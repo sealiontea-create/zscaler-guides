@@ -90,6 +90,23 @@
   .expand-body.show{display:block;}
   .expand-body p{font-size:14px;color:#475569;line-height:1.6;}
 
+  .help-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#7c3aed;text-decoration:none;margin-top:6px;}
+  .help-link:hover{text-decoration:underline;}
+  .setup-step{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;margin-bottom:12px;position:relative;border-left:4px solid #7c3aed;}
+  .setup-step .step-num{position:absolute;top:-10px;left:16px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-size:11px;font-weight:800;padding:3px 12px;border-radius:8px;}
+  .setup-step h4{font-size:15px;font-weight:700;color:#0f172a;margin:6px 0 8px;}
+  .setup-step p{font-size:13px;color:#475569;line-height:1.7;}
+  .setup-step .nav-path{font-size:12px;font-weight:600;color:#7c3aed;background:#faf5ff;padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:8px;}
+  .setup-step ul{list-style:none;padding:0;margin:8px 0 0;}
+  .setup-step ul li{padding:4px 0;font-size:13px;color:#475569;line-height:1.5;display:flex;gap:8px;}
+  .setup-step ul li::before{content:"\2192";color:#7c3aed;font-weight:700;flex-shrink:0;}
+  .help-links-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:20px;margin-bottom:20px;}
+  .help-links-box h3{font-size:15px;font-weight:700;color:#0f172a;margin:0 0 12px;display:flex;align-items:center;gap:8px;}
+  .help-links-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .help-links-grid a{display:flex;align-items:center;gap:8px;font-size:13px;color:#475569;text-decoration:none;padding:10px 12px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;transition:all 0.2s;}
+  .help-links-grid a:hover{border-color:#7c3aed;color:#7c3aed;background:#faf5ff;}
+  .help-links-grid a .link-icon{font-size:16px;flex-shrink:0;}
+
   .footer{margin-top:32px;padding:16px 0;border-top:1px solid #e2e8f0;text-align:center;}
   .footer p{font-size:11px;color:#94a3b8;}
 
@@ -118,6 +135,7 @@
       <button class="tab" onclick="switchTab('how', this)">How It Works</button>
       <button class="tab" onclick="switchTab('mvp', this)">MVP Program</button>
       <button class="tab" onclick="switchTab('engines', this)">Engine Guide</button>
+      <button class="tab" onclick="switchTab('setup', this)">Setup Guide</button>
       <button class="tab" onclick="switchTab('objections', this)">Objections</button>
     </div>
   </div>
@@ -187,16 +205,19 @@
         <div style="font-size:28px;margin-bottom:8px;">📖</div>
         <div style="font-size:14px;font-weight:700;color:#6d28d9;margin-bottom:4px;">Dictionaries</div>
         <div style="font-size:12px;color:#475569;line-height:1.4;">Pattern definitions — regex, keywords, checksums. "What does a credit card number look like?"</div>
+        <a href="https://help.zscaler.com/zia/about-dlp-dictionaries" target="_blank" class="help-link">Configure Dictionaries &#8599;</a>
       </div>
       <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:16px;text-align:center;">
         <div style="font-size:28px;margin-bottom:8px;">⚙️</div>
         <div style="font-size:14px;font-weight:700;color:#6d28d9;margin-bottom:4px;">Engines</div>
         <div style="font-size:12px;color:#475569;line-height:1.4;">Logic combining dictionaries — "Match SSNs AND credit cards with more than 5 hits."</div>
+        <a href="https://help.zscaler.com/zia/about-dlp-engines" target="_blank" class="help-link">Configure Engines &#8599;</a>
       </div>
       <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:16px;text-align:center;">
         <div style="font-size:28px;margin-bottom:8px;">📋</div>
         <div style="font-size:14px;font-weight:700;color:#6d28d9;margin-bottom:4px;">Policies</div>
         <div style="font-size:12px;color:#475569;line-height:1.4;">Rules tying engines to users, groups, destinations, and actions (Allow, Caution, Block).</div>
+        <a href="https://help.zscaler.com/zia/configuring-dlp-policy-rules-content-inspection" target="_blank" class="help-link">Configure DLP Rules &#8599;</a>
       </div>
     </div>
 
@@ -214,10 +235,12 @@
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
         <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;">Exact Data Match (EDM)</div>
         <div style="font-size:12px;color:#64748b;line-height:1.5;">Compares content against hashed reference values from your actual data (SSNs, account numbers). Eliminates false positives.</div>
+        <a href="https://help.zscaler.com/zia/about-exact-data-match" target="_blank" class="help-link">Setup EDM &#8599;</a>
       </div>
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
         <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;">Indexed Document Match (IDM)</div>
         <div style="font-size:12px;color:#64748b;line-height:1.5;">Fingerprints sensitive documents (contracts, IP). Detects full or partial matches in outbound traffic.</div>
+        <a href="https://help.zscaler.com/zia/about-indexed-document-match" target="_blank" class="help-link">Setup IDM &#8599;</a>
       </div>
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
         <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;">AI-Powered Classification</div>
@@ -247,6 +270,7 @@
     <div class="info-box amber">
       <div class="info-title">Prerequisites</div>
       <p><strong>SSL inspection must be enabled</strong> for DLP to function. DLP cannot inspect what it cannot see. If traffic is bypassing SSL inspection, DLP is blind to that traffic. This is why the SSL Inspection Assessment should be completed before deploying DLP.</p>
+      <a href="https://help.zscaler.com/zia/configuring-ssl-inspection-policy" target="_blank" class="help-link">Configure SSL Inspection &#8599;</a>
     </div>
   </div>
 
@@ -341,6 +365,22 @@
       </div>
     </div>
 
+    <div class="help-links-box">
+      <h3><span style="font-size:18px;">📘</span> Zscaler Help — Setup Resources</h3>
+      <div class="help-links-grid">
+        <a href="https://help.zscaler.com/zia/about-dlp-dictionaries" target="_blank"><span class="link-icon">📖</span> DLP Dictionaries</a>
+        <a href="https://help.zscaler.com/zia/about-dlp-engines" target="_blank"><span class="link-icon">⚙️</span> DLP Engines</a>
+        <a href="https://help.zscaler.com/zia/configuring-dlp-policy-rules-content-inspection" target="_blank"><span class="link-icon">📋</span> DLP Policy Rules</a>
+        <a href="https://help.zscaler.com/zia/configuring-dlp-notification-templates" target="_blank"><span class="link-icon">📧</span> Notification Templates</a>
+        <a href="https://help.zscaler.com/zia/about-exact-data-match" target="_blank"><span class="link-icon">🎯</span> Exact Data Match (EDM)</a>
+        <a href="https://help.zscaler.com/zia/about-indexed-document-match" target="_blank"><span class="link-icon">📄</span> Indexed Document Match (IDM)</a>
+        <a href="https://help.zscaler.com/zia/configuring-ocr-for-dlp" target="_blank"><span class="link-icon">🔍</span> OCR for DLP</a>
+        <a href="https://help.zscaler.com/zia/configuring-dlp-advanced-settings" target="_blank"><span class="link-icon">🔧</span> Advanced DLP Settings</a>
+        <a href="https://help.zscaler.com/zia/configuring-ssl-inspection-policy" target="_blank"><span class="link-icon">🔐</span> SSL Inspection (prerequisite)</a>
+        <a href="https://help.zscaler.com/zscaler-deployments-operations/data-loss-prevention-deployment-and-operations-guide" target="_blank"><span class="link-icon">📚</span> DLP Deployment Guide</a>
+      </div>
+    </div>
+
     <div class="info-box amber">
       <div class="info-title">A Note on Incident Management</div>
       <p>Without the <strong>Workflow Automation</strong> add-on, DLP incident alerts are delivered via SMTP email notifications. This means incidents go to an admin mailbox — there's no built-in ticketing, user justification workflows, or automated triage. This is functional for an MVP program, but it means someone needs to own that inbox and review incidents regularly.</p>
@@ -424,6 +464,121 @@
     <div class="info-box blue">
       <div class="info-title">Tuning Tip: Confidence Scores</div>
       <p>Every predefined dictionary has a configurable confidence score threshold (Low, Medium, High). Start with <strong>High</strong> confidence to minimize false positives. If you're not seeing enough detections, lower to Medium. Low confidence should only be used when you've validated the additional matches are genuine. False positives erode trust in the DLP program faster than anything else.</p>
+    </div>
+  </div>
+
+  <!-- SETUP GUIDE -->
+  <div id="tab-setup" class="hidden">
+    <div class="section-title">Step-by-Step Setup</div>
+    <p class="section-sub">Follow these steps to configure your MVP DLP program. Each step maps to the MVP phases described in this guide.</p>
+
+    <div class="setup-step">
+      <div class="step-num">Step 1</div>
+      <h4>Verify SSL Inspection Is Enabled</h4>
+      <div class="nav-path">Policy &gt; SSL Inspection</div>
+      <p>DLP can only inspect decrypted traffic. Before configuring DLP, confirm SSL inspection is active for the users and categories you want to protect.</p>
+      <ul>
+        <li>Check that SSL inspection rules exist and are <strong>enabled</strong></li>
+        <li>Verify your target user groups are included in the inspection scope</li>
+        <li>Review bypass rules — any bypassed category is invisible to DLP</li>
+        <li>Confirm the intermediate CA certificate is deployed to managed endpoints</li>
+      </ul>
+      <a href="https://help.zscaler.com/zia/configuring-ssl-inspection-policy" target="_blank" class="help-link">SSL Inspection configuration &#8599;</a>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 2</div>
+      <h4>Review Predefined DLP Engines</h4>
+      <div class="nav-path">Administration &gt; DLP &gt; DLP Engines</div>
+      <p>Zscaler provides predefined engines for common compliance scenarios. You don't need to build anything — just select which engines to activate.</p>
+      <ul>
+        <li>Click on <strong>Predefined Engines</strong> to see the full list</li>
+        <li>Review the <strong>PCI</strong> engine — detects credit card numbers with Luhn checksum validation</li>
+        <li>Review the <strong>PII</strong> engine — detects SSNs, names, addresses (High Volume and Low Volume variants)</li>
+        <li>Review the <strong>HIPAA</strong> engine — detects medical information combined with SSNs</li>
+        <li>Review the <strong>Source Code</strong> engine — detects programming patterns being uploaded</li>
+        <li>Note which engines are relevant to your organization — you'll reference them when creating rules</li>
+      </ul>
+      <a href="https://help.zscaler.com/zia/about-dlp-engines" target="_blank" class="help-link">DLP Engines overview &#8599;</a>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 3</div>
+      <h4>Create Your First DLP Policy Rule</h4>
+      <div class="nav-path">Policy &gt; Data Loss Prevention</div>
+      <p>This is where you create the rule that ties an engine to a scope and an action. Start with a single rule in Allow (log only) mode.</p>
+      <ul>
+        <li>Click <strong>Add DLP Rule</strong></li>
+        <li><strong>Name:</strong> "MVP - PCI Monitor" (descriptive name helps with incident review)</li>
+        <li><strong>DLP Engines:</strong> Select the <strong>PCI</strong> engine</li>
+        <li><strong>Action:</strong> Select <strong>Allow</strong> — this logs the incident without blocking anything</li>
+        <li><strong>Users/Groups:</strong> Select <strong>All Users</strong> or start with a specific department</li>
+        <li><strong>Cloud Applications:</strong> Leave as "Any" to monitor all destinations</li>
+        <li><strong>File Types:</strong> Leave as "All" for maximum visibility</li>
+        <li><strong>Severity:</strong> Set based on your org's incident priority model</li>
+        <li>Click <strong>Save</strong> and <strong>Activate Changes</strong></li>
+      </ul>
+      <p style="margin-top:8px;"><strong>Repeat</strong> for PII, HIPAA, and Source Code engines — one rule per engine makes incident review cleaner.</p>
+      <a href="https://help.zscaler.com/zia/configuring-dlp-policy-rules-content-inspection" target="_blank" class="help-link">DLP rule configuration &#8599;</a>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 4</div>
+      <h4>Configure Notification Templates</h4>
+      <div class="nav-path">Administration &gt; DLP &gt; Notification Templates</div>
+      <p>Set up email notifications so the right people are alerted when DLP incidents occur.</p>
+      <ul>
+        <li>Click <strong>Add Notification Template</strong></li>
+        <li><strong>Auditor Notification:</strong> Goes to your security team — include incident details, user info, and destination</li>
+        <li><strong>User Notification:</strong> (Optional for Phase 1) Inform the user their action triggered a DLP alert</li>
+        <li><strong>Manager Notification:</strong> (Optional) Alert the user's manager for policy violations</li>
+        <li>Assign the notification template to your DLP rules (edit each rule and select the template)</li>
+        <li>Designate a team member or shared mailbox to own the notification inbox</li>
+      </ul>
+      <a href="https://help.zscaler.com/zia/configuring-dlp-notification-templates" target="_blank" class="help-link">Notification template setup &#8599;</a>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 5</div>
+      <h4>Monitor and Review Incidents</h4>
+      <div class="nav-path">Analytics &gt; Web Insights &gt; DLP</div>
+      <p>After rules are active, start reviewing the data. This is the most valuable part of Phase 1.</p>
+      <ul>
+        <li>Navigate to <strong>Analytics &gt; Web Insights</strong> and filter by DLP</li>
+        <li>Review incidents by: engine type, user, department, destination, file type</li>
+        <li>Identify false positives — note patterns and tune engine confidence thresholds</li>
+        <li>Identify the top 3-5 riskiest patterns for Phase 3 (Caution) targeting</li>
+        <li>Build a weekly summary: total incidents, top engines triggered, top users, top destinations</li>
+      </ul>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 6</div>
+      <h4>Graduate to Caution and Block</h4>
+      <p>After 2-4 weeks of monitoring, upgrade validated high-risk rules from Allow to Caution, then eventually Block.</p>
+      <ul>
+        <li>Edit your DLP rule and change the action from <strong>Allow</strong> to <strong>Caution</strong></li>
+        <li>Customize the caution page message — explain <em>why</em> the action was flagged</li>
+        <li>Monitor: users who click "Proceed" may need targeted training</li>
+        <li>After validating with Caution (2+ weeks), change to <strong>Block</strong> for confirmed high-risk rules only</li>
+        <li>Keep Allow rules active for broad monitoring — your DLP program should use all three actions simultaneously</li>
+      </ul>
+    </div>
+
+    <div class="help-links-box">
+      <h3><span style="font-size:18px;">📘</span> Zscaler Help — Reference Links</h3>
+      <div class="help-links-grid">
+        <a href="https://help.zscaler.com/zia/about-dlp-dictionaries" target="_blank"><span class="link-icon">📖</span> DLP Dictionaries</a>
+        <a href="https://help.zscaler.com/zia/about-dlp-engines" target="_blank"><span class="link-icon">⚙️</span> DLP Engines</a>
+        <a href="https://help.zscaler.com/zia/configuring-dlp-policy-rules-content-inspection" target="_blank"><span class="link-icon">📋</span> DLP Policy Rules</a>
+        <a href="https://help.zscaler.com/zia/configuring-dlp-notification-templates" target="_blank"><span class="link-icon">📧</span> Notification Templates</a>
+        <a href="https://help.zscaler.com/zia/about-exact-data-match" target="_blank"><span class="link-icon">🎯</span> Exact Data Match (EDM)</a>
+        <a href="https://help.zscaler.com/zia/about-indexed-document-match" target="_blank"><span class="link-icon">📄</span> Indexed Document Match (IDM)</a>
+        <a href="https://help.zscaler.com/zia/configuring-ocr-for-dlp" target="_blank"><span class="link-icon">🔍</span> OCR for DLP</a>
+        <a href="https://help.zscaler.com/zia/configuring-dlp-advanced-settings" target="_blank"><span class="link-icon">🔧</span> Advanced DLP Settings</a>
+        <a href="https://help.zscaler.com/zia/configuring-ssl-inspection-policy" target="_blank"><span class="link-icon">🔐</span> SSL Inspection</a>
+        <a href="https://help.zscaler.com/zscaler-deployments-operations/data-loss-prevention-deployment-and-operations-guide" target="_blank"><span class="link-icon">📚</span> DLP Deployment Guide</a>
+      </div>
     </div>
   </div>
 

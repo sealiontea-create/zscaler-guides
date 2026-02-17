@@ -168,6 +168,24 @@
   .cta-box h3 { font-size: 17px; font-weight: 700; color: #0f172a; margin: 0 0 8px; }
   .cta-box p { font-size: 14px; color: #475569; line-height: 1.5; }
 
+  .help-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#2563eb;text-decoration:none;margin-top:4px;}
+  .help-link:hover{text-decoration:underline;}
+  .setup-section{margin-top:24px;}
+  .setup-step{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;margin-bottom:12px;position:relative;border-left:4px solid #2563eb;}
+  .setup-step .step-num{position:absolute;top:-10px;left:16px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-size:11px;font-weight:800;padding:3px 12px;border-radius:8px;}
+  .setup-step h4{font-size:15px;font-weight:700;color:#0f172a;margin:6px 0 8px;}
+  .setup-step p{font-size:13px;color:#475569;line-height:1.7;}
+  .setup-step .nav-path{font-size:12px;font-weight:600;color:#2563eb;background:#eff6ff;padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:8px;}
+  .setup-step ul{list-style:none;padding:0;margin:8px 0 0;}
+  .setup-step ul li{padding:4px 0;font-size:13px;color:#475569;line-height:1.5;display:flex;gap:8px;}
+  .setup-step ul li::before{content:"\2192";color:#2563eb;font-weight:700;flex-shrink:0;}
+  .help-links-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:20px;margin-top:16px;}
+  .help-links-box h3{font-size:15px;font-weight:700;color:#0f172a;margin:0 0 12px;display:flex;align-items:center;gap:8px;}
+  .help-links-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .help-links-grid a{display:flex;align-items:center;gap:8px;font-size:13px;color:#475569;text-decoration:none;padding:10px 12px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;transition:all 0.2s;}
+  .help-links-grid a:hover{border-color:#2563eb;color:#2563eb;background:#eff6ff;}
+  .help-links-grid a .link-icon{font-size:16px;flex-shrink:0;}
+
   .footer {
     margin-top: 32px; padding: 16px 0; border-top: 1px solid #e2e8f0; text-align: center;
   }
@@ -248,7 +266,102 @@
 
     <div class="info-box" style="background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:20px;margin-top:20px;">
       <div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:6px;">⚠️ Prerequisite: SSL Inspection</div>
-      <p style="font-size:14px;color:#475569;line-height:1.6;">Browser Isolation delivers maximum value when SSL inspection is enabled. Without it, CBI can only isolate based on URL category — not page content or behavior. Complete the SSL Inspection Assessment first for full CBI coverage.</p>
+      <p style="font-size:14px;color:#475569;line-height:1.6;">Browser Isolation delivers maximum value when SSL inspection is enabled. Without it, CBI can only isolate based on URL category — not page content or behavior.</p>
+      <a href="https://help.zscaler.com/zia/configuring-ssl-inspection-policy" target="_blank" class="help-link" style="color:#92400e;">Configure SSL Inspection &#8599;</a>
+    </div>
+
+    <div class="setup-section">
+      <h3 style="font-size:18px;font-weight:800;color:#0f172a;margin:0 0 16px;">How to Set Up Browser Isolation</h3>
+
+      <div class="setup-step">
+        <div class="step-num">Step 1</div>
+        <h4>Create an Isolation Profile</h4>
+        <div class="nav-path">Administration &gt; Cloud Browser Isolation &gt; Isolation Profiles</div>
+        <p>The isolation profile controls the user experience during isolated sessions — what they can and can't do.</p>
+        <ul>
+          <li>Click <strong>Add Isolation Profile</strong></li>
+          <li>Name it (e.g., "Standard - Restrict Downloads")</li>
+          <li><strong>Clipboard:</strong> Block copy/paste to prevent data exfiltration (or Allow for low-risk use cases)</li>
+          <li><strong>Downloads:</strong> Set to CDR (Content Disarm &amp; Reconstruction) to flatten files into safe PDFs, or Block entirely</li>
+          <li><strong>Upload:</strong> Block or Allow depending on your data protection requirements</li>
+          <li><strong>Printing:</strong> Block to prevent data leakage via print-to-PDF</li>
+          <li><strong>Rendering:</strong> Select Turbo Mode for near-native 50fps experience</li>
+          <li><strong>Persistence:</strong> Choose non-persistent (session ends when tab closes) for maximum security</li>
+        </ul>
+        <a href="https://help.zscaler.com/zia/creating-isolation-profile-cloud-browser-isolation" target="_blank" class="help-link">Full profile configuration guide &#8599;</a>
+      </div>
+
+      <div class="setup-step">
+        <div class="step-num">Step 2</div>
+        <h4>Create a URL Filtering Rule with Isolate Action</h4>
+        <div class="nav-path">Policy &gt; URL &amp; Cloud App Control &gt; URL Filtering Rules</div>
+        <p>This is where you tell Zscaler which traffic to isolate instead of allowing or blocking.</p>
+        <ul>
+          <li>Click <strong>Add URL Filtering Rule</strong></li>
+          <li><strong>Name:</strong> "Isolate Uncategorized Sites" (start here — highest risk category)</li>
+          <li><strong>URL Categories:</strong> Select "Uncategorized" and optionally "Newly Registered Domains"</li>
+          <li><strong>Action:</strong> Select <strong>Isolate</strong></li>
+          <li><strong>Isolation Profile:</strong> Select the profile you created in Step 1</li>
+          <li><strong>Users/Groups:</strong> Start with a pilot group (e.g., IT or Security team) before rolling out broadly</li>
+          <li><strong>Rule Order:</strong> Place above any Allow rules for the same categories</li>
+        </ul>
+        <a href="https://help.zscaler.com/zia/configuring-url-filtering-policy" target="_blank" class="help-link">Full URL filtering policy guide &#8599;</a>
+      </div>
+
+      <div class="setup-step">
+        <div class="step-num">Step 3</div>
+        <h4>Enable Smart Browser Isolation (if licensed)</h4>
+        <div class="nav-path">Policy &gt; Cloud Browser Isolation &gt; Smart Isolation</div>
+        <p>Smart Isolation uses AI to automatically isolate suspicious pages — even on categorized, "trusted" sites that have been compromised.</p>
+        <ul>
+          <li>Enable <strong>Smart Browser Isolation</strong></li>
+          <li>Set the risk threshold — start with the default and adjust based on volume</li>
+          <li>Assign to user groups — can run alongside your URL-based isolation rules</li>
+          <li>This catches threats that URL category-based isolation misses (e.g., compromised news sites)</li>
+        </ul>
+        <a href="https://help.zscaler.com/zia/configuring-smart-browser-isolation-policy" target="_blank" class="help-link">Smart Isolation setup guide &#8599;</a>
+      </div>
+
+      <div class="setup-step">
+        <div class="step-num">Step 4</div>
+        <h4>Test and Validate</h4>
+        <p>Before rolling out broadly, verify isolation is working correctly with your pilot group.</p>
+        <ul>
+          <li>As a pilot user, visit an uncategorized site — you should see the isolation indicator in the browser</li>
+          <li>Test clipboard, download, and print controls match your profile settings</li>
+          <li>Verify Turbo Mode rendering is smooth (should feel near-native)</li>
+          <li>Check <strong>Analytics &gt; Web Insights</strong> for isolation activity logs</li>
+          <li>Gather pilot user feedback — are there usability issues? Sites that break?</li>
+          <li>Once validated, expand the user scope in your URL filtering rule</li>
+        </ul>
+      </div>
+
+      <div class="setup-step">
+        <div class="step-num">Step 5</div>
+        <h4>Expand Coverage</h4>
+        <p>After successful pilot, expand isolation to more categories and user groups.</p>
+        <ul>
+          <li>Add more URL categories: "Newly Registered Domains," "Other Miscellaneous," "Web-Based Email"</li>
+          <li>Create separate rules with different profiles (e.g., stricter controls for contractors vs. employees)</li>
+          <li>Consider isolating specific cloud apps for BYOD users (SaaS apps via ZPA isolation)</li>
+          <li>Review isolation analytics monthly — adjust categories based on threat trends</li>
+        </ul>
+        <a href="https://help.zscaler.com/zscaler-deployments-operations/cloud-browser-isolation-deployment-and-operations-guide" target="_blank" class="help-link">CBI deployment best practices &#8599;</a>
+      </div>
+    </div>
+
+    <div class="help-links-box">
+      <h3><span style="font-size:18px;">📘</span> Zscaler Help — Reference Links</h3>
+      <div class="help-links-grid">
+        <a href="https://help.zscaler.com/zia/about-cloud-browser-isolation" target="_blank"><span class="link-icon">🌐</span> About CBI</a>
+        <a href="https://help.zscaler.com/zia/configuring-browser-isolation" target="_blank"><span class="link-icon">⚙️</span> Configure CBI</a>
+        <a href="https://help.zscaler.com/zia/creating-isolation-profile-cloud-browser-isolation" target="_blank"><span class="link-icon">🔒</span> Isolation Profiles</a>
+        <a href="https://help.zscaler.com/zia/configuring-smart-browser-isolation-policy" target="_blank"><span class="link-icon">🧠</span> Smart Isolation</a>
+        <a href="https://help.zscaler.com/zia/configuring-url-filtering-policy" target="_blank"><span class="link-icon">🏷️</span> URL Filtering Rules</a>
+        <a href="https://help.zscaler.com/isolation/default-isolation-profiles-isolation" target="_blank"><span class="link-icon">📋</span> Default Profiles</a>
+        <a href="https://help.zscaler.com/zscaler-deployments-operations/cloud-browser-isolation-deployment-and-operations-guide" target="_blank"><span class="link-icon">📚</span> Deployment Guide</a>
+        <a href="https://help.zscaler.com/zia/limits-cloud-browser-isolation" target="_blank"><span class="link-icon">📏</span> CBI Limits</a>
+      </div>
     </div>
   </div>
 

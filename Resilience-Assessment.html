@@ -126,6 +126,23 @@
   .expand-body.show { display:block; }
   .expand-body p { font-size:14px;color:#475569;line-height:1.6; }
 
+  .help-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#16a34a;text-decoration:none;margin-top:4px;}
+  .help-link:hover{text-decoration:underline;}
+  .setup-step{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;margin-bottom:12px;position:relative;border-left:4px solid #22c55e;}
+  .setup-step .step-num{position:absolute;top:-10px;left:16px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:11px;font-weight:800;padding:3px 12px;border-radius:8px;}
+  .setup-step h4{font-size:15px;font-weight:700;color:#0f172a;margin:6px 0 8px;}
+  .setup-step p{font-size:13px;color:#475569;line-height:1.7;}
+  .setup-step .nav-path{font-size:12px;font-weight:600;color:#16a34a;background:#f0fdf4;padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:8px;}
+  .setup-step ul{list-style:none;padding:0;margin:8px 0 0;}
+  .setup-step ul li{padding:4px 0;font-size:13px;color:#475569;line-height:1.5;display:flex;gap:8px;}
+  .setup-step ul li::before{content:"\2192";color:#22c55e;font-weight:700;flex-shrink:0;}
+  .help-links-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:20px;margin-top:16px;}
+  .help-links-box h3{font-size:15px;font-weight:700;color:#0f172a;margin:0 0 12px;display:flex;align-items:center;gap:8px;}
+  .help-links-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .help-links-grid a{display:flex;align-items:center;gap:8px;font-size:13px;color:#475569;text-decoration:none;padding:10px 12px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;transition:all 0.2s;}
+  .help-links-grid a:hover{border-color:#22c55e;color:#16a34a;background:#f0fdf4;}
+  .help-links-grid a .link-icon{font-size:16px;flex-shrink:0;}
+
   .footer { margin-top:32px;padding:16px 0;border-top:1px solid #e2e8f0;text-align:center; }
   .footer p { font-size:11px;color:#94a3b8; }
 
@@ -157,6 +174,7 @@
       <button class="tab" onclick="switchTab('tiers', this)">Failure Scenarios</button>
       <button class="tab" onclick="switchTab('checklist', this)">Readiness Checklist</button>
       <button class="tab" onclick="switchTab('plan', this)">Deployment Plan</button>
+      <button class="tab" onclick="switchTab('setup', this)">Setup Guide</button>
       <button class="tab" onclick="switchTab('objections', this)">Objections</button>
     </div>
   </div>
@@ -500,6 +518,119 @@
       <div class="phase-note">
         <div class="phase-note-label">💡 The Drill Is Essential</div>
         <p>"Configuration without testing is hope, not a plan. The drill will reveal gaps that aren't visible in documentation — DNS propagation delays, PAC file accessibility, PSE connectivity, and user experience during failover."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETUP GUIDE -->
+  <div id="tab-setup" class="hidden">
+    <div class="section-title">Step-by-Step Setup</div>
+    <p class="section-sub">How to configure each component of Zscaler Resilience, from automatic protections to full catastrophic DR.</p>
+
+    <div class="setup-step">
+      <div class="step-num">Step 1</div>
+      <h4>Verify Client Connector Forwarding Profiles</h4>
+      <div class="nav-path">ZCC Portal &gt; Administration &gt; Forwarding Profile</div>
+      <p>Ensure ZCC has both primary and secondary gateways configured for automatic blackout failover.</p>
+      <ul>
+        <li>Open your forwarding profile and verify <strong>Primary Gateway</strong> and <strong>Secondary Gateway</strong> are both set</li>
+        <li>Primary should be closest DC to the user population; secondary should be a different DC</li>
+        <li>Confirm all user groups are assigned to the forwarding profile</li>
+        <li>Verify ZCC version across endpoints — Windows 4.0+, macOS 3.7.1+ required for full resilience</li>
+      </ul>
+      <a href="https://help.zscaler.com/zscaler-client-connector/configuring-business-continuity-zscaler-client-connector" target="_blank" class="help-link">Client Connector resilience settings &#8599;</a>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 2</div>
+      <h4>Enable Dynamic Service Edge Selection (Brownout Protection)</h4>
+      <div class="nav-path">ZCC Portal &gt; Administration &gt; Forwarding Profile &gt; Advanced</div>
+      <p>This feature lets ZCC continuously measure gateway latency and auto-switch to the best-performing path during brownouts.</p>
+      <ul>
+        <li>Enable <strong>Dynamic Performance-based Service Edge Selection</strong></li>
+        <li>ZCC will continuously probe configured gateways for HTTP latency</li>
+        <li>When the primary gateway degrades, ZCC autonomously switches to the lowest-latency alternative</li>
+        <li>No manual intervention required once enabled</li>
+      </ul>
+      <a href="https://help.zscaler.com/zscaler-client-connector/configuring-fail-open-settings-zscaler-client-connector" target="_blank" class="help-link">Fail-open and brownout settings &#8599;</a>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 3</div>
+      <h4>Configure ZIA Disaster Recovery</h4>
+      <div class="nav-path">ZIA Admin Portal &gt; Administration &gt; Disaster Recovery</div>
+      <p>This is the most critical pre-configuration. Without it, a catastrophic event means total loss of internet access.</p>
+      <ul>
+        <li><strong>Register a DR domain:</strong> A dedicated domain for DR DNS resolution (e.g., dr.yourdomain.com)</li>
+        <li><strong>Generate DNS records:</strong> Use Zscaler's Record Generation tool to create the required TXT and A records</li>
+        <li><strong>Add DNS records to your registrar:</strong> These must be in place and propagated BEFORE an event</li>
+        <li><strong>Configure the hosted DNS allow list:</strong> Add your mission-critical apps (M365, Salesforce, etc.) — only these will have direct internet access during DR</li>
+        <li><strong>Host a custom PAC file:</strong> Must be reachable via HTTP/HTTPS when ZIA is unavailable — host on infrastructure independent of Zscaler</li>
+      </ul>
+      <a href="https://help.zscaler.com/zia/configuring-disaster-recovery" target="_blank" class="help-link">ZIA DR configuration &#8599;</a>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 4</div>
+      <h4>Deploy ZPA Private Service Edges</h4>
+      <div class="nav-path">ZPA Admin Portal &gt; Administration &gt; Service Edges</div>
+      <p>PSEs provide local ZPA brokering during a catastrophic event. One pair is included in Business Edition+ at no extra cost.</p>
+      <ul>
+        <li><strong>Provision PSEs:</strong> Deploy as VMs in your data center (VMware, Hyper-V) or cloud (AWS, Azure, GCP)</li>
+        <li><strong>Register with ZPA:</strong> Verify PSEs connect to ZPA cloud and download latest policies</li>
+        <li><strong>Deploy App Connectors:</strong> Ensure App Connectors for critical private apps are connected to your PSE group</li>
+        <li><strong>Configure DNS A records:</strong> Point your DR domain to PSE public IPs so ZCC can reach them directly</li>
+        <li><strong>Deploy in pairs:</strong> Active-active for redundancy — both PSEs should be in the same Service Edge Group</li>
+      </ul>
+      <a href="https://help.zscaler.com/zpa/configuring-service-edges" target="_blank" class="help-link">ZPA Private Service Edge setup &#8599;</a>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 5</div>
+      <h4>Configure Tunnel Redundancy (Branch Offices)</h4>
+      <div class="nav-path">ZIA Admin Portal &gt; Administration &gt; Traffic Forwarding</div>
+      <p>For branch offices using GRE or IPSec tunnels, ensure redundant tunnel configuration for failover.</p>
+      <ul>
+        <li><strong>GRE tunnels:</strong> Configure primary and secondary tunnels to different Zscaler DCs</li>
+        <li><strong>IPSec tunnels:</strong> Set up redundant VPN tunnels with automatic failover on your edge device</li>
+        <li>Verify your router/firewall supports health-check based failover between tunnels</li>
+        <li>Test failover by temporarily disabling the primary tunnel</li>
+      </ul>
+      <div style="display:flex;gap:12px;margin-top:8px;">
+        <a href="https://help.zscaler.com/zia/configuring-gre-tunnels" target="_blank" class="help-link">GRE tunnel setup &#8599;</a>
+        <a href="https://help.zscaler.com/zia/configuring-ipsec-vpn-tunnel" target="_blank" class="help-link">IPSec tunnel setup &#8599;</a>
+      </div>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num">Step 6</div>
+      <h4>Run a DR Drill</h4>
+      <p>Configuration without testing is hope, not a plan. Validate the entire failover chain end-to-end.</p>
+      <ul>
+        <li><strong>Schedule:</strong> Coordinate with IT leadership and affected business units</li>
+        <li><strong>Trigger DR mode:</strong> Follow the documented DNS-based activation procedure</li>
+        <li><strong>Validate ZIA:</strong> Confirm users can access critical apps from the hosted DNS allow list</li>
+        <li><strong>Validate ZPA:</strong> Confirm private app access works through PSEs</li>
+        <li><strong>Measure:</strong> Time to failover, apps accessible, user experience, any gaps</li>
+        <li><strong>Document:</strong> Record results, gaps discovered, and remediation steps</li>
+        <li><strong>Repeat annually:</strong> DR drills should be an annual exercise at minimum</li>
+      </ul>
+      <a href="https://help.zscaler.com/zscaler-deployments-operations/disaster-recovery-deployment-operations-guide" target="_blank" class="help-link">DR deployment &amp; operations guide &#8599;</a>
+    </div>
+
+    <div class="help-links-box">
+      <h3><span style="font-size:18px;">📘</span> Zscaler Help — Reference Links</h3>
+      <div class="help-links-grid">
+        <a href="https://help.zscaler.com/zia/configuring-disaster-recovery" target="_blank"><span class="link-icon">🔥</span> ZIA Disaster Recovery</a>
+        <a href="https://help.zscaler.com/zpa/understanding-disaster-recovery" target="_blank"><span class="link-icon">🔥</span> ZPA Disaster Recovery</a>
+        <a href="https://help.zscaler.com/zpa/configuring-service-edges" target="_blank"><span class="link-icon">🖥️</span> ZPA Service Edges</a>
+        <a href="https://help.zscaler.com/zia/deploying-private-service-edge" target="_blank"><span class="link-icon">🖥️</span> ZIA Service Edge Deploy</a>
+        <a href="https://help.zscaler.com/zscaler-client-connector/configuring-business-continuity-zscaler-client-connector" target="_blank"><span class="link-icon">📱</span> ZCC Business Continuity</a>
+        <a href="https://help.zscaler.com/zscaler-client-connector/configuring-fail-open-settings-zscaler-client-connector" target="_blank"><span class="link-icon">⚡</span> ZCC Fail-Open Settings</a>
+        <a href="https://help.zscaler.com/zia/configuring-gre-tunnels" target="_blank"><span class="link-icon">🔗</span> GRE Tunnel Config</a>
+        <a href="https://help.zscaler.com/zia/configuring-ipsec-vpn-tunnel" target="_blank"><span class="link-icon">🔗</span> IPSec Tunnel Config</a>
+        <a href="https://help.zscaler.com/zscaler-deployments-operations/zia-disaster-recovery-deployment-and-operations-guide" target="_blank"><span class="link-icon">📚</span> ZIA DR Operations Guide</a>
+        <a href="https://help.zscaler.com/zscaler-deployments-operations/zpa-disaster-recovery-deployment-and-operations-guide" target="_blank"><span class="link-icon">📚</span> ZPA DR Operations Guide</a>
       </div>
     </div>
   </div>
