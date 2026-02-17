@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZS Adoption Toolkit — Customer Guides</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237C3AED'/%3E%3Ctext x='32' y='46' font-family='Arial' font-size='38' font-weight='800' fill='white' text-anchor='middle'%3EZ%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: #f8fafc; color: #1e293b; min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { text-decoration: none; color: inherit; }
+
+  .header {
+    background: linear-gradient(135deg, #1a0533 0%, #3b1578 40%, #7c3aed 100%);
+    padding: 48px 24px 56px; position: relative; overflow: hidden; text-align: center;
+  }
+  .orb { position: absolute; border-radius: 50%; }
+  .orb.a { top: -60px; right: -40px; width: 240px; height: 240px; background: rgba(255,255,255,0.03); }
+  .orb.b { bottom: -50px; left: 20px; width: 160px; height: 160px; background: rgba(255,255,255,0.02); }
+  .orb.c { top: 30px; left: -80px; width: 200px; height: 200px; background: rgba(124,58,237,0.08); }
+
+  .logo {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 56px; height: 56px; border-radius: 14px; background: rgba(255,255,255,0.12);
+    font-size: 30px; font-weight: 800; color: #fff; margin-bottom: 16px;
+    backdrop-filter: blur(8px);
+  }
+  .header h1 { font-size: 32px; font-weight: 800; color: #fff; margin: 0 0 8px; }
+  .header p { font-size: 16px; color: rgba(255,255,255,0.6); max-width: 560px; margin: 0 auto; line-height: 1.6; }
+
+  .content { max-width: 800px; margin: -32px auto 0; padding: 0 20px 48px; position: relative; }
+
+  .order-note {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+    padding: 18px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .order-note .icon { font-size: 20px; flex-shrink: 0; }
+  .order-note .text { font-size: 14px; color: #475569; line-height: 1.5; }
+  .order-note strong { color: #0f172a; }
+
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .guide-card {
+    background: #fff; border: 2px solid #e2e8f0; border-radius: 16px;
+    padding: 24px; transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .guide-card:hover { border-color: #7c3aed; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.1); }
+  .guide-card .num {
+    position: absolute; top: -1px; right: -1px;
+    background: linear-gradient(135deg, #7c3aed, #5b21b6); color: #fff;
+    font-size: 11px; font-weight: 800; padding: 6px 14px;
+    border-radius: 0 14px 0 12px;
+  }
+  .guide-card .emoji { font-size: 32px; margin-bottom: 12px; }
+  .guide-card h2 { font-size: 17px; font-weight: 700; color: #0f172a; margin: 0 0 6px; }
+  .guide-card .desc { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 14px; }
+  .guide-card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .tag {
+    font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 8px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .tag.blue { background: #eff6ff; color: #1e40af; }
+  .tag.purple { background: #faf5ff; color: #7c3aed; }
+  .tag.green { background: #f0fdf4; color: #166534; }
+  .tag.amber { background: #fffbeb; color: #92400e; }
+  .guide-card .cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 700; color: #7c3aed;
+  }
+  .guide-card:hover .cta { text-decoration: underline; }
+
+  .bonus-card {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+    padding: 20px; margin-top: 16px; grid-column: 1 / -1;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .bonus-card .emoji { font-size: 28px; flex-shrink: 0; }
+  .bonus-card h3 { font-size: 15px; font-weight: 700; color: #0f172a; margin: 0 0 4px; }
+  .bonus-card .desc { font-size: 13px; color: #64748b; line-height: 1.5; }
+
+  .footer {
+    margin-top: 32px; padding: 20px 0; border-top: 1px solid #e2e8f0; text-align: center;
+  }
+  .footer p { font-size: 11px; color: #94a3b8; line-height: 1.8; }
+
+  @media (max-width: 600px) {
+    .guide-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 26px; }
+  }
+  @media print {
+    .header { background: #1a0533 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .guide-card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+  <div class="logo">Z</div>
+  <h1>ZS Adoption Toolkit</h1>
+  <p>Interactive customer guides for maximizing the value of your ZS platform investment</p>
+</div>
+
+<div class="content">
+
+  <div class="order-note">
+    <div class="icon">📋</div>
+    <div class="text"><strong>Recommended reading order:</strong> Start with SSL Inspection (foundation for everything else), then DLP, Browser Isolation, and finally Resilience.</div>
+  </div>
+
+  <div class="guide-grid">
+
+    <a href="SSL-Inspection-Assessment.html" class="guide-card">
+      <div class="num">Start Here</div>
+      <div class="emoji">🔐</div>
+      <h2>SSL Inspection Assessment</h2>
+      <div class="desc">Understand your encrypted traffic gaps, read your audit report, and follow a 4-week plan to close blind spots safely.</div>
+      <div class="tags">
+        <span class="tag purple">Foundation</span>
+        <span class="tag blue">ZIA</span>
+      </div>
+      <div class="cta">Open guide →</div>
+    </a>
+
+    <a href="DLP-Adoption-Guide.html" class="guide-card">
+      <div class="num">2</div>
+      <div class="emoji">🛡️</div>
+      <h2>DLP Adoption Guide</h2>
+      <div class="desc">A practical MVP approach to data loss prevention — start with visibility, grow into protection. Includes engine guide and objection handling.</div>
+      <div class="tags">
+        <span class="tag purple">Data Protection</span>
+        <span class="tag blue">ZIA</span>
+      </div>
+      <div class="cta">Open guide →</div>
+    </a>
+
+    <a href="CBI-Customer-Guide.html" class="guide-card">
+      <div class="num">3</div>
+      <div class="emoji">🌐</div>
+      <h2>Cloud Browser Isolation</h2>
+      <div class="desc">See how isolation protects against phishing, zero-days, and BYOD risks — with interactive before/after threat scenarios.</div>
+      <div class="tags">
+        <span class="tag green">Threat Prevention</span>
+        <span class="tag blue">ZIA</span>
+      </div>
+      <div class="cta">Open guide →</div>
+    </a>
+
+    <a href="Resilience-Assessment.html" class="guide-card">
+      <div class="num">4</div>
+      <div class="emoji">⚡</div>
+      <h2>Resilience Assessment</h2>
+      <div class="desc">Evaluate your business continuity posture across blackouts, brownouts, and catastrophic events. Includes interactive readiness checklist.</div>
+      <div class="tags">
+        <span class="tag amber">Business Continuity</span>
+        <span class="tag blue">ZIA + ZPA</span>
+      </div>
+      <div class="cta">Open guide →</div>
+    </a>
+
+    <div class="bonus-card">
+      <div class="emoji">📊</div>
+      <div>
+        <h3>SSL Inspection Audit Report Template</h3>
+        <div class="desc">A ZIA Custom Report JSON file that creates a side-by-side view of inspected vs uninspected traffic. Import via Analytics → Custom Reports.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <p>ZS Adoption Toolkit — Built by TSM Clint Olds</p>
+    <p>Unofficial customer guide. Not affiliated with or endorsed by Zscaler, Inc.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

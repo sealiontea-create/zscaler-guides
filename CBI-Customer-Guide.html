@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Browser Isolation — ZS Adoption Toolkit</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237C3AED'/%3E%3Ctext x='32' y='46' font-family='Arial' font-size='38' font-weight='800' fill='white' text-anchor='middle'%3EZ%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: #ffffff;
+    color: #1e293b;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font-family: inherit; cursor: pointer; }
+
+  .header {
+    background: linear-gradient(135deg, #0c2d6b 0%, #1746a2 50%, #2563eb 100%);
+    padding: 32px 24px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-orb1 {
+    position: absolute; top: -40px; right: -40px; width: 200px; height: 200px;
+    border-radius: 50%; background: rgba(255,255,255,0.04);
+  }
+  .header-orb2 {
+    position: absolute; bottom: -60px; left: -20px; width: 160px; height: 160px;
+    border-radius: 50%; background: rgba(255,255,255,0.03);
+  }
+  .header-inner { max-width: 720px; margin: 0 auto; position: relative; }
+  .header-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: 26px; font-weight: 800; color: #fff; margin: 0 0 8px; line-height: 1.2;
+  }
+  .header p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+  .view-toggles { display: flex; gap: 8px; margin-top: 20px; }
+  .view-btn {
+    padding: 8px 20px; border-radius: 20px; border: none;
+    font-size: 13px; font-weight: 600; transition: all 0.2s;
+    backdrop-filter: blur(8px);
+  }
+  .view-btn.active { background: rgba(255,255,255,0.2); color: #fff; }
+  .view-btn.inactive { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); }
+
+  .content { max-width: 720px; margin: 0 auto; padding: 24px 20px; }
+
+  /* Scenario selectors */
+  .scenario-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
+  .scenario-btn {
+    padding: 12px 8px; border-radius: 10px; border: 2px solid #e2e8f0;
+    background: #fff; text-align: center; transition: all 0.2s;
+  }
+  .scenario-btn.active { border-color: #2563eb; background: #eff6ff; }
+  .scenario-btn .icon { font-size: 22px; margin-bottom: 4px; }
+  .scenario-btn .label { font-size: 11px; font-weight: 600; color: #64748b; line-height: 1.3; }
+  .scenario-btn.active .label { color: #2563eb; }
+
+  /* Scenario detail */
+  .scenario-detail {
+    background: #f8fafc; border-radius: 16px; padding: 24px;
+    margin-bottom: 20px; border: 1px solid #e2e8f0;
+  }
+  .scenario-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .scenario-tag {
+    font-size: 11px; font-weight: 700; color: #2563eb;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .tier-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+  }
+  .tier-standard { background: #fef3c7; color: #92400e; }
+  .tier-advanced { background: #dbeafe; color: #1e40af; }
+  .scenario-detail h2 { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 8px; }
+  .scenario-detail .story { font-size: 14px; color: #475569; line-height: 1.6; }
+
+  /* Toggle */
+  .toggle-wrap { display: flex; justify-content: center; margin-bottom: 20px; }
+  .toggle-bar { display: flex; background: #f1f5f9; border-radius: 12px; padding: 4px; gap: 4px; }
+  .toggle-btn {
+    padding: 10px 20px; border-radius: 10px; border: none;
+    font-size: 13px; font-weight: 700; transition: all 0.25s;
+  }
+  .toggle-btn.without { background: transparent; color: #64748b; }
+  .toggle-btn.without.active { background: #ef4444; color: #fff; }
+  .toggle-btn.with { background: transparent; color: #64748b; }
+  .toggle-btn.with.active { background: #10b981; color: #fff; }
+
+  /* Result card */
+  .result-card {
+    border-radius: 16px; padding: 24px; border-width: 2px; border-style: solid;
+    transition: all 0.3s;
+  }
+  .result-card.critical { background: #fee2e2; border-color: #fca5a5; }
+  .result-card.safe { background: #d1fae5; border-color: #6ee7b7; }
+  .result-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .result-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .result-card.critical .result-icon { background: rgba(239,68,68,0.12); }
+  .result-card.safe .result-icon { background: rgba(16,185,129,0.12); }
+  .result-label { font-size: 15px; font-weight: 700; }
+  .result-card.critical .result-label { color: #991b1b; }
+  .result-card.safe .result-label { color: #065f46; }
+  .result-text { font-size: 14px; line-height: 1.6; margin: 0 0 16px; opacity: 0.85; }
+  .result-card.critical .result-text { color: #991b1b; }
+  .result-card.safe .result-text { color: #065f46; }
+  .result-outcome {
+    display: inline-block; padding: 6px 14px; border-radius: 8px;
+    font-size: 13px; font-weight: 700;
+  }
+  .result-card.critical .result-outcome { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #ef4444; }
+  .result-card.safe .result-outcome { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); color: #10b981; }
+
+  /* How it works */
+  .how-it-works {
+    margin-top: 24px; background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 16px; padding: 24px;
+  }
+  .how-it-works h3 { font-size: 15px; font-weight: 700; color: #0f172a; margin: 0 0 16px; }
+  .how-flow { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0; }
+  .how-step { text-align: center; padding: 8px 10px; }
+  .how-step .step-icon { font-size: 24px; margin-bottom: 4px; }
+  .how-step .step-label { font-size: 11px; font-weight: 600; color: #475569; line-height: 1.3; max-width: 100px; margin: 0 auto; }
+  .how-arrow { font-size: 18px; color: #cbd5e1; padding: 0 6px; }
+
+  /* Features */
+  .features-intro { font-size: 14px; color: #64748b; margin: 0 0 20px; line-height: 1.5; }
+  .feature-card {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+    margin-bottom: 10px; cursor: pointer; transition: all 0.2s; overflow: hidden;
+  }
+  .feature-card.expanded { border: 2px solid #2563eb; }
+  .feature-header { padding: 16px 20px; display: flex; align-items: center; gap: 14px; }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: 12px; background: #eff6ff;
+    display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+  }
+  .feature-info { flex: 1; }
+  .feature-name-row { display: flex; align-items: center; gap: 8px; }
+  .feature-name { font-size: 15px; font-weight: 700; color: #0f172a; }
+  .feature-oneliner { font-size: 13px; color: #64748b; margin-top: 2px; }
+  .feature-arrow {
+    color: #94a3b8; font-size: 16px; transition: transform 0.2s;
+  }
+  .feature-arrow.open { transform: rotate(180deg); }
+  .feature-detail {
+    padding: 0 20px 16px 78px; font-size: 14px; color: #475569; line-height: 1.6;
+    display: none;
+  }
+  .feature-detail.show { display: block; }
+
+  /* CTA */
+  .cta-box {
+    margin-top: 24px; background: linear-gradient(135deg, #eff6ff, #f0f9ff);
+    border: 1px solid #bfdbfe; border-radius: 16px; padding: 24px; text-align: center;
+  }
+  .cta-box .cta-icon { font-size: 24px; margin-bottom: 8px; }
+  .cta-box h3 { font-size: 17px; font-weight: 700; color: #0f172a; margin: 0 0 8px; }
+  .cta-box p { font-size: 14px; color: #475569; line-height: 1.5; }
+
+  .footer {
+    margin-top: 32px; padding: 16px 0; border-top: 1px solid #e2e8f0; text-align: center;
+  }
+  .footer p { font-size: 11px; color: #94a3b8; }
+
+  .hidden { display: none; }
+
+  @media (max-width: 500px) {
+    .scenario-grid { grid-template-columns: repeat(2, 1fr); }
+    .how-flow { gap: 4px; }
+    .header h1 { font-size: 22px; }
+  }
+
+  @media print {
+    .header { background: #1e293b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .view-toggles, .toggle-wrap { display: none; }
+    .feature-detail { display: block !important; }
+    .result-card, .scenario-detail, .feature-card, .how-it-works { break-inside: avoid; }
+    body { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-orb1"></div>
+  <div class="header-orb2"></div>
+  <div class="header-inner">
+    <div class="header-eyebrow">ZS Adoption Toolkit</div>
+    <h1>Cloud Browser Isolation</h1>
+    <p>See how isolation protects your users — without blocking productivity</p>
+    <div class="view-toggles">
+      <button class="view-btn active" id="btn-scenarios" onclick="switchView('scenarios')">Threat Scenarios</button>
+      <button class="view-btn inactive" id="btn-features" onclick="switchView('features')">Key Capabilities</button>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- SCENARIOS VIEW -->
+  <div id="view-scenarios">
+    <div class="scenario-grid" id="scenario-grid"></div>
+    <div class="scenario-detail" id="scenario-detail"></div>
+
+    <div class="toggle-wrap">
+      <div class="toggle-bar">
+        <button class="toggle-btn without active" id="toggle-without" onclick="toggleIsolation(false)">✗ Without Isolation</button>
+        <button class="toggle-btn with" id="toggle-with" onclick="toggleIsolation(true)">✓ With Isolation</button>
+      </div>
+    </div>
+
+    <div id="result-container"></div>
+
+    <div class="how-it-works">
+      <h3>How Browser Isolation Works</h3>
+      <div class="how-flow">
+        <div class="how-step"><div class="step-icon">👤</div><div class="step-label">User clicks link</div></div>
+        <div class="how-arrow">→</div>
+        <div class="how-step"><div class="step-icon">☁️</div><div class="step-label">Page renders in Zscaler cloud</div></div>
+        <div class="how-arrow">→</div>
+        <div class="how-step"><div class="step-icon">🖥️</div><div class="step-label">Safe pixels sent to device</div></div>
+        <div class="how-arrow">→</div>
+        <div class="how-step"><div class="step-icon">🛡️</div><div class="step-label">Threats never reach endpoint</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES VIEW -->
+  <div id="view-features" class="hidden">
+    <p class="features-intro">Cloud Browser Isolation capabilities available with your Zscaler platform. Tap any feature to learn more.</p>
+    <div id="features-list"></div>
+    <div class="cta-box">
+      <div class="cta-icon">🚀</div>
+      <h3>Ready to get started?</h3>
+      <p>Category Isolation for unknown sites is already included in your platform. Your Zscaler team can help you enable it this week — and show you what Advanced capabilities look like in your environment.</p>
+    </div>
+
+    <div class="info-box" style="background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:20px;margin-top:20px;">
+      <div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:6px;">⚠️ Prerequisite: SSL Inspection</div>
+      <p style="font-size:14px;color:#475569;line-height:1.6;">Browser Isolation delivers maximum value when SSL inspection is enabled. Without it, CBI can only isolate based on URL category — not page content or behavior. Complete the SSL Inspection Assessment first for full CBI coverage.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Cloud Browser Isolation — ZS Adoption Toolkit</p>
+    <p style="margin-top:4px;">Built by TSM Clint Olds</p>
+    <p style="margin-top:4px;font-size:10px;">Unofficial customer guide. Not affiliated with or endorsed by Zscaler, Inc.</p>
+  </div>
+</div>
+
+<script>
+const scenarios = [
+  {
+    id: "uncategorized", icon: "❓", threat: "Uncategorized Website",
+    story: "An employee clicks a link from a vendor email. The site is legitimate but brand new — Zscaler hasn't categorized it yet.",
+    without: { label: "Without Isolation", result: "Site loads directly on the endpoint. If it's compromised, malware executes on the device. Attacker has a foothold.", outcome: "Potential endpoint compromise" },
+    withIso: { label: "With Isolation", result: "Site renders in Zscaler's cloud. Only safe pixels reach the device. User browses normally. Even if the site is malicious — zero impact.", outcome: "User productive, endpoint protected" },
+    tier: "Standard"
+  },
+  {
+    id: "phishing", icon: "🎣", threat: "Zero-Day Phishing Page",
+    story: "A well-crafted phishing email gets past the email gateway. The link points to a newly registered domain hosting a credential harvester.",
+    without: { label: "Without Isolation", result: "Page loads natively. User sees a convincing login form. Credentials submitted directly to the attacker's server.", outcome: "Credentials stolen, account compromised" },
+    withIso: { label: "With Isolation", result: "Page renders in isolation. With clipboard controls enabled, even if the user tries to paste credentials — it's blocked. The harvester never receives real data.", outcome: "Phishing attempt neutralized" },
+    tier: "Advanced"
+  },
+  {
+    id: "watering", icon: "💧", threat: "Compromised Legitimate Site",
+    story: "A trusted industry news site gets compromised overnight. Malicious JavaScript is injected into the page. URL category still shows 'News & Media.'",
+    without: { label: "Without Isolation", result: "URL filtering allows it — the category is trusted. Malicious script executes in the browser. Drive-by download initiates.", outcome: "Malware delivered via trusted site" },
+    withIso: { label: "With Smart Isolation", result: "AI detects suspicious page behavior during TLS inspection. Session automatically opens in isolation. Malicious script runs in Zscaler's cloud container — never touches the endpoint.", outcome: "Zero-day threat stopped automatically" },
+    tier: "Advanced"
+  },
+  {
+    id: "byod", icon: "📱", threat: "Contractor on Personal Device",
+    story: "A third-party contractor needs to access your internal web app from their personal laptop. No corporate agent installed.",
+    without: { label: "Without Isolation", result: "Either block access entirely (killing productivity) or allow full access (data exposure risk). Contractor can download, copy, print sensitive data.", outcome: "Choose between productivity or security" },
+    withIso: { label: "With Isolation", result: "Contractor accesses the app through an isolated browser session — no agent needed. Download, clipboard, and print are disabled. Data stays in the cloud. Full productivity, zero leakage.", outcome: "Secure access without compromise" },
+    tier: "Advanced"
+  }
+];
+
+const features = [
+  { name: "Turbo Mode", icon: "⚡", oneLiner: "Near-native browsing at 50fps", detail: "Rendering instructions are sent to your device's GPU instead of streaming pixels. Users can't tell they're isolated.", tier: "Advanced" },
+  { name: "Smart Isolation", icon: "🧠", oneLiner: "AI catches threats URL filtering misses", detail: "Machine learning scores page behavior in real-time. Sites that were safe yesterday but compromised today get auto-isolated — no policy changes needed.", tier: "Advanced" },
+  { name: "Data Controls", icon: "🔒", oneLiner: "Clipboard, download, print restrictions", detail: "Granular controls prevent data from leaving the isolated session. Users can view but not extract. Essential for BYOD and contractor access.", tier: "Advanced" },
+  { name: "CDR Downloads", icon: "📄", oneLiner: "Safe flattened PDFs, no macros", detail: "When users need to download a document, Content Disarm and Reconstruction strips active content and delivers a clean, flattened PDF.", tier: "Advanced" },
+  { name: "Category Isolation", icon: "🏷️", oneLiner: "Isolate uncategorized destinations", detail: "Sites that Zscaler can't yet classify get isolated automatically. These unknown destinations are often the riskiest — available on Business+ and higher bundles — check your entitlements.", tier: "Standard" },
+  { name: "Persistent URL", icon: "🔗", oneLiner: "Users see real URLs, not Zscaler URLs", detail: "The original website URL displays in the address bar during isolated sessions. Reduces confusion and helpdesk tickets.", tier: "Advanced" }
+];
+
+let activeScenario = 0;
+let showIsolation = false;
+let activeView = 'scenarios';
+
+function switchView(view) {
+  activeView = view;
+  document.getElementById('view-scenarios').classList.toggle('hidden', view !== 'scenarios');
+  document.getElementById('view-features').classList.toggle('hidden', view !== 'features');
+  document.getElementById('btn-scenarios').className = 'view-btn ' + (view === 'scenarios' ? 'active' : 'inactive');
+  document.getElementById('btn-features').className = 'view-btn ' + (view === 'features' ? 'active' : 'inactive');
+}
+
+function selectScenario(idx) {
+  activeScenario = idx;
+  showIsolation = false;
+  renderScenarioGrid();
+  renderScenarioDetail();
+  renderToggle();
+  renderResult();
+}
+
+function toggleIsolation(val) {
+  showIsolation = val;
+  renderToggle();
+  renderResult();
+}
+
+function renderScenarioGrid() {
+  const grid = document.getElementById('scenario-grid');
+  grid.innerHTML = scenarios.map((s, i) =>
+    `<button class="scenario-btn ${i === activeScenario ? 'active' : ''}" onclick="selectScenario(${i})">
+      <div class="icon">${s.icon}</div>
+      <div class="label">${s.threat}</div>
+    </button>`
+  ).join('');
+}
+
+function renderScenarioDetail() {
+  const s = scenarios[activeScenario];
+  const tierClass = s.tier === 'Standard' ? 'tier-standard' : 'tier-advanced';
+  document.getElementById('scenario-detail').innerHTML =
+    `<div class="scenario-meta">
+      <span class="scenario-tag">Scenario</span>
+      <span class="tier-badge ${tierClass}">${s.tier} CBI</span>
+    </div>
+    <h2>${s.threat}</h2>
+    <p class="story">${s.story}</p>`;
+}
+
+function renderToggle() {
+  document.getElementById('toggle-without').className = 'toggle-btn without ' + (!showIsolation ? 'active' : '');
+  document.getElementById('toggle-with').className = 'toggle-btn with ' + (showIsolation ? 'active' : '');
+}
+
+function renderResult() {
+  const s = scenarios[activeScenario];
+  const r = showIsolation ? s.withIso : s.without;
+  const cls = showIsolation ? 'safe' : 'critical';
+  const icon = showIsolation ? '🛡️' : '⚠️';
+  document.getElementById('result-container').innerHTML =
+    `<div class="result-card ${cls}">
+      <div class="result-header">
+        <div class="result-icon">${icon}</div>
+        <div class="result-label">${r.label}</div>
+      </div>
+      <p class="result-text">${r.result}</p>
+      <span class="result-outcome">Outcome: ${r.outcome}</span>
+    </div>`;
+}
+
+function renderFeatures() {
+  const list = document.getElementById('features-list');
+  list.innerHTML = features.map((f, i) => {
+    const tierClass = f.tier === 'Standard' ? 'tier-standard' : 'tier-advanced';
+    return `<div class="feature-card" id="feature-${i}" onclick="toggleFeature(${i})">
+      <div class="feature-header">
+        <div class="feature-icon">${f.icon}</div>
+        <div class="feature-info">
+          <div class="feature-name-row">
+            <span class="feature-name">${f.name}</span>
+            <span class="tier-badge ${tierClass}">${f.tier}</span>
+          </div>
+          <div class="feature-oneliner">${f.oneLiner}</div>
+        </div>
+        <span class="feature-arrow" id="arrow-${i}">▾</span>
+      </div>
+      <div class="feature-detail" id="detail-${i}">${f.detail}</div>
+    </div>`;
+  }).join('');
+}
+
+let expandedFeature = null;
+function toggleFeature(idx) {
+  if (expandedFeature !== null && expandedFeature !== idx) {
+    document.getElementById('detail-' + expandedFeature).classList.remove('show');
+    document.getElementById('arrow-' + expandedFeature).classList.remove('open');
+    document.getElementById('feature-' + expandedFeature).classList.remove('expanded');
+  }
+  if (expandedFeature === idx) {
+    document.getElementById('detail-' + idx).classList.remove('show');
+    document.getElementById('arrow-' + idx).classList.remove('open');
+    document.getElementById('feature-' + idx).classList.remove('expanded');
+    expandedFeature = null;
+  } else {
+    document.getElementById('detail-' + idx).classList.add('show');
+    document.getElementById('arrow-' + idx).classList.add('open');
+    document.getElementById('feature-' + idx).classList.add('expanded');
+    expandedFeature = idx;
+  }
+}
+
+// Init
+renderScenarioGrid();
+renderScenarioDetail();
+renderToggle();
+renderResult();
+renderFeatures();
+</script>
+</body>
+</html>

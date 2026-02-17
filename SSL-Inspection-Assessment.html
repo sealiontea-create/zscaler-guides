@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSL Inspection Assessment — ZS Adoption Toolkit</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237C3AED'/%3E%3Ctext x='32' y='46' font-family='Arial' font-size='38' font-weight='800' fill='white' text-anchor='middle'%3EZ%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: #ffffff; color: #1e293b; min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font-family: inherit; cursor: pointer; }
+
+  .header {
+    background: linear-gradient(135deg, #1a0a2e 0%, #2d1b69 40%, #5b21b6 100%);
+    padding: 32px 24px 24px; position: relative; overflow: hidden;
+  }
+  .header-orb { position: absolute; border-radius: 50%; }
+  .header-orb.a { top: -50px; right: -30px; width: 200px; height: 200px; background: rgba(255,255,255,0.04); }
+  .header-orb.b { bottom: -40px; left: 30px; width: 120px; height: 120px; background: rgba(255,255,255,0.03); }
+  .header-orb.c { top: 20px; left: -60px; width: 180px; height: 180px; background: rgba(139,92,246,0.08); }
+  .header-inner { max-width: 760px; margin: 0 auto; position: relative; }
+  .header-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 3px; color: rgba(255,255,255,0.45); text-transform: uppercase; margin-bottom: 8px; }
+  .header h1 { font-size: 26px; font-weight: 800; color: #fff; margin: 0 0 8px; line-height: 1.2; }
+  .header p { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+  .nav-tabs { display: flex; gap: 0; margin-top: 20px; }
+  .nav-tab {
+    padding: 10px 18px; border: none; font-size: 13px; font-weight: 600;
+    border-bottom: 2px solid transparent; background: transparent;
+    color: rgba(255,255,255,0.4); transition: all 0.2s;
+  }
+  .nav-tab.active { color: #fff; border-bottom-color: #a78bfa; }
+
+  .content { max-width: 760px; margin: 0 auto; padding: 24px 20px; }
+  .hidden { display: none; }
+
+  /* Stat cards */
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .stat-card {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;
+    padding: 18px; text-align: center;
+  }
+  .stat-big { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+  .stat-big.red { color: #dc2626; }
+  .stat-big.amber { color: #d97706; }
+  .stat-big.purple { color: #7c3aed; }
+  .stat-label { font-size: 12px; color: #64748b; font-weight: 500; line-height: 1.4; }
+
+  /* Info box */
+  .info-box {
+    background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 14px;
+    padding: 20px; margin-bottom: 20px;
+  }
+  .info-box.red { background: #fef2f2; border-color: #fecaca; }
+  .info-box.green { background: #f0fdf4; border-color: #bbf7d0; }
+  .info-box.blue { background: #eff6ff; border-color: #bfdbfe; }
+  .info-box .info-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .info-box.red .info-title { color: #991b1b; }
+  .info-box.green .info-title { color: #166534; }
+  .info-box.blue .info-title { color: #1e40af; }
+  .info-box p { font-size: 14px; color: #475569; line-height: 1.6; }
+
+  /* Category table */
+  .cat-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  .cat-table th {
+    text-align: left; font-size: 11px; font-weight: 700; color: #64748b;
+    text-transform: uppercase; letter-spacing: 1px; padding: 8px 12px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .cat-table td {
+    padding: 10px 12px; font-size: 13px; color: #334155; border-bottom: 1px solid #f1f5f9;
+    vertical-align: top; line-height: 1.5;
+  }
+  .cat-table tr:hover { background: #f8fafc; }
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 10px;
+    font-size: 11px; font-weight: 700;
+  }
+  .badge.inspect { background: #dcfce7; color: #166534; }
+  .badge.bypass { background: #fef3c7; color: #92400e; }
+  .badge.review { background: #fee2e2; color: #991b1b; }
+  .badge.quick { background: #dbeafe; color: #1e40af; }
+
+  /* Phase cards */
+  .phase-card {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+    padding: 20px; margin-bottom: 14px; border-left: 4px solid #7c3aed;
+  }
+  .phase-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .phase-week {
+    font-size: 11px; font-weight: 700; color: #7c3aed;
+    text-transform: uppercase; letter-spacing: 1.5px;
+  }
+  .phase-title { font-size: 16px; font-weight: 700; color: #0f172a; }
+  .phase-actions { list-style: none; padding: 0; }
+  .phase-actions li {
+    padding: 5px 0; font-size: 13px; color: #475569; line-height: 1.5;
+    display: flex; gap: 8px;
+  }
+  .phase-actions li::before { content: "\2192"; color: #7c3aed; font-weight: 700; flex-shrink: 0; }
+  .phase-talk {
+    background: #faf5ff; border-radius: 10px; padding: 14px;
+    margin-top: 12px; border: 1px solid #ede9fe;
+  }
+  .phase-talk-label {
+    font-size: 11px; font-weight: 700; color: #7c3aed;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .phase-talk p { font-size: 13px; color: #6b7280; line-height: 1.5; font-style: italic; }
+
+  /* Expandable */
+  .expand-card {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+    margin-bottom: 10px; overflow: hidden; cursor: pointer; transition: all 0.2s;
+  }
+  .expand-card.open { border-color: #7c3aed; border-width: 2px; }
+  .expand-header {
+    padding: 16px 20px; display: flex; align-items: center;
+    justify-content: space-between;
+  }
+  .expand-header-left { display: flex; align-items: center; gap: 12px; }
+  .expand-icon {
+    width: 40px; height: 40px; border-radius: 10px; background: #f5f3ff;
+    display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+  .expand-name { font-size: 15px; font-weight: 700; color: #0f172a; }
+  .expand-sub { font-size: 13px; color: #64748b; margin-top: 1px; }
+  .expand-arrow { color: #94a3b8; font-size: 16px; transition: transform 0.2s; }
+  .expand-arrow.open { transform: rotate(180deg); }
+  .expand-body { padding: 0 20px 16px; display: none; }
+  .expand-body.show { display: block; }
+  .expand-body p { font-size: 14px; color: #475569; line-height: 1.6; }
+
+  /* Report steps */
+  .report-step {
+    display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start;
+  }
+  .report-step-num {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+    color: #fff; font-size: 15px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .report-step-content h3 { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .report-step-content p { font-size: 14px; color: #475569; line-height: 1.6; }
+  .report-step-content code {
+    background: #f1f5f9; padding: 2px 6px; border-radius: 4px;
+    font-size: 13px; color: #6366f1; font-family: 'SF Mono', monospace;
+  }
+
+  .section-title {
+    font-size: 18px; font-weight: 800; color: #0f172a; margin: 0 0 16px;
+  }
+  .section-sub {
+    font-size: 14px; color: #64748b; margin: -8px 0 20px; line-height: 1.5;
+  }
+
+  .footer {
+    margin-top: 32px; padding: 16px 0; border-top: 1px solid #e2e8f0; text-align: center;
+  }
+  .footer p { font-size: 11px; color: #94a3b8; }
+
+  @media (max-width: 600px) {
+    .stat-row { grid-template-columns: 1fr; }
+    .cat-table { font-size: 12px; }
+    .nav-tab { padding: 10px 12px; font-size: 12px; }
+  }
+
+  @media print {
+    .header { background: #1a0a2e !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .nav-tabs { display: none; }
+    .hidden { display: block !important; }
+    .phase-card, .info-box, .stat-card, .report-step { break-inside: avoid; }
+    .expand-body { display: block !important; }
+    .cat-table { font-size: 11px; }
+    body { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-orb a"></div>
+  <div class="header-orb b"></div>
+  <div class="header-orb c"></div>
+  <div class="header-inner">
+    <div class="header-eyebrow">ZS Adoption Toolkit</div>
+    <h1>SSL Inspection Assessment</h1>
+    <p>Understanding your encrypted traffic gaps — and how to close them safely</p>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('why', this)">Why It Matters</button>
+      <button class="nav-tab" onclick="switchTab('report', this)">Reading Your Report</button>
+      <button class="nav-tab" onclick="switchTab('categories', this)">Category Guide</button>
+      <button class="nav-tab" onclick="switchTab('plan', this)">4-Week Plan</button>
+      <button class="nav-tab" onclick="switchTab('objections', this)">Objections</button>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- WHY IT MATTERS -->
+  <div id="tab-why">
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-big red">87%</div>
+        <div class="stat-label">of attacks use encrypted HTTPS traffic</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-big amber">86%</div>
+        <div class="stat-label">of encrypted threats involve malware</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-big purple">95%+</div>
+        <div class="stat-label">of global web traffic is now encrypted</div>
+      </div>
+    </div>
+
+    <div class="info-box red">
+      <div class="info-title">⚠️ The Blind Spot</div>
+      <p>Without SSL inspection, your Zscaler deployment cannot see inside encrypted traffic. That means Advanced Threat Protection, Cloud Sandbox, DLP, Browser Isolation, and Cloud Firewall are all blind to the majority of threats. You're paying for protection you can't fully use.</p>
+    </div>
+
+    <div class="section-title">What Goes Dark Without Inspection</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
+      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:#991b1b;margin-bottom:8px;">🚫 Cannot function</div>
+        <div style="font-size:13px;color:#7f1d1d;line-height:1.6;">
+          Inline Malware Protection<br>
+          Cloud Sandbox analysis<br>
+          Advanced Threat Protection (IPS)<br>
+          Inline DLP (data loss prevention)<br>
+          Browser Isolation for inspected sites<br>
+          File Type Controls
+        </div>
+      </div>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:#166534;margin-bottom:8px;">✓ Still works without inspection</div>
+        <div style="font-size:13px;color:#14532d;line-height:1.6;">
+          URL category filtering (allow/block)<br>
+          DNS security controls<br>
+          Cloud App Control (basic)<br>
+          Bandwidth Control<br>
+          Basic protocol detection
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box green">
+      <div class="info-title">💡 The Opportunity</div>
+      <p>Zscaler's cloud architecture handles SSL inspection at scale with no appliance bottlenecks. Expanding inspection doesn't require hardware upgrades or capacity planning. It's a policy change — and this assessment shows you exactly where to start.</p>
+    </div>
+  </div>
+
+  <!-- READING YOUR REPORT -->
+  <div id="tab-report" class="hidden">
+    <div class="section-title">How to Read Your SSL Audit Report</div>
+    <p class="section-sub">Your report shows inspected (HTTPS) vs uninspected (SSL) traffic side by side. Here's what to focus on.</p>
+
+    <div class="report-step">
+      <div class="report-step-num">1</div>
+      <div class="report-step-content">
+        <h3>Protocol Breakdown</h3>
+        <p>Compare the <code>SSL</code> bar (uninspected) to <code>HTTPS</code> (inspected). The ratio tells you your inspection coverage. If SSL is larger than HTTPS — most of your traffic is flying blind. Ideal state: HTTPS dominates with SSL being a thin sliver of known exemptions.</p>
+      </div>
+    </div>
+
+    <div class="report-step">
+      <div class="report-step-num">2</div>
+      <div class="report-step-content">
+        <h3>Uninspected Cloud Applications</h3>
+        <p>This widget shows which SaaS apps are bypassing inspection. Expected bypasses: M365 apps with certificate pinning (handled by click-to-run rules). Red flags: seeing major SaaS apps here that <em>should</em> be inspected — Salesforce, ServiceNow, Box, Slack, etc.</p>
+      </div>
+    </div>
+
+    <div class="report-step">
+      <div class="report-step-num">3</div>
+      <div class="report-step-content">
+        <h3>Threats Blocked vs Threats in Uninspected Traffic</h3>
+        <p>This is the key comparison. The left shows threats Zscaler caught <em>because</em> you're inspecting. The right shows threat signals in traffic you're NOT inspecting — these represent active risk in your environment.</p>
+      </div>
+    </div>
+
+    <div class="report-step">
+      <div class="report-step-num">4</div>
+      <div class="report-step-content">
+        <h3>URL Categories — Inspected vs Uninspected</h3>
+        <p>The pie charts reveal which categories are bypassed. Look for large uninspected categories that aren't regulatory requirements. Common culprits: Miscellaneous, Web Search, Streaming Media, Content Delivery Networks. These are often bypassed "just in case" and never revisited.</p>
+      </div>
+    </div>
+
+    <div class="report-step">
+      <div class="report-step-num">5</div>
+      <div class="report-step-content">
+        <h3>File Types</h3>
+        <p>If you see file downloads (EXE, DLL, ZIP, Office docs) in uninspected traffic — that's active risk. Malware hides in these file types and Sandbox can't analyze what it can't see.</p>
+      </div>
+    </div>
+
+    <div class="info-box blue">
+      <div class="info-title">📊 Bonus: Check Your Grade</div>
+      <p>In ZIA, go to <strong>Analytics → Security Policy Audit Report → Traffic Inspection</strong>. Zscaler grades your inspection posture and gives specific recommendations. Most customers don't know this report exists.</p>
+    </div>
+  </div>
+
+  <!-- CATEGORY GUIDE -->
+  <div id="tab-categories" class="hidden">
+    <div class="section-title">URL Category Inspection Guide</div>
+    <p class="section-sub">Not all bypasses are equal. Here's how to prioritize which categories to inspect first.</p>
+
+    <table class="cat-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Recommendation</th>
+          <th>Why</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Miscellaneous / Other</strong></td>
+          <td><span class="badge inspect">Inspect Now</span></td>
+          <td>Uncategorized = unknown risk. This is where novel threats hide. No regulatory reason to bypass.</td>
+        </tr>
+        <tr>
+          <td><strong>Web Search</strong></td>
+          <td><span class="badge inspect">Inspect Now</span></td>
+          <td>Search engines are a common malware delivery vector via malvertising. High volume, high value.</td>
+        </tr>
+        <tr>
+          <td><strong>Content Delivery Networks</strong></td>
+          <td><span class="badge inspect">Inspect Now</span></td>
+          <td>CDNs host legitimate and malicious content. Attackers use CDN domains to look trustworthy.</td>
+        </tr>
+        <tr>
+          <td><strong>Streaming Media</strong></td>
+          <td><span class="badge bypass">Legitimate Bypass</span></td>
+          <td>Low security value — streaming content is not a significant threat vector. Often doesn't respond well to inspection. Bypass is expected and acceptable.</td>
+        </tr>
+        <tr>
+          <td><strong>Newly Registered Domains</strong></td>
+          <td><span class="badge inspect">Inspect Now</span></td>
+          <td>Top phishing vector. These should be inspected AND isolated (with CBI) or cautioned at minimum.</td>
+        </tr>
+        <tr>
+          <td><strong>SaaS Apps (general)</strong></td>
+          <td><span class="badge inspect">Inspect Now</span></td>
+          <td>DLP can't protect data in SaaS apps without inspection. Critical for data security posture.</td>
+        </tr>
+        <tr>
+          <td><strong>Microsoft 365</strong></td>
+          <td><span class="badge bypass">Legitimate Bypass</span></td>
+          <td>Certificate pinning requires bypass. Enable M365 click-to-run rules. Use out-of-band CASB for visibility.</td>
+        </tr>
+        <tr>
+          <td><strong>Conferencing (Teams/Zoom)</strong></td>
+          <td><span class="badge bypass">Legitimate Bypass</span></td>
+          <td>Real-time media doesn't benefit from inline inspection. Bypass is expected and acceptable.</td>
+        </tr>
+        <tr>
+          <td><strong>Health / Medical</strong></td>
+          <td><span class="badge bypass">Regulatory Bypass</span></td>
+          <td>HIPAA/PII concerns may require bypass. Document the regulatory justification. Consider out-of-band scanning.</td>
+        </tr>
+        <tr>
+          <td><strong>Finance / Banking</strong></td>
+          <td><span class="badge bypass">Regulatory Bypass</span></td>
+          <td>PCI/regulatory requirements may mandate bypass. Document justification. Review annually.</td>
+        </tr>
+        <tr>
+          <td><strong>Custom bypass lists</strong></td>
+          <td><span class="badge review">Review Needed</span></td>
+          <td>These accumulate over time and rarely get cleaned up. Audit each entry — is the original reason still valid?</td>
+        </tr>
+        <tr>
+          <td><strong>All other categories</strong></td>
+          <td><span class="badge inspect">Inspect Now</span></td>
+          <td>If there's no regulatory or technical reason to bypass, inspect it. Zscaler recommends 100% inspection as the goal.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="info-box">
+      <div class="info-title" style="color:#7c3aed;">🔑 The Golden Rule</div>
+      <p>Every bypass should have a documented reason. If you can't explain why a category is bypassed, it should be inspected. Legacy bypasses from initial deployment are the #1 source of unnecessary blind spots.</p>
+    </div>
+  </div>
+
+  <!-- 4-WEEK PLAN -->
+  <div id="tab-plan" class="hidden">
+    <div class="section-title">4-Week SSL Inspection Expansion Plan</div>
+    <p class="section-sub">A phased approach to closing inspection gaps safely — no big-bang changes.</p>
+
+    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;padding:12px;margin-bottom:20px;font-size:13px;color:#6d28d9;font-weight:600;text-align:center;">
+      💡 Tip: Use Ctrl+P to print this plan as a checklist for your weekly review meetings
+    </div>
+
+    <div style="background:#fef2f2;border:2px solid #fecaca;border-radius:14px;padding:20px;margin-bottom:20px;">
+      <div style="font-size:15px;font-weight:700;color:#991b1b;margin-bottom:8px;">🔐 Prerequisite: CA Certificate Deployment</div>
+      <p style="font-size:14px;color:#475569;line-height:1.7;margin-bottom:12px;">SSL inspection requires the Zscaler root or intermediate CA certificate to be trusted by all endpoints and browsers. Without it, users will see certificate warnings on every inspected site. This is the #1 operational blocker for SSL inspection expansion.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:#fff;border:1px solid #fecaca;border-radius:10px;padding:14px;">
+          <div style="font-size:13px;font-weight:700;color:#991b1b;margin-bottom:4px;">What To Deploy</div>
+          <div style="font-size:12px;color:#475569;line-height:1.6;">Download your tenant's Zscaler root CA certificate from Administration → SSL Inspection → Intermediate Root Certificate Authority. Deploy via GPO (Windows), MDM profile (macOS/mobile), or certificate management platform.</div>
+        </div>
+        <div style="background:#fff;border:1px solid #fecaca;border-radius:10px;padding:14px;">
+          <div style="font-size:13px;font-weight:700;color:#991b1b;margin-bottom:4px;">How To Verify</div>
+          <div style="font-size:12px;color:#475569;line-height:1.6;">Visit ip.zscaler.com from an inspected endpoint. The certificate chain should show your Zscaler CA — not the origin site's CA. If you see the origin CA, that traffic is not being inspected.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div><span class="phase-week">Week 1</span><div class="phase-title">Baseline & Quick Wins</div></div>
+      </div>
+      <ul class="phase-actions">
+        <li>Import the SSL Audit Report and review current inspection ratio</li>
+        <li>Check your grade: Analytics → Security Policy Audit Report → Traffic Inspection</li>
+        <li>Enable M365 click-to-run if not already configured (Policy → URL & Cloud App Control → Advanced)</li>
+        <li>Verify "Zscaler Recommended Exemption Rule" is enabled (handles cert-pinning automatically)</li>
+        <li>Inspect: Miscellaneous, Web Search, and Content Delivery Networks if currently bypassed</li>
+      </ul>
+      <div class="phase-talk">
+        <div class="phase-talk-label">💡 Why This Is Safe</div>
+        <p>"These categories have no regulatory bypass requirement. Miscellaneous traffic is uncategorized — by definition, it's unknown risk. Web Search and CDNs are high-volume vectors for malvertising and malware delivery. Enabling inspection here gives Zscaler visibility into your biggest blind spots with minimal user impact."</p>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div><span class="phase-week">Week 2</span><div class="phase-title">Expand Coverage</div></div>
+      </div>
+      <ul class="phase-actions">
+        <li>Enable inspection for Newly Registered Domains if currently bypassed</li>
+        <li>Review SaaS applications in the uninspected cloud apps widget — enable inspection for non-pinned apps</li>
+        <li>Monitor web logs for SSL Policy Reason field — identify any certificate errors or user complaints</li>
+        <li>Create specific bypass rules for any legitimate breakage (app-specific, not category-wide)</li>
+      </ul>
+      <div class="phase-talk">
+        <div class="phase-talk-label">💡 Why This Works</div>
+        <p>"If a specific app breaks, we create a narrow bypass just for that app — we don't bypass the entire category. The goal is surgical exemptions, not blanket bypasses."</p>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div><span class="phase-week">Week 3</span><div class="phase-title">Audit Legacy Bypasses</div></div>
+      </div>
+      <ul class="phase-actions">
+        <li>Review all custom SSL bypass rules — when were they created? By whom? Is the reason still valid?</li>
+        <li>Review certificate pinning exemptions — the industry is moving away from pinning, some old exemptions may no longer be needed</li>
+        <li>Check source-based exemptions — are entire locations or groups bypassed that shouldn't be?</li>
+        <li>Document every remaining bypass with a business justification</li>
+      </ul>
+      <div class="phase-talk">
+        <div class="phase-talk-label">💡 Why This Works</div>
+        <p>"Bypass rules are like firewall rules — they accumulate and nobody cleans them up. A rule that made sense 2 years ago during initial deployment may be completely unnecessary now. Let's review them together."</p>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div><span class="phase-week">Week 4</span><div class="phase-title">Measure & Report</div></div>
+      </div>
+      <ul class="phase-actions">
+        <li>Pull the SSL Audit Report again — compare inspected vs uninspected ratio to Week 1 baseline</li>
+        <li>Check Security Policy Audit Report grade — did it improve?</li>
+        <li>Quantify: "X additional threats blocked that we would have missed before"</li>
+        <li>Document remaining legitimate bypasses with justification for compliance records</li>
+        <li>Set calendar reminder: re-audit in 90 days</li>
+      </ul>
+      <div class="phase-talk">
+        <div class="phase-talk-label">💡 The Executive Summary</div>
+        <p>"In 4 weeks we went from X% to Y% inspection coverage. We identified Z additional threats in traffic that was previously uninspected. Every remaining bypass is documented with a business justification. We'll re-audit quarterly."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECTIONS -->
+  <div id="tab-objections" class="hidden">
+    <div class="section-title">Common Objections</div>
+    <p class="section-sub">What customers say and how to respond.</p>
+
+    <div id="objections-list"></div>
+  </div>
+
+  <div class="footer">
+    <p>SSL Inspection Assessment — ZS Adoption Toolkit</p>
+    <p style="margin-top:4px;">Built by TSM Clint Olds</p>
+    <p style="margin-top:4px;font-size:10px;">Unofficial customer guide. Not affiliated with or endorsed by Zscaler, Inc.</p>
+    <p style="margin-top:4px;">Source: ThreatLabz 2024 Encrypted Attacks Report • Zscaler SSL Inspection Best Practices</p>
+  </div>
+</div>
+
+<script>
+const objections = [
+  {
+    q: "SSL inspection will break applications.",
+    icon: "💥",
+    a: "Some apps with certificate pinning will need bypasses — and Zscaler's predefined exemption rule handles the most common ones automatically (less than 1% of traffic). For everything else, we start with a pilot group, monitor for breakage, and create narrow app-specific exemptions only where needed. We never bypass entire categories without justification."
+  },
+  {
+    q: "We bypassed those categories for a reason during deployment.",
+    icon: "📋",
+    a: "That's common — initial deployments often take a conservative approach to avoid disruption. But those bypass decisions were made months or years ago. The threat landscape has changed, Zscaler's compatibility has improved, and many of those original reasons may no longer apply. Let's review them together and see what's still necessary."
+  },
+  {
+    q: "We have regulatory requirements that prevent inspection.",
+    icon: "⚖️",
+    a: "Absolutely — and those should stay bypassed. Health and Finance categories often have legitimate PII or compliance requirements. But those are typically a small percentage of total traffic. The question is: what about the other 80-90% of bypassed traffic that has no regulatory justification? That's where we focus."
+  },
+  {
+    q: "Users will complain about performance.",
+    icon: "🐌",
+    a: "Zscaler's cloud proxy architecture handles SSL inspection at scale — this isn't a hardware appliance with throughput limits. Single-scan multi-action processing means traffic is inspected once by all engines simultaneously. Most users won't notice any difference. If they do, ZDX will help us pinpoint whether it's related to inspection or another factor."
+  },
+  {
+    q: "We're inspecting enough already.",
+    icon: "🤷",
+    a: "Let's look at the data together. The audit report shows exactly what percentage of your traffic is uninspected and what's hiding in it. If your uninspected traffic contains threat detections — that's risk you're currently accepting. The Security Policy Audit Report will also give you Zscaler's own grade on your inspection posture."
+  },
+  {
+    q: "Our security team doesn't have bandwidth to manage SSL policy changes.",
+    icon: "⏰",
+    a: "That's exactly why we're doing this together. The 4-week plan is designed so each step takes 30 minutes or less. I'll walk you through the changes in our weekly meetings. And once inspection is expanded, your team actually gets MORE signal with LESS noise because Sandbox, ATP, and DLP can finally see the full picture."
+  },
+  {
+    q: "What about user privacy concerns?",
+    icon: "🔐",
+    a: "Zscaler provides granular controls — you can exempt personal categories like Banking and Health. You can also implement role-based log access so only authorized admins see decrypted log data. A four-eyes principle can require two approvals before log decryption. Privacy and inspection can coexist with the right policy design."
+  }
+];
+
+// Tab switching
+function switchTab(tab, btn) {
+  document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('tab-' + tab).classList.remove('hidden');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// Render objections
+let openObj = null;
+function renderObjections() {
+  const list = document.getElementById('objections-list');
+  list.innerHTML = objections.map((o, i) => `
+    <div class="expand-card" id="obj-${i}" onclick="toggleObj(${i})">
+      <div class="expand-header">
+        <div class="expand-header-left">
+          <div class="expand-icon">${o.icon}</div>
+          <div class="expand-name">"${o.q}"</div>
+        </div>
+        <span class="expand-arrow" id="obj-arrow-${i}">▾</span>
+      </div>
+      <div class="expand-body" id="obj-body-${i}">
+        <div style="font-size:12px;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Recommended Approach</div>
+        <p style="font-style:italic;">"${o.a}"</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleObj(idx) {
+  if (openObj !== null && openObj !== idx) {
+    document.getElementById('obj-body-' + openObj).classList.remove('show');
+    document.getElementById('obj-arrow-' + openObj).classList.remove('open');
+    document.getElementById('obj-' + openObj).classList.remove('open');
+  }
+  if (openObj === idx) {
+    document.getElementById('obj-body-' + idx).classList.remove('show');
+    document.getElementById('obj-arrow-' + idx).classList.remove('open');
+    document.getElementById('obj-' + idx).classList.remove('open');
+    openObj = null;
+  } else {
+    document.getElementById('obj-body-' + idx).classList.add('show');
+    document.getElementById('obj-arrow-' + idx).classList.add('open');
+    document.getElementById('obj-' + idx).classList.add('open');
+    openObj = idx;
+  }
+}
+
+renderObjections();
+</script>
+</body>
+</html>

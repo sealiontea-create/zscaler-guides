@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resilience Assessment — ZS Adoption Toolkit</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237C3AED'/%3E%3Ctext x='32' y='46' font-family='Arial' font-size='38' font-weight='800' fill='white' text-anchor='middle'%3EZ%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, system-ui, sans-serif; background: #fff; color: #1e293b; -webkit-font-smoothing: antialiased; }
+  button { font-family: inherit; cursor: pointer; }
+  .hidden { display: none; }
+
+  .header {
+    background: linear-gradient(135deg, #0c4a1f 0%, #166534 40%, #22c55e 100%);
+    padding: 32px 24px 24px; position: relative; overflow: hidden;
+  }
+  .orb { position: absolute; border-radius: 50%; }
+  .orb.a { top:-50px;right:-30px;width:200px;height:200px;background:rgba(255,255,255,0.04); }
+  .orb.b { bottom:-40px;left:30px;width:120px;height:120px;background:rgba(255,255,255,0.03); }
+  .hdr { max-width:760px; margin:0 auto; position:relative; }
+  .eyebrow { font-size:11px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-bottom:8px; }
+  .header h1 { font-size:26px;font-weight:800;color:#fff;margin:0 0 8px;line-height:1.2; }
+  .header p { font-size:15px;color:rgba(255,255,255,0.65);line-height:1.5; }
+  .tabs { display:flex;gap:0;margin-top:20px; }
+  .tab { padding:10px 16px;border:none;font-size:13px;font-weight:600;border-bottom:2px solid transparent;background:transparent;color:rgba(255,255,255,0.4);transition:all 0.2s; }
+  .tab.active { color:#fff;border-bottom-color:#86efac; }
+
+  .content { max-width:760px;margin:0 auto;padding:24px 20px; }
+
+  .stat-row { display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px; }
+  .stat-card { background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:18px;text-align:center; }
+  .stat-big { font-size:28px;font-weight:800;line-height:1;margin-bottom:4px; }
+  .stat-big.green { color:#16a34a; }
+  .stat-big.amber { color:#d97706; }
+  .stat-big.red { color:#dc2626; }
+  .stat-label { font-size:12px;color:#64748b;font-weight:500;line-height:1.4; }
+
+  .info-box { border-radius:14px;padding:20px;margin-bottom:20px;border:1px solid; }
+  .info-box.green { background:#f0fdf4;border-color:#bbf7d0; }
+  .info-box.amber { background:#fffbeb;border-color:#fde68a; }
+  .info-box.red { background:#fef2f2;border-color:#fecaca; }
+  .info-box.blue { background:#eff6ff;border-color:#bfdbfe; }
+  .info-title { font-size:14px;font-weight:700;margin-bottom:6px; }
+  .info-box.green .info-title { color:#166534; }
+  .info-box.amber .info-title { color:#92400e; }
+  .info-box.red .info-title { color:#991b1b; }
+  .info-box.blue .info-title { color:#1e40af; }
+  .info-box p { font-size:14px;color:#475569;line-height:1.6; }
+
+  .section-title { font-size:18px;font-weight:800;color:#0f172a;margin:0 0 16px; }
+  .section-sub { font-size:14px;color:#64748b;margin:-8px 0 20px;line-height:1.5; }
+
+  /* Tier cards */
+  .tier-card {
+    background:#fff;border:2px solid #e2e8f0;border-radius:16px;
+    padding:24px;margin-bottom:16px;transition:all 0.2s;
+  }
+  .tier-card.blackout { border-left:5px solid #22c55e; }
+  .tier-card.brownout { border-left:5px solid #f59e0b; }
+  .tier-card.catastrophic { border-left:5px solid #ef4444; }
+  .tier-header { display:flex;align-items:center;gap:12px;margin-bottom:12px; }
+  .tier-icon { font-size:28px; }
+  .tier-meta { flex:1; }
+  .tier-name { font-size:17px;font-weight:700;color:#0f172a; }
+  .tier-desc { font-size:13px;color:#64748b;margin-top:2px; }
+  .tier-badge { font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px; }
+  .tier-badge.auto { background:#dcfce7;color:#166534; }
+  .tier-badge.config { background:#fef3c7;color:#92400e; }
+  .tier-badge.manual { background:#fee2e2;color:#991b1b; }
+  .tier-body { font-size:14px;color:#475569;line-height:1.7; }
+  .tier-body strong { color:#0f172a; }
+
+  .feature-list { list-style:none;padding:0;margin:12px 0 0; }
+  .feature-list li { padding:6px 0;font-size:13px;color:#475569;display:flex;gap:8px;line-height:1.5; }
+  .feature-list li::before { content:"\2192";color:#22c55e;font-weight:700;flex-shrink:0; }
+
+  /* Checklist */
+  .check-section { margin-bottom:24px; }
+  .check-group-title { font-size:14px;font-weight:700;color:#0f172a;margin:0 0 10px;display:flex;align-items:center;gap:8px; }
+  .check-item {
+    background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+    padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;
+  }
+  .check-box {
+    width:22px;height:22px;border-radius:6px;border:2px solid #cbd5e1;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    cursor:pointer;transition:all 0.2s;font-size:13px;color:transparent;margin-top:1px;
+  }
+  .check-box.checked { background:#22c55e;border-color:#22c55e;color:#fff; }
+  .check-text { flex:1; }
+  .check-text .main { font-size:14px;font-weight:600;color:#0f172a; }
+  .check-text .detail { font-size:13px;color:#64748b;margin-top:2px;line-height:1.5; }
+  .check-tag { font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap;margin-top:2px; }
+  .check-tag.zia { background:#dbeafe;color:#1e40af; }
+  .check-tag.zpa { background:#fae8ff;color:#86198f; }
+  .check-tag.both { background:#f0fdf4;color:#166534; }
+
+  /* Phase cards */
+  .phase-card {
+    background:#fff;border:1px solid #e2e8f0;border-radius:14px;
+    padding:20px;margin-bottom:14px;border-left:4px solid #22c55e;
+  }
+  .phase-week { font-size:11px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:1.5px; }
+  .phase-title { font-size:16px;font-weight:700;color:#0f172a;margin-top:2px; }
+  .phase-actions { list-style:none;padding:0;margin:12px 0 0; }
+  .phase-actions li { padding:5px 0;font-size:13px;color:#475569;line-height:1.5;display:flex;gap:8px; }
+  .phase-actions li::before { content:"\2192";color:#22c55e;font-weight:700;flex-shrink:0; }
+  .phase-note { background:#f0fdf4;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #dcfce7; }
+  .phase-note-label { font-size:11px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px; }
+  .phase-note p { font-size:13px;color:#475569;line-height:1.5;font-style:italic; }
+
+  /* Expand */
+  .expand-card { background:#fff;border:1px solid #e2e8f0;border-radius:14px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:all 0.2s; }
+  .expand-card.open { border-color:#22c55e;border-width:2px; }
+  .expand-hdr { padding:16px 20px;display:flex;align-items:center;justify-content:space-between; }
+  .expand-left { display:flex;align-items:center;gap:12px; }
+  .expand-ico { width:40px;height:40px;border-radius:10px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0; }
+  .expand-name { font-size:15px;font-weight:700;color:#0f172a; }
+  .expand-sub { font-size:13px;color:#64748b;margin-top:1px; }
+  .expand-arrow { color:#94a3b8;font-size:16px;transition:transform 0.2s; }
+  .expand-arrow.open { transform:rotate(180deg); }
+  .expand-body { padding:0 20px 16px;display:none; }
+  .expand-body.show { display:block; }
+  .expand-body p { font-size:14px;color:#475569;line-height:1.6; }
+
+  .footer { margin-top:32px;padding:16px 0;border-top:1px solid #e2e8f0;text-align:center; }
+  .footer p { font-size:11px;color:#94a3b8; }
+
+  @media(max-width:600px){
+    .stat-row{grid-template-columns:1fr;}
+    .tab{padding:10px 10px;font-size:11px;}
+  }
+
+  @media print {
+    .header { background: #0c4a1f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .tabs { display: none; }
+    .hidden { display: block !important; }
+    .tier-card, .check-item, .phase-card, .info-box { break-inside: avoid; }
+    .expand-body { display: block !important; }
+    body { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="orb a"></div><div class="orb b"></div>
+  <div class="hdr">
+    <div class="eyebrow">ZS Adoption Toolkit</div>
+    <h1>Resilience Assessment</h1>
+    <p>Ensuring business continuity across blackouts, brownouts, and catastrophic events</p>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('overview', this)">Overview</button>
+      <button class="tab" onclick="switchTab('tiers', this)">Failure Scenarios</button>
+      <button class="tab" onclick="switchTab('checklist', this)">Readiness Checklist</button>
+      <button class="tab" onclick="switchTab('plan', this)">Deployment Plan</button>
+      <button class="tab" onclick="switchTab('objections', this)">Objections</button>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- OVERVIEW -->
+  <div id="tab-overview">
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-big red">80%</div>
+        <div class="stat-label">of organizations experienced a cloud outage in the last 3 years</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-big green">150+</div>
+        <div class="stat-label">Zscaler data centers worldwide with carrier-neutral connectivity</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-big green">$0</div>
+        <div class="stat-label">additional cost — resilience features included in Business Edition+</div>
+      </div>
+    </div>
+
+    <div class="info-box blue">
+      <div class="info-title">💡 What Is Zscaler Resilience?</div>
+      <p>Zscaler Resilience is a complete set of capabilities that ensures uninterrupted business continuity. It handles three categories of failure — blackouts, brownouts, and catastrophic events — using a combination of automatic failover, dynamic path selection, and customer-controlled disaster recovery. All capabilities are included in Business Edition and above at no additional cost, including one pair of Private Service Edges.</p>
+    </div>
+
+    <div class="section-title">Three Levels of Protection</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;">
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">⚡</div>
+        <div style="font-size:14px;font-weight:700;color:#166534;margin-bottom:4px;">Blackouts</div>
+        <div style="font-size:12px;color:#475569;line-height:1.4;">Data center goes down. Automatic failover to secondary gateway.</div>
+        <div style="margin-top:8px;"><span class="tier-badge auto">Automatic</span></div>
+      </div>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">🌊</div>
+        <div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:4px;">Brownouts</div>
+        <div style="font-size:12px;color:#475569;line-height:1.4;">Degraded performance. Dynamic path selection finds optimal route.</div>
+        <div style="margin-top:8px;"><span class="tier-badge config">Config Required</span></div>
+      </div>
+      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">🔥</div>
+        <div style="font-size:14px;font-weight:700;color:#991b1b;margin-bottom:4px;">Catastrophic</div>
+        <div style="font-size:12px;color:#475569;line-height:1.4;">Cloud unreachable. DR mode with Private Service Edges + DNS allow list.</div>
+        <div style="margin-top:8px;"><span class="tier-badge manual">Pre-config Required</span></div>
+      </div>
+    </div>
+
+    <div class="info-box amber">
+      <div class="info-title">⚠️ The Gap</div>
+      <p>Blackout protection works automatically. But brownout optimization and catastrophic DR require configuration and infrastructure that most customers haven't set up. If the worst happens tomorrow, would your environment be ready? The Readiness Checklist will tell you.</p>
+    </div>
+  </div>
+
+  <!-- FAILURE SCENARIOS -->
+  <div id="tab-tiers" class="hidden">
+    <div class="section-title">Understanding Each Failure Type</div>
+
+    <div class="tier-card blackout">
+      <div class="tier-header">
+        <div class="tier-icon">⚡</div>
+        <div class="tier-meta">
+          <div class="tier-name">Blackout — Data Center Outage</div>
+          <div class="tier-desc">A Zscaler data center or upstream ISP goes completely offline</div>
+        </div>
+        <span class="tier-badge auto">Automatic</span>
+      </div>
+      <div class="tier-body">
+        <strong>What happens:</strong> Zscaler Client Connector detects the primary gateway is unreachable and automatically fails over to the secondary gateway. Traffic routes through the next-closest data center.
+        <ul class="feature-list">
+          <li>ZCC automatic gateway failover (built-in, no config needed)</li>
+          <li>Carrier-neutral data centers with multiple ISP paths</li>
+          <li>Over-provisioned capacity absorbs transient load spikes</li>
+          <li>BGP controls reroute traffic to accommodate contingencies</li>
+          <li>CloudOps can switch upstream ISPs while resolving primary issues</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card brownout">
+      <div class="tier-header">
+        <div class="tier-icon">🌊</div>
+        <div class="tier-meta">
+          <div class="tier-name">Brownout — Performance Degradation</div>
+          <div class="tier-desc">Service is "up" but slow — the hardest problem to detect and resolve</div>
+        </div>
+        <span class="tier-badge config">Config Required</span>
+      </div>
+      <div class="tier-body">
+        <strong>What happens:</strong> An upstream ISP or peering issue causes latency spikes. Everything technically works but users experience slowness. Without dynamic selection, traffic stays on the degraded path.
+        <ul class="feature-list">
+          <li><strong>Dynamic Performance-based Service Edge Selection:</strong> ZCC continuously probes gateways for HTTP latency and autonomously switches to the lowest-latency path</li>
+          <li><strong>Customer-controlled Data Center Exclusion:</strong> Manually set a temporary exclusion period for a data center experiencing issues — services auto-restore when resolved</li>
+          <li>ZDX monitoring provides end-to-end visibility into user experience to detect brownouts in real time</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card catastrophic">
+      <div class="tier-header">
+        <div class="tier-icon">🔥</div>
+        <div class="tier-meta">
+          <div class="tier-name">Catastrophic — Cloud Unreachable</div>
+          <div class="tier-desc">Natural disaster, nation-state attack, or widespread infrastructure failure</div>
+        </div>
+        <span class="tier-badge manual">Pre-config Required</span>
+      </div>
+      <div class="tier-body">
+        <strong>What happens:</strong> The Zscaler cloud is not accessible. This is the black swan event — extremely rare but potentially devastating without a plan.
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#1e40af;margin-bottom:8px;">ZIA Disaster Recovery</div>
+            <div style="font-size:13px;color:#475569;line-height:1.6;">
+              ZCC switches to local content filtering mode. Direct internet access restricted to critical business apps only via a hosted DNS allow list and custom PAC file. Basic URL filtering continues locally.
+            </div>
+          </div>
+          <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#7c3aed;margin-bottom:8px;">ZPA Disaster Recovery</div>
+            <div style="font-size:13px;color:#475569;line-height:1.6;">
+              Traffic redirects to ZPA Private Service Edges in your data center or cloud. Most recent policies still enforced. Private app access continues with full security controls.
+            </div>
+          </div>
+        </div>
+
+        <ul class="feature-list" style="margin-top:12px;">
+          <li>DR mode activated via DNS records — customer-controlled trigger</li>
+          <li>SAML assertion validity extended 14 days during DR</li>
+          <li>Upon cloud restoration, system returns to normal operation automatically</li>
+          <li><strong>Critical:</strong> PSEs, DNS records, and PAC files must be configured BEFORE an event</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- READINESS CHECKLIST -->
+  <div id="tab-checklist" class="hidden">
+    <div class="section-title">Resilience Readiness Checklist</div>
+    <p class="section-sub">Walk through each item. Anything unchecked is a gap in your business continuity posture.</p>
+
+    <div id="check-progress" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:20px;text-align:center;">
+      <div style="font-size:28px;font-weight:800;color:#16a34a;" id="check-pct">0%</div>
+      <div style="font-size:13px;color:#64748b;font-weight:500;" id="check-count">0 of 14 items complete</div>
+      <div style="background:#e2e8f0;border-radius:6px;height:8px;margin-top:10px;overflow:hidden;">
+        <div id="check-bar" style="background:linear-gradient(90deg,#22c55e,#16a34a);height:100%;width:0%;transition:width 0.3s;border-radius:6px;"></div>
+      </div>
+    </div>
+
+    <div class="check-section">
+      <div class="check-group-title">⚡ Blackout Protection (Automatic)</div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">ZCC deployed with primary + secondary gateway configured</div>
+          <div class="detail">Verify in ZCC portal: Administration → Forwarding Profile. Both primary and secondary gateways should be configured.</div>
+        </div>
+        <span class="check-tag both">ZIA + ZPA</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">ZCC version is current (Windows 4.0+, macOS 3.7.1+)</div>
+          <div class="detail">Older ZCC versions may not support all resilience features. Check client version in ZCC portal.</div>
+        </div>
+        <span class="check-tag both">ZIA + ZPA</span>
+      </div>
+    </div>
+
+    <div class="check-section">
+      <div class="check-group-title">🌊 Brownout Protection (Configuration Required)</div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">Dynamic Service Edge Selection enabled</div>
+          <div class="detail">ZCC continuously probes gateway latency and auto-selects the optimal path. Verify this feature is enabled in your forwarding profile.</div>
+        </div>
+        <span class="check-tag zia">ZIA</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">Data Center Exclusion process documented</div>
+          <div class="detail">Your team should know how to temporarily exclude a data center experiencing issues. Document the steps and who has authority to trigger.</div>
+        </div>
+        <span class="check-tag zia">ZIA</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">ZDX monitoring active for key applications</div>
+          <div class="detail">ZDX provides end-to-end path visibility to detect brownouts before users complain. Configure probes for critical business apps.</div>
+        </div>
+        <span class="check-tag both">ZIA + ZPA</span>
+      </div>
+    </div>
+
+    <div class="check-section">
+      <div class="check-group-title">🔥 Catastrophic DR — ZIA (Pre-configuration Required)</div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">DR domain name registered</div>
+          <div class="detail">A dedicated domain for disaster recovery DNS resolution. Required to trigger DR mode via DNS records.</div>
+        </div>
+        <span class="check-tag zia">ZIA</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">DNS TXT and A records configured for DR</div>
+          <div class="detail">Use Zscaler's Record Generation tool to create the required DNS records. These must be in place before a disaster event.</div>
+        </div>
+        <span class="check-tag zia">ZIA</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">Hosted DNS allow list configured with critical business apps</div>
+          <div class="detail">During DR, only apps on this list will have direct internet access. Define your mission-critical apps now — not during an emergency.</div>
+        </div>
+        <span class="check-tag zia">ZIA</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">Custom PAC file hosted and reachable</div>
+          <div class="detail">The PAC file directs traffic during DR mode. It must be reachable via HTTP/HTTPS when ZIA service is unavailable — host it externally.</div>
+        </div>
+        <span class="check-tag zia">ZIA</span>
+      </div>
+    </div>
+
+    <div class="check-section">
+      <div class="check-group-title">🔥 Catastrophic DR — ZPA (Pre-configuration Required)</div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">Private Service Edges (PSEs) provisioned</div>
+          <div class="detail">At minimum one pair of PSEs deployed in your data center or cloud (one pair included in Business Edition). Deployed in active-active for redundancy.</div>
+        </div>
+        <span class="check-tag zpa">ZPA</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">PSEs running latest software version</div>
+          <div class="detail">Zscaler manages PSE software but verify the version is current. Outdated PSEs may not support DR functionality.</div>
+        </div>
+        <span class="check-tag zpa">ZPA</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">App Connectors deployed and connected to PSEs</div>
+          <div class="detail">App Connectors broker connections between PSEs and internal apps. Verify they're registered and healthy.</div>
+        </div>
+        <span class="check-tag zpa">ZPA</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">DNS A records configured with PSE public IPs for DR</div>
+          <div class="detail">During DR, ZCC needs to reach PSEs directly. DNS A records must point to PSE public IPs.</div>
+        </div>
+        <span class="check-tag zpa">ZPA</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-text">
+          <div class="main">DR drill completed in the last 12 months</div>
+          <div class="detail">Configuration without testing is hope, not a plan. Schedule an annual DR drill to validate the entire failover chain.</div>
+        </div>
+        <span class="check-tag both">ZIA + ZPA</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPLOYMENT PLAN -->
+  <div id="tab-plan" class="hidden">
+    <div class="section-title">Resilience Deployment Plan</div>
+    <p class="section-sub">A phased approach to building full resilience posture — from automatic protections to catastrophic DR.</p>
+
+    <div class="phase-card">
+      <div class="phase-week">Week 1 — Validate Existing Protections</div>
+      <div class="phase-title">Confirm Automatic Failover & Update ZCC</div>
+      <ul class="phase-actions">
+        <li>Verify ZCC version across all endpoints (Windows 4.0+, macOS 3.7.1+)</li>
+        <li>Confirm primary + secondary gateway configuration in forwarding profiles</li>
+        <li>Validate Dynamic Service Edge Selection is enabled</li>
+        <li>Document who has authority to trigger Data Center Exclusion</li>
+      </ul>
+      <div class="phase-note">
+        <div class="phase-note-label">💡 Why This Is First</div>
+        <p>"Blackout and brownout protection is mostly automatic — but only if your ZCC is current and properly configured. This is a quick validation that ensures the first two tiers of resilience are working."</p>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-week">Week 2 — Define Critical Applications</div>
+      <div class="phase-title">Build Your Mission-Critical App List</div>
+      <ul class="phase-actions">
+        <li>Identify apps that must remain accessible during a catastrophic event</li>
+        <li>Separate into: internet/SaaS apps (ZIA DR allow list) and private apps (ZPA DR via PSEs)</li>
+        <li>Get stakeholder sign-off on the critical app list — this is a business decision, not just IT</li>
+        <li>Configure the hosted DNS allow list with approved critical apps</li>
+      </ul>
+      <div class="phase-note">
+        <div class="phase-note-label">💡 Why This Matters</div>
+        <p>"During a catastrophic event, users will only be able to access apps on this list. Defining it now — with input from business leadership — prevents emergency decisions made under pressure."</p>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-week">Week 3 — Deploy ZPA Infrastructure</div>
+      <div class="phase-title">Provision Private Service Edges</div>
+      <ul class="phase-actions">
+        <li>Deploy PSE pair in primary data center or cloud (VM image or RPM on Linux)</li>
+        <li>Verify PSEs register with ZPA Cloud and download policies</li>
+        <li>Deploy and connect App Connectors for critical private applications</li>
+        <li>Configure DNS A records pointing to PSE public IPs</li>
+      </ul>
+      <div class="phase-note">
+        <div class="phase-note-label">💡 Licensing Note</div>
+        <p>"One pair of Private Service Edges is included in Business Edition and above at no additional cost. Provisioning them is the single most impactful step in your resilience posture."</p>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-week">Week 4 — Configure ZIA DR & Test</div>
+      <div class="phase-title">Complete DR Configuration and Validate</div>
+      <ul class="phase-actions">
+        <li>Register DR domain and configure DNS TXT records using Zscaler's Record Generation tool</li>
+        <li>Host custom PAC file externally (must be reachable when ZIA is unavailable)</li>
+        <li>Configure ZIA DR settings in the admin portal</li>
+        <li>Schedule and execute a DR drill — validate the entire failover chain end-to-end</li>
+        <li>Document results and remediate any gaps</li>
+      </ul>
+      <div class="phase-note">
+        <div class="phase-note-label">💡 The Drill Is Essential</div>
+        <p>"Configuration without testing is hope, not a plan. The drill will reveal gaps that aren't visible in documentation — DNS propagation delays, PAC file accessibility, PSE connectivity, and user experience during failover."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECTIONS -->
+  <div id="tab-objections" class="hidden">
+    <div class="section-title">Common Concerns</div>
+    <p class="section-sub">Addressing questions about resilience investment and configuration effort.</p>
+    <div id="objections-list"></div>
+  </div>
+
+  <div class="footer">
+    <p>Resilience Assessment — ZS Adoption Toolkit</p>
+    <p style="margin-top:4px;">Built by TSM Clint Olds</p>
+    <p style="margin-top:4px;font-size:10px;">Unofficial customer guide. Not affiliated with or endorsed by Zscaler, Inc.</p>
+  </div>
+</div>
+
+<script>
+const objections = [
+  { q:"Zscaler has never gone down for us — why invest time in DR?", icon:"🤔",
+    a:"That's a testament to the platform's reliability. But resilience planning isn't about what's happened — it's about what could happen. 80% of organizations have experienced a cloud outage in the last 3 years. The question for leadership isn't 'will it happen' but 'are we prepared if it does.' The features are already licensed and included — it's just configuration." },
+  { q:"We don't have resources to deploy Private Service Edges.", icon:"🖥️",
+    a:"PSEs are lightweight VMs — they can run in your existing VMware environment, AWS, or Azure. One pair is included in your licensing at no additional cost. Deployment takes a few hours, not weeks. And for ZPA-dependent organizations, PSEs are the only way to maintain private app access during a catastrophic event." },
+  { q:"Our business continuity plan covers this already.", icon:"📋",
+    a:"Most BC plans were designed for on-premises infrastructure. If your organization has moved to cloud-first with Zscaler as the security layer, your BC plan needs to account for cloud resilience specifically. Does your current plan define which apps are critical during a Zscaler outage? Does it include DR DNS records and hosted PAC files? If not, there's a gap." },
+  { q:"This seems like a lot of work for something that may never happen.", icon:"⏰",
+    a:"The first two tiers — blackout and brownout protection — are mostly automatic with minimal configuration. The real effort is catastrophic DR, which can be completed in 2-3 weeks. Compare that investment to the cost of a full day where your entire workforce can't access the internet or private applications. For most organizations, that's millions in lost productivity." },
+  { q:"Can't we just fail back to our VPN if Zscaler goes down?", icon:"🔌",
+    a:"If you've decommissioned VPN infrastructure (which is the goal with Zscaler), there's nothing to fail back to. And if you're maintaining VPN as a backup, you're paying for redundant infrastructure that doesn't have the same security controls. Zscaler DR with PSEs provides the same zero trust security during an outage — VPN doesn't." },
+  { q:"How do we know DR mode actually works?", icon:"🧪",
+    a:"You test it. An annual DR drill validates the entire chain — DNS resolution, PAC file accessibility, PSE connectivity, policy enforcement, and user experience. Without testing, your DR configuration is theoretical. With testing, it's validated and you have documented evidence for audit and compliance." }
+];
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('tab-' + tab).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function toggleCheck(el) {
+  const box = el.querySelector('.check-box');
+  box.classList.toggle('checked');
+  saveChecklist();
+  updateProgress();
+}
+
+function saveChecklist() {
+  const items = document.querySelectorAll('.check-box');
+  const state = Array.from(items).map(b => b.classList.contains('checked'));
+  localStorage.setItem('zs_resilience_checklist', JSON.stringify(state));
+}
+
+function loadChecklist() {
+  const saved = localStorage.getItem('zs_resilience_checklist');
+  if (!saved) return;
+  const state = JSON.parse(saved);
+  const items = document.querySelectorAll('.check-box');
+  items.forEach((b, i) => { if (state[i]) b.classList.add('checked'); });
+}
+
+function updateProgress() {
+  const items = document.querySelectorAll('.check-box');
+  const checked = document.querySelectorAll('.check-box.checked').length;
+  const total = items.length;
+  const pct = Math.round((checked / total) * 100);
+  document.getElementById('check-pct').textContent = pct + '%';
+  document.getElementById('check-count').textContent = checked + ' of ' + total + ' items complete';
+  document.getElementById('check-bar').style.width = pct + '%';
+}
+
+let openObj = null;
+function renderObjections() {
+  document.getElementById('objections-list').innerHTML = objections.map((o,i) => `
+    <div class="expand-card" id="obj-${i}" onclick="toggleObj(${i})">
+      <div class="expand-hdr">
+        <div class="expand-left">
+          <div class="expand-ico">${o.icon}</div>
+          <div class="expand-name">"${o.q}"</div>
+        </div>
+        <span class="expand-arrow" id="oa-${i}">▾</span>
+      </div>
+      <div class="expand-body" id="ob-${i}">
+        <div style="font-size:12px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Recommended Approach</div>
+        <p style="font-style:italic;">"${o.a}"</p>
+      </div>
+    </div>`).join('');
+}
+function toggleObj(i) {
+  if(openObj!==null&&openObj!==i){document.getElementById('ob-'+openObj).classList.remove('show');document.getElementById('oa-'+openObj).classList.remove('open');document.getElementById('obj-'+openObj).classList.remove('open');}
+  if(openObj===i){document.getElementById('ob-'+i).classList.remove('show');document.getElementById('oa-'+i).classList.remove('open');document.getElementById('obj-'+i).classList.remove('open');openObj=null;}
+  else{document.getElementById('ob-'+i).classList.add('show');document.getElementById('oa-'+i).classList.add('open');document.getElementById('obj-'+i).classList.add('open');openObj=i;}
+}
+renderObjections();
+loadChecklist();
+updateProgress();
+</script>
+</body>
+</html>

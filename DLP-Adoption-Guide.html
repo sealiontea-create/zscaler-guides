@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DLP Adoption Guide — ZS Adoption Toolkit</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237C3AED'/%3E%3Ctext x='32' y='46' font-family='Arial' font-size='38' font-weight='800' fill='white' text-anchor='middle'%3EZ%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:#fff;color:#1e293b;-webkit-font-smoothing:antialiased;}
+  button{font-family:inherit;cursor:pointer;}
+  .hidden{display:none;}
+
+  .header{background:linear-gradient(135deg,#4a1d96 0%,#6d28d9 40%,#a78bfa 100%);padding:32px 24px 24px;position:relative;overflow:hidden;}
+  .orb{position:absolute;border-radius:50%;}
+  .orb.a{top:-50px;right:-30px;width:200px;height:200px;background:rgba(255,255,255,0.04);}
+  .orb.b{bottom:-40px;left:30px;width:120px;height:120px;background:rgba(255,255,255,0.03);}
+  .hdr{max-width:760px;margin:0 auto;position:relative;}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-bottom:8px;}
+  .header h1{font-size:26px;font-weight:800;color:#fff;margin:0 0 8px;line-height:1.2;}
+  .header p{font-size:15px;color:rgba(255,255,255,0.65);line-height:1.5;}
+  .tabs{display:flex;gap:0;margin-top:20px;flex-wrap:wrap;}
+  .tab{padding:10px 16px;border:none;font-size:13px;font-weight:600;border-bottom:2px solid transparent;background:transparent;color:rgba(255,255,255,0.4);transition:all 0.2s;}
+  .tab.active{color:#fff;border-bottom-color:#c4b5fd;}
+
+  .content{max-width:760px;margin:0 auto;padding:24px 20px;}
+
+  .stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;}
+  .stat-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:18px;text-align:center;}
+  .stat-big{font-size:28px;font-weight:800;line-height:1;margin-bottom:4px;}
+  .stat-big.purple{color:#7c3aed;}
+  .stat-big.red{color:#dc2626;}
+  .stat-big.amber{color:#d97706;}
+  .stat-label{font-size:12px;color:#64748b;font-weight:500;line-height:1.4;}
+
+  .info-box{border-radius:14px;padding:20px;margin-bottom:20px;border:1px solid;}
+  .info-box.purple{background:#faf5ff;border-color:#e9d5ff;}
+  .info-box.red{background:#fef2f2;border-color:#fecaca;}
+  .info-box.green{background:#f0fdf4;border-color:#bbf7d0;}
+  .info-box.blue{background:#eff6ff;border-color:#bfdbfe;}
+  .info-box.amber{background:#fffbeb;border-color:#fde68a;}
+  .info-title{font-size:14px;font-weight:700;margin-bottom:6px;}
+  .info-box.purple .info-title{color:#6d28d9;}
+  .info-box.red .info-title{color:#991b1b;}
+  .info-box.green .info-title{color:#166534;}
+  .info-box.blue .info-title{color:#1e40af;}
+  .info-box.amber .info-title{color:#92400e;}
+  .info-box p{font-size:14px;color:#475569;line-height:1.6;}
+
+  .section-title{font-size:18px;font-weight:800;color:#0f172a;margin:0 0 16px;}
+  .section-sub{font-size:14px;color:#64748b;margin:-8px 0 20px;line-height:1.5;}
+
+  /* MVP phases */
+  .mvp-phase{background:#fff;border:2px solid #e2e8f0;border-radius:16px;padding:24px;margin-bottom:16px;position:relative;}
+  .mvp-phase.active-phase{border-color:#7c3aed;}
+  .mvp-num{position:absolute;top:-12px;left:20px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-size:12px;font-weight:800;padding:4px 14px;border-radius:10px;}
+  .mvp-title{font-size:17px;font-weight:700;color:#0f172a;margin:8px 0 4px;}
+  .mvp-duration{font-size:12px;color:#7c3aed;font-weight:600;margin-bottom:12px;}
+  .mvp-body{font-size:14px;color:#475569;line-height:1.7;}
+  .mvp-body strong{color:#0f172a;}
+  .mvp-actions{list-style:none;padding:0;margin:12px 0 0;}
+  .mvp-actions li{padding:5px 0;font-size:13px;color:#475569;line-height:1.5;display:flex;gap:8px;}
+  .mvp-actions li::before{content:"\2192";color:#7c3aed;font-weight:700;flex-shrink:0;}
+  .mvp-outcome{background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;padding:14px;margin-top:12px;}
+  .mvp-outcome-label{font-size:11px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+  .mvp-outcome p{font-size:13px;color:#475569;line-height:1.5;font-style:italic;}
+
+  /* Engine table */
+  .eng-table{width:100%;border-collapse:collapse;margin-bottom:20px;}
+  .eng-table th{text-align:left;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;padding:8px 12px;border-bottom:2px solid #e2e8f0;}
+  .eng-table td{padding:10px 12px;font-size:13px;color:#334155;border-bottom:1px solid #f1f5f9;vertical-align:top;line-height:1.5;}
+  .eng-table tr:hover{background:#f8fafc;}
+  .badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700;}
+  .badge.start{background:#dcfce7;color:#166534;}
+  .badge.next{background:#dbeafe;color:#1e40af;}
+  .badge.advanced{background:#faf5ff;color:#7c3aed;}
+
+  /* Expand */
+  .expand-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:all 0.2s;}
+  .expand-card.open{border-color:#7c3aed;border-width:2px;}
+  .expand-hdr{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+  .expand-left{display:flex;align-items:center;gap:12px;}
+  .expand-ico{width:40px;height:40px;border-radius:10px;background:#faf5ff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .expand-name{font-size:15px;font-weight:700;color:#0f172a;}
+  .expand-arrow{color:#94a3b8;font-size:16px;transition:transform 0.2s;}
+  .expand-arrow.open{transform:rotate(180deg);}
+  .expand-body{padding:0 20px 16px;display:none;}
+  .expand-body.show{display:block;}
+  .expand-body p{font-size:14px;color:#475569;line-height:1.6;}
+
+  .footer{margin-top:32px;padding:16px 0;border-top:1px solid #e2e8f0;text-align:center;}
+  .footer p{font-size:11px;color:#94a3b8;}
+
+  @media(max-width:600px){.stat-row{grid-template-columns:1fr;}.tab{padding:10px 10px;font-size:11px;}}
+
+  @media print {
+    .header { background: #4a1d96 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .tabs { display: none; }
+    .hidden { display: block !important; }
+    .mvp-phase, .info-box, .stat-card { break-inside: avoid; }
+    .expand-body { display: block !important; }
+    body { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="orb a"></div><div class="orb b"></div>
+  <div class="hdr">
+    <div class="eyebrow">ZS Adoption Toolkit</div>
+    <h1>Data Loss Prevention</h1>
+    <p>A practical approach to DLP adoption — start with visibility, grow into protection</p>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('why', this)">Why DLP</button>
+      <button class="tab" onclick="switchTab('how', this)">How It Works</button>
+      <button class="tab" onclick="switchTab('mvp', this)">MVP Program</button>
+      <button class="tab" onclick="switchTab('engines', this)">Engine Guide</button>
+      <button class="tab" onclick="switchTab('objections', this)">Objections</button>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- WHY DLP -->
+  <div id="tab-why">
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-big red">$4.9M</div>
+        <div class="stat-label">average cost of a data breach in 2024 (IBM)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-big amber">60%+</div>
+        <div class="stat-label">of breaches caused by insider threats or accidental exposure</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-big purple">95%+</div>
+        <div class="stat-label">of web traffic is encrypted — DLP requires SSL inspection to function</div>
+      </div>
+    </div>
+
+    <div class="info-box red">
+      <div class="info-title">The Problem</div>
+      <p>Most data loss isn't caused by sophisticated attackers — it's caused by employees accidentally uploading sensitive files to personal cloud storage, pasting credit card numbers into chat apps, or emailing spreadsheets with PII to the wrong recipient. Without DLP, you have zero visibility into what data is leaving your environment.</p>
+    </div>
+
+    <div class="info-box green">
+      <div class="info-title">The Opportunity</div>
+      <p>Zscaler DLP is already included in your platform. It inspects data inline as it moves through the Zscaler cloud — no additional hardware, no endpoint agents required for web/SaaS coverage. And you don't have to start by blocking anything. The most valuable first step is simply turning on visibility.</p>
+    </div>
+
+    <div class="section-title">What DLP Protects Against</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:#991b1b;margin-bottom:8px;">Common Data Loss Scenarios</div>
+        <div style="font-size:13px;color:#7f1d1d;line-height:1.8;">
+          Employee uploads client data to personal Dropbox<br>
+          Finance team emails spreadsheet with SSNs<br>
+          Developer pushes source code to public GitHub<br>
+          Sales rep pastes customer list into ChatGPT<br>
+          Contractor downloads IP to personal device
+        </div>
+      </div>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:#166534;margin-bottom:8px;">What DLP Gives You</div>
+        <div style="font-size:13px;color:#14532d;line-height:1.8;">
+          Visibility into sensitive data movement<br>
+          Automated detection of PII, PCI, HIPAA data<br>
+          Policy enforcement by user, group, destination<br>
+          Incident logging for compliance and audit<br>
+          User coaching through caution pages
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div id="tab-how" class="hidden">
+    <div class="section-title">DLP Architecture</div>
+    <p class="section-sub">Three building blocks: Dictionaries define what to look for, Engines define the logic, Policies define who and what to do.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;">
+      <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">📖</div>
+        <div style="font-size:14px;font-weight:700;color:#6d28d9;margin-bottom:4px;">Dictionaries</div>
+        <div style="font-size:12px;color:#475569;line-height:1.4;">Pattern definitions — regex, keywords, checksums. "What does a credit card number look like?"</div>
+      </div>
+      <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">⚙️</div>
+        <div style="font-size:14px;font-weight:700;color:#6d28d9;margin-bottom:4px;">Engines</div>
+        <div style="font-size:12px;color:#475569;line-height:1.4;">Logic combining dictionaries — "Match SSNs AND credit cards with more than 5 hits."</div>
+      </div>
+      <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">📋</div>
+        <div style="font-size:14px;font-weight:700;color:#6d28d9;margin-bottom:4px;">Policies</div>
+        <div style="font-size:12px;color:#475569;line-height:1.4;">Rules tying engines to users, groups, destinations, and actions (Allow, Caution, Block).</div>
+      </div>
+    </div>
+
+    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:14px;margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:700;color:#6d28d9;margin-bottom:4px;">How They Connect: DLP Rules</div>
+      <div style="font-size:12px;color:#475569;line-height:1.5;">In the admin portal, you create <strong>DLP Rules</strong> that tie everything together: select an Engine, define the scope (users, groups, departments, destinations), and assign an action (Allow, Caution, Block). Rules are evaluated in order — first match wins.</div>
+    </div>
+
+    <div class="section-title">Detection Methods</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+        <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;">Traditional Classification</div>
+        <div style="font-size:12px;color:#64748b;line-height:1.5;">Regex patterns and predefined dictionaries match known data formats — credit cards (Luhn checksum), SSNs, medical terms.</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+        <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;">Exact Data Match (EDM)</div>
+        <div style="font-size:12px;color:#64748b;line-height:1.5;">Compares content against hashed reference values from your actual data (SSNs, account numbers). Eliminates false positives.</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+        <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;">Indexed Document Match (IDM)</div>
+        <div style="font-size:12px;color:#64748b;line-height:1.5;">Fingerprints sensitive documents (contracts, IP). Detects full or partial matches in outbound traffic.</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+        <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;">AI-Powered Classification</div>
+        <div style="font-size:12px;color:#64748b;line-height:1.5;">ML models detect sensitive data in unstructured content — faster and more accurate than regex for complex scenarios.</div>
+      </div>
+    </div>
+
+    <div class="section-title">Policy Actions</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px;">
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:6px;">👁️</div>
+        <div style="font-size:14px;font-weight:700;color:#166534;">Allow (Log Only)</div>
+        <div style="font-size:12px;color:#475569;line-height:1.4;margin-top:4px;">Traffic passes through. Incident is logged. Zero user impact. This is your MVP starting point.</div>
+      </div>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:6px;">⚠️</div>
+        <div style="font-size:14px;font-weight:700;color:#92400e;">Caution</div>
+        <div style="font-size:12px;color:#475569;line-height:1.4;margin-top:4px;">User sees a warning page. They can acknowledge and proceed or cancel. Creates accountability without blocking.</div>
+      </div>
+      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:6px;">🚫</div>
+        <div style="font-size:14px;font-weight:700;color:#991b1b;">Block</div>
+        <div style="font-size:12px;color:#475569;line-height:1.4;margin-top:4px;">Transaction is blocked. User sees a notification. Use this only after tuning to minimize false positives.</div>
+      </div>
+    </div>
+
+    <div class="info-box amber">
+      <div class="info-title">Prerequisites</div>
+      <p><strong>SSL inspection must be enabled</strong> for DLP to function. DLP cannot inspect what it cannot see. If traffic is bypassing SSL inspection, DLP is blind to that traffic. This is why the SSL Inspection Assessment should be completed before deploying DLP.</p>
+    </div>
+  </div>
+
+  <!-- MVP PROGRAM -->
+  <div id="tab-mvp" class="hidden">
+    <div class="section-title">MVP DLP Program</div>
+    <p class="section-sub">You don't need a full data classification program, dedicated DLP analysts, or expensive add-on licenses to get started. Here's how to build a practical DLP program from zero.</p>
+
+    <div class="info-box purple">
+      <div class="info-title">The MVP Philosophy</div>
+      <p>Start with visibility (log only), not enforcement (block). Let the data tell you where the risks are. Tune policies based on real incidents. Graduate to enforcement only when you're confident in detection accuracy. This approach builds organizational buy-in because you're proving value before creating friction.</p>
+    </div>
+
+    <div class="mvp-phase active-phase">
+      <div class="mvp-num">Phase 1</div>
+      <div class="mvp-title">Monitor Only — See What's Happening</div>
+      <div class="mvp-duration">Weeks 1–2 • Zero user impact</div>
+      <div class="mvp-body">
+        Enable predefined DLP engines with <strong>Allow (log only)</strong> action. No user sees anything different. You get full visibility into sensitive data leaving your environment.
+      </div>
+      <ul class="mvp-actions">
+        <li>Enable the <strong>PCI</strong> engine (credit card numbers) — set action to Allow</li>
+        <li>Enable the <strong>PII</strong> engine (SSNs, names, addresses) — set action to Allow</li>
+        <li>Enable the <strong>HIPAA</strong> engine (medical information) — set action to Allow, especially relevant for healthcare orgs</li>
+        <li>Enable the <strong>Source Code</strong> engine — set action to Allow (catches developers uploading code)</li>
+        <li>Set confidence thresholds to <strong>High</strong> to minimize false positives</li>
+        <li>Configure DLP notification email to go to a designated security contact</li>
+      </ul>
+      <div class="mvp-outcome">
+        <div class="mvp-outcome-label">What You'll Learn</div>
+        <p>"Within the first week, you'll see exactly what sensitive data is moving through your environment, who's sending it, and where it's going. This data is the foundation for every decision that follows."</p>
+      </div>
+    </div>
+
+    <div class="mvp-phase">
+      <div class="mvp-num">Phase 2</div>
+      <div class="mvp-title">Analyze & Tune — Understand the Patterns</div>
+      <div class="mvp-duration">Weeks 3–4 • Still zero user impact</div>
+      <div class="mvp-body">
+        Review the incidents generated in Phase 1. Identify false positives, top offenders, riskiest destinations, and legitimate business workflows that trigger DLP.
+      </div>
+      <ul class="mvp-actions">
+        <li>Review DLP incident logs: who, what data type, what destination, how often</li>
+        <li>Identify false positives — tune confidence thresholds or exclude specific destinations</li>
+        <li>Categorize incidents: accidental (training issue) vs. risky (policy issue) vs. malicious (investigation)</li>
+        <li>Identify the top 3–5 riskiest patterns (e.g., "Finance team uploading SSN-containing files to personal cloud")</li>
+        <li>Build a simple weekly report: incident count by type, top users, top destinations</li>
+      </ul>
+      <div class="mvp-outcome">
+        <div class="mvp-outcome-label">Building the Business Case</div>
+        <p>"This report is your ammunition. 'Last month, we detected X instances of PII being uploaded to unsanctioned cloud storage. Here are the top destinations and users. Here's what we recommend.' That's how you go from monitoring to action with organizational support."</p>
+      </div>
+    </div>
+
+    <div class="mvp-phase">
+      <div class="mvp-num">Phase 3</div>
+      <div class="mvp-title">Caution — Educate Before You Enforce</div>
+      <div class="mvp-duration">Weeks 5–6 • Users see warning pages (can still proceed)</div>
+      <div class="mvp-body">
+        For the top 3–5 riskiest patterns identified in Phase 2, change the action from Allow to <strong>Caution</strong>. Users see a warning page and must acknowledge before proceeding. This creates accountability and awareness without blocking work.
+      </div>
+      <ul class="mvp-actions">
+        <li>Change action to <strong>Caution</strong> for high-risk patterns only (targeted, not blanket)</li>
+        <li>Customize the caution page with a clear explanation of why the action was flagged</li>
+        <li>Monitor: how many users proceed vs. cancel? Cancellations indicate awareness is working</li>
+        <li>Track helpdesk tickets — if they spike, your caution rules may be too broad</li>
+        <li>Continue Allow (log only) for everything else</li>
+      </ul>
+      <div class="mvp-outcome">
+        <div class="mvp-outcome-label">Why Caution Before Block</div>
+        <p>"Caution pages are the most underrated DLP feature. They turn every potential incident into a training moment. The user learns in real time that their action involves sensitive data. Many organizations find that Caution alone reduces risky behavior by 40–60% — without ever blocking anything."</p>
+      </div>
+    </div>
+
+    <div class="mvp-phase">
+      <div class="mvp-num">Phase 4</div>
+      <div class="mvp-title">Enforce — Block Confirmed High-Risk Patterns</div>
+      <div class="mvp-duration">Weeks 7+ • Targeted blocking on validated rules only</div>
+      <div class="mvp-body">
+        For patterns that persist after Caution — users who consistently proceed through warnings — graduate to <strong>Block</strong>. Only block rules you're confident in after weeks of tuning.
+      </div>
+      <ul class="mvp-actions">
+        <li>Block rule examples: bulk credit card uploads to personal storage, SSN-containing files to unsanctioned apps</li>
+        <li>Keep Caution for gray-area scenarios where users may have legitimate justification</li>
+        <li>Keep Allow (log only) for broad monitoring and new patterns</li>
+        <li>Establish a quarterly review cadence: tune rules, review incidents, update policies</li>
+        <li>Present results to leadership: incidents detected, incidents prevented, risk reduction over time</li>
+      </ul>
+      <div class="mvp-outcome">
+        <div class="mvp-outcome-label">The Long Game</div>
+        <p>"A mature DLP program uses all three actions simultaneously. Allow for broad visibility, Caution for education, Block for confirmed high-risk. This layered approach gives you maximum coverage with minimum business friction."</p>
+      </div>
+    </div>
+
+    <div class="info-box amber">
+      <div class="info-title">A Note on Incident Management</div>
+      <p>Without the <strong>Workflow Automation</strong> add-on, DLP incident alerts are delivered via SMTP email notifications. This means incidents go to an admin mailbox — there's no built-in ticketing, user justification workflows, or automated triage. This is functional for an MVP program, but it means someone needs to own that inbox and review incidents regularly.</p>
+      <p style="margin-top:8px;">For organizations that want to scale beyond the MVP: <strong>Workflow Automation</strong> adds incident assignment to end users for justification, integration with SIEM and GRC platforms, and automated remediation workflows. It transforms DLP from "alert and hope someone reads it" to a managed program. If your MVP data shows significant volume, Workflow Automation becomes the natural next investment.</p>
+    </div>
+  </div>
+
+  <!-- ENGINE GUIDE -->
+  <div id="tab-engines" class="hidden">
+    <div class="section-title">Predefined DLP Engine Guide</div>
+    <p class="section-sub">Zscaler includes predefined engines for common compliance and data protection scenarios. Here's what to enable and when.</p>
+
+    <table class="eng-table">
+      <thead>
+        <tr><th>Engine</th><th>Detects</th><th>Phase</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>PCI</strong></td>
+          <td>Credit card numbers (Luhn checksum validated)</td>
+          <td><span class="badge start">Start Here</span></td>
+          <td>Low false positive rate due to Luhn validation. Set confidence to High, match count low (>1) for documents, medium for spreadsheets.</td>
+        </tr>
+        <tr>
+          <td><strong>PII (US)</strong></td>
+          <td>SSNs, names, addresses</td>
+          <td><span class="badge start">Start Here</span></td>
+          <td>Available in High Volume (>25 matches) and Low Volume (>1 match) variants. Start with High Volume to reduce false positives.</td>
+        </tr>
+        <tr>
+          <td><strong>HIPAA</strong></td>
+          <td>Medical information + SSNs</td>
+          <td><span class="badge start">Start Here</span></td>
+          <td>Combines Social Security Numbers and Medical Information dictionaries. Essential for healthcare organizations or any org handling PHI.</td>
+        </tr>
+        <tr>
+          <td><strong>Source Code</strong></td>
+          <td>Programming patterns (class, void, import)</td>
+          <td><span class="badge start">Start Here</span></td>
+          <td>Detects code being uploaded to unauthorized destinations. Minimum 1KB data size threshold. High value for protecting IP.</td>
+        </tr>
+        <tr>
+          <td><strong>GLBA</strong></td>
+          <td>Financial statements + SSNs</td>
+          <td><span class="badge next">Phase 2</span></td>
+          <td>Gramm-Leach-Bliley Act compliance. Relevant for financial services organizations.</td>
+        </tr>
+        <tr>
+          <td><strong>PIPEDA</strong></td>
+          <td>Canadian PII (SIN, credit cards, names)</td>
+          <td><span class="badge next">Phase 2</span></td>
+          <td>Available in High and Low Volume variants. Enable if you handle Canadian personal information.</td>
+        </tr>
+        <tr>
+          <td><strong>Country-Specific PII</strong></td>
+          <td>Expanded PII dictionaries for various jurisdictions</td>
+          <td><span class="badge next">Phase 2</span></td>
+          <td>Recently expanded dictionaries covering international PII formats. Enable based on where you operate.</td>
+        </tr>
+        <tr>
+          <td><strong>Offensive Language</strong></td>
+          <td>Adult content patterns</td>
+          <td><span class="badge advanced">Phase 3+</span></td>
+          <td>Uses Adult Content dictionary. Relevant for HR policy enforcement and K-12 environments.</td>
+        </tr>
+        <tr>
+          <td><strong>Custom Engines</strong></td>
+          <td>Your specific data patterns</td>
+          <td><span class="badge advanced">Phase 3+</span></td>
+          <td>Build engines with your own keywords, regex, and dictionary combinations. "Project codenames," "internal classification labels," etc.</td>
+        </tr>
+        <tr>
+          <td><strong>EDM (Exact Data Match)</strong></td>
+          <td>Hash-matched against your actual data</td>
+          <td><span class="badge advanced">Phase 3+</span></td>
+          <td>Upload hashed reference data (SSNs, account numbers). Near-zero false positive rate. Requires data preparation.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="info-box blue">
+      <div class="info-title">Tuning Tip: Confidence Scores</div>
+      <p>Every predefined dictionary has a configurable confidence score threshold (Low, Medium, High). Start with <strong>High</strong> confidence to minimize false positives. If you're not seeing enough detections, lower to Medium. Low confidence should only be used when you've validated the additional matches are genuine. False positives erode trust in the DLP program faster than anything else.</p>
+    </div>
+  </div>
+
+  <!-- OBJECTIONS -->
+  <div id="tab-objections" class="hidden">
+    <div class="section-title">Common Concerns</div>
+    <p class="section-sub">Addressing the barriers to DLP adoption.</p>
+    <div id="objections-list"></div>
+  </div>
+
+  <div class="footer">
+    <p>Data Loss Prevention — ZS Adoption Toolkit</p>
+    <p style="margin-top:4px;">Built by TSM Clint Olds</p>
+    <p style="margin-top:4px;font-size:10px;">Unofficial customer guide. Not affiliated with or endorsed by Zscaler, Inc.</p>
+    <p style="margin-top:4px;">Source: IBM Cost of a Data Breach Report 2024 • Verizon DBIR • Zscaler DLP Documentation</p>
+  </div>
+</div>
+
+<script>
+const objections = [
+  { q:"We don't have a DLP team or data classification program.", icon:"👥",
+    a:"You don't need one to start. The MVP approach uses predefined engines that Zscaler maintains — PCI, PII, HIPAA, Source Code. These are ready out of the box. You set them to Allow (log only), and they start detecting immediately. No data classification project required. The DLP data you collect in Phase 1 actually becomes the foundation for a classification program if you decide to build one later." },
+  { q:"DLP creates too many false positives and users will complain.", icon:"🔔",
+    a:"That's why you start with log-only mode. No user sees anything. You use the first 2–4 weeks to identify and eliminate false positives before anyone is impacted. Set confidence thresholds to High, use the PCI engine (which has Luhn checksum validation for very low false positive rates), and tune before you ever show a user a caution page. By the time you introduce Caution actions, you'll be confident in the detections." },
+  { q:"We don't have the resources to manage DLP incidents.", icon:"⏰",
+    a:"At the MVP level, incident management is a 30-minute weekly review of the DLP log summary. Without Workflow Automation, alerts come via email — designate one person to review weekly, pull the top patterns, and report monthly. This isn't a full-time job at Phase 1. If volume grows and justifies it, that data becomes the business case for Workflow Automation and dedicated resources." },
+  { q:"We can't block anything — it will disrupt business.", icon:"🚫",
+    a:"The MVP program doesn't block anything for the first 6+ weeks. Phase 1 and 2 are entirely log-only. Phase 3 uses Caution pages where users can still proceed. You only graduate to Block in Phase 4, and only for patterns you've validated over weeks of data. This is the most conservative, business-friendly approach to DLP possible." },
+  { q:"Our SSL inspection coverage is limited — won't DLP miss things?", icon:"🔐",
+    a:"Yes, DLP can only inspect traffic that's SSL inspected. That's why we recommend completing the SSL Inspection Assessment first. Any traffic bypassing SSL inspection is invisible to DLP. The good news: improving SSL inspection coverage for DLP gives you the same visibility improvement for all other Zscaler security features — ATP, Sandbox, CBI." },
+  { q:"We already have DLP through another product.", icon:"🔄",
+    a:"If you're using a separate DLP product, you're likely managing multiple policy engines that detect the same data differently. Zscaler DLP is inline — it inspects data as it moves through the proxy, using the same engine across web, SaaS, and cloud channels. You can run Zscaler DLP in monitor-only alongside your existing solution to compare detection accuracy before making any changes." },
+  { q:"What about GenAI — employees using ChatGPT with company data?", icon:"🤖",
+    a:"This is one of the most compelling use cases for DLP today. Zscaler DLP can detect sensitive data being pasted or uploaded into GenAI applications. You can set Caution or Block actions specifically for AI application destinations. The Source Code engine is particularly valuable here — it catches developers pasting proprietary code into AI assistants." }
+];
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('tab-' + tab).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+let openObj = null;
+function renderObjections() {
+  document.getElementById('objections-list').innerHTML = objections.map((o,i) => `
+    <div class="expand-card" id="obj-${i}" onclick="toggleObj(${i})">
+      <div class="expand-hdr">
+        <div class="expand-left">
+          <div class="expand-ico">${o.icon}</div>
+          <div class="expand-name">"${o.q}"</div>
+        </div>
+        <span class="expand-arrow" id="oa-${i}">▾</span>
+      </div>
+      <div class="expand-body" id="ob-${i}">
+        <div style="font-size:12px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Recommended Approach</div>
+        <p style="font-style:italic;">"${o.a}"</p>
+      </div>
+    </div>`).join('');
+}
+function toggleObj(i) {
+  if(openObj!==null&&openObj!==i){document.getElementById('ob-'+openObj).classList.remove('show');document.getElementById('oa-'+openObj).classList.remove('open');document.getElementById('obj-'+openObj).classList.remove('open');}
+  if(openObj===i){document.getElementById('ob-'+i).classList.remove('show');document.getElementById('oa-'+i).classList.remove('open');document.getElementById('obj-'+i).classList.remove('open');openObj=null;}
+  else{document.getElementById('ob-'+i).classList.add('show');document.getElementById('oa-'+i).classList.add('open');document.getElementById('obj-'+i).classList.add('open');openObj=i;}
+}
+renderObjections();
+</script>
+</body>
+</html>
