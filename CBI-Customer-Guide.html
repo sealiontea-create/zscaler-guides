@@ -220,6 +220,7 @@
     <div class="view-toggles">
       <button class="view-btn active" id="btn-scenarios" onclick="switchView('scenarios')">Threat Scenarios</button>
       <button class="view-btn inactive" id="btn-features" onclick="switchView('features')">Key Capabilities</button>
+      <button class="view-btn inactive" id="btn-getstarted" onclick="switchView('getstarted')">Get Started</button>
     </div>
   </div>
 </div>
@@ -269,85 +270,87 @@
       <p style="font-size:14px;color:#475569;line-height:1.6;">Browser Isolation delivers maximum value when SSL inspection is enabled. Without it, CBI can only isolate based on URL category — not page content or behavior.</p>
       <a href="https://help.zscaler.com/zia/configuring-ssl-inspection-policy" target="_blank" class="help-link" style="color:#92400e;">Configure SSL Inspection &#8599;</a>
     </div>
+  </div>
 
-    <div class="setup-section">
-      <h3 style="font-size:18px;font-weight:800;color:#0f172a;margin:0 0 16px;">How to Set Up Browser Isolation</h3>
+  <!-- GET STARTED VIEW -->
+  <div id="view-getstarted" class="hidden">
+    <h3 style="font-size:18px;font-weight:800;color:#0f172a;margin:0 0 8px;">Get Started with Browser Isolation</h3>
+    <p style="font-size:14px;color:#64748b;margin-bottom:20px;line-height:1.5;">Step-by-step instructions to configure and deploy Cloud Browser Isolation in your environment.</p>
 
-      <div class="setup-step">
-        <div class="step-num">Step 1</div>
-        <h4>Create an Isolation Profile</h4>
-        <div class="nav-path">Administration &gt; Cloud Browser Isolation &gt; Isolation Profiles</div>
-        <p>The isolation profile controls the user experience during isolated sessions — what they can and can't do.</p>
-        <ul>
-          <li>Click <strong>Add Isolation Profile</strong></li>
-          <li>Name it (e.g., "Standard - Restrict Downloads")</li>
-          <li><strong>Clipboard:</strong> Block copy/paste to prevent data exfiltration (or Allow for low-risk use cases)</li>
-          <li><strong>Downloads:</strong> Set to CDR (Content Disarm &amp; Reconstruction) to flatten files into safe PDFs, or Block entirely</li>
-          <li><strong>Upload:</strong> Block or Allow depending on your data protection requirements</li>
-          <li><strong>Printing:</strong> Block to prevent data leakage via print-to-PDF</li>
-          <li><strong>Rendering:</strong> Select Turbo Mode for near-native 50fps experience</li>
-          <li><strong>Persistence:</strong> Choose non-persistent (session ends when tab closes) for maximum security</li>
-        </ul>
-        <a href="https://help.zscaler.com/zia/creating-isolation-profile-cloud-browser-isolation" target="_blank" class="help-link">Full profile configuration guide &#8599;</a>
-      </div>
+    <div class="setup-step">
+      <div class="step-num">Step 1</div>
+      <h4>Create an Isolation Profile</h4>
+      <div class="nav-path">Administration &gt; Cloud Browser Isolation &gt; Isolation Profiles</div>
+      <p>The isolation profile controls the user experience during isolated sessions — what they can and can't do.</p>
+      <ul>
+        <li>Click <strong>Add Isolation Profile</strong></li>
+        <li>Name it (e.g., "Standard - Restrict Downloads")</li>
+        <li><strong>Clipboard:</strong> Block copy/paste to prevent data exfiltration (or Allow for low-risk use cases)</li>
+        <li><strong>Downloads:</strong> Set to CDR (Content Disarm &amp; Reconstruction) to flatten files into safe PDFs, or Block entirely</li>
+        <li><strong>Upload:</strong> Block or Allow depending on your data protection requirements</li>
+        <li><strong>Printing:</strong> Block to prevent data leakage via print-to-PDF</li>
+        <li><strong>Rendering:</strong> Select Turbo Mode for near-native 50fps experience</li>
+        <li><strong>Persistence:</strong> Choose non-persistent (session ends when tab closes) for maximum security</li>
+      </ul>
+      <a href="https://help.zscaler.com/zia/creating-isolation-profile-cloud-browser-isolation" target="_blank" class="help-link">Full profile configuration guide &#8599;</a>
+    </div>
 
-      <div class="setup-step">
-        <div class="step-num">Step 2</div>
-        <h4>Create a URL Filtering Rule with Isolate Action</h4>
-        <div class="nav-path">Policy &gt; URL &amp; Cloud App Control &gt; URL Filtering Rules</div>
-        <p>This is where you tell Zscaler which traffic to isolate instead of allowing or blocking.</p>
-        <ul>
-          <li>Click <strong>Add URL Filtering Rule</strong></li>
-          <li><strong>Name:</strong> "Isolate Uncategorized Sites" (start here — highest risk category)</li>
-          <li><strong>URL Categories:</strong> Select "Uncategorized" and optionally "Newly Registered Domains"</li>
-          <li><strong>Action:</strong> Select <strong>Isolate</strong></li>
-          <li><strong>Isolation Profile:</strong> Select the profile you created in Step 1</li>
-          <li><strong>Users/Groups:</strong> Start with a pilot group (e.g., IT or Security team) before rolling out broadly</li>
-          <li><strong>Rule Order:</strong> Place above any Allow rules for the same categories</li>
-        </ul>
-        <a href="https://help.zscaler.com/zia/configuring-url-filtering-policy" target="_blank" class="help-link">Full URL filtering policy guide &#8599;</a>
-      </div>
+    <div class="setup-step">
+      <div class="step-num">Step 2</div>
+      <h4>Create a URL Filtering Rule with Isolate Action</h4>
+      <div class="nav-path">Policy &gt; URL &amp; Cloud App Control &gt; URL Filtering Rules</div>
+      <p>This is where you tell Zscaler which traffic to isolate instead of allowing or blocking.</p>
+      <ul>
+        <li>Click <strong>Add URL Filtering Rule</strong></li>
+        <li><strong>Name:</strong> "Isolate Uncategorized Sites" (start here — highest risk category)</li>
+        <li><strong>URL Categories:</strong> Select "Uncategorized" and optionally "Newly Registered Domains"</li>
+        <li><strong>Action:</strong> Select <strong>Isolate</strong></li>
+        <li><strong>Isolation Profile:</strong> Select the profile you created in Step 1</li>
+        <li><strong>Users/Groups:</strong> Start with a pilot group (e.g., IT or Security team) before rolling out broadly</li>
+        <li><strong>Rule Order:</strong> Place above any Allow rules for the same categories</li>
+      </ul>
+      <a href="https://help.zscaler.com/zia/configuring-url-filtering-policy" target="_blank" class="help-link">Full URL filtering policy guide &#8599;</a>
+    </div>
 
-      <div class="setup-step">
-        <div class="step-num">Step 3</div>
-        <h4>Enable Smart Browser Isolation (if licensed)</h4>
-        <div class="nav-path">Policy &gt; Cloud Browser Isolation &gt; Smart Isolation</div>
-        <p>Smart Isolation uses AI to automatically isolate suspicious pages — even on categorized, "trusted" sites that have been compromised.</p>
-        <ul>
-          <li>Enable <strong>Smart Browser Isolation</strong></li>
-          <li>Set the risk threshold — start with the default and adjust based on volume</li>
-          <li>Assign to user groups — can run alongside your URL-based isolation rules</li>
-          <li>This catches threats that URL category-based isolation misses (e.g., compromised news sites)</li>
-        </ul>
-        <a href="https://help.zscaler.com/zia/configuring-smart-browser-isolation-policy" target="_blank" class="help-link">Smart Isolation setup guide &#8599;</a>
-      </div>
+    <div class="setup-step">
+      <div class="step-num">Step 3</div>
+      <h4>Enable Smart Browser Isolation (if licensed)</h4>
+      <div class="nav-path">Policy &gt; Cloud Browser Isolation &gt; Smart Isolation</div>
+      <p>Smart Isolation uses AI to automatically isolate suspicious pages — even on categorized, "trusted" sites that have been compromised.</p>
+      <ul>
+        <li>Enable <strong>Smart Browser Isolation</strong></li>
+        <li>Set the risk threshold — start with the default and adjust based on volume</li>
+        <li>Assign to user groups — can run alongside your URL-based isolation rules</li>
+        <li>This catches threats that URL category-based isolation misses (e.g., compromised news sites)</li>
+      </ul>
+      <a href="https://help.zscaler.com/zia/configuring-smart-browser-isolation-policy" target="_blank" class="help-link">Smart Isolation setup guide &#8599;</a>
+    </div>
 
-      <div class="setup-step">
-        <div class="step-num">Step 4</div>
-        <h4>Test and Validate</h4>
-        <p>Before rolling out broadly, verify isolation is working correctly with your pilot group.</p>
-        <ul>
-          <li>As a pilot user, visit an uncategorized site — you should see the isolation indicator in the browser</li>
-          <li>Test clipboard, download, and print controls match your profile settings</li>
-          <li>Verify Turbo Mode rendering is smooth (should feel near-native)</li>
-          <li>Check <strong>Analytics &gt; Web Insights</strong> for isolation activity logs</li>
-          <li>Gather pilot user feedback — are there usability issues? Sites that break?</li>
-          <li>Once validated, expand the user scope in your URL filtering rule</li>
-        </ul>
-      </div>
+    <div class="setup-step">
+      <div class="step-num">Step 4</div>
+      <h4>Test and Validate</h4>
+      <p>Before rolling out broadly, verify isolation is working correctly with your pilot group.</p>
+      <ul>
+        <li>As a pilot user, visit an uncategorized site — you should see the isolation indicator in the browser</li>
+        <li>Test clipboard, download, and print controls match your profile settings</li>
+        <li>Verify Turbo Mode rendering is smooth (should feel near-native)</li>
+        <li>Check <strong>Analytics &gt; Web Insights</strong> for isolation activity logs</li>
+        <li>Gather pilot user feedback — are there usability issues? Sites that break?</li>
+        <li>Once validated, expand the user scope in your URL filtering rule</li>
+      </ul>
+    </div>
 
-      <div class="setup-step">
-        <div class="step-num">Step 5</div>
-        <h4>Expand Coverage</h4>
-        <p>After successful pilot, expand isolation to more categories and user groups.</p>
-        <ul>
-          <li>Add more URL categories: "Newly Registered Domains," "Other Miscellaneous," "Web-Based Email"</li>
-          <li>Create separate rules with different profiles (e.g., stricter controls for contractors vs. employees)</li>
-          <li>Consider isolating specific cloud apps for BYOD users (SaaS apps via ZPA isolation)</li>
-          <li>Review isolation analytics monthly — adjust categories based on threat trends</li>
-        </ul>
-        <a href="https://help.zscaler.com/zscaler-deployments-operations/cloud-browser-isolation-deployment-and-operations-guide" target="_blank" class="help-link">CBI deployment best practices &#8599;</a>
-      </div>
+    <div class="setup-step">
+      <div class="step-num">Step 5</div>
+      <h4>Expand Coverage</h4>
+      <p>After successful pilot, expand isolation to more categories and user groups.</p>
+      <ul>
+        <li>Add more URL categories: "Newly Registered Domains," "Other Miscellaneous," "Web-Based Email"</li>
+        <li>Create separate rules with different profiles (e.g., stricter controls for contractors vs. employees)</li>
+        <li>Consider isolating specific cloud apps for BYOD users (SaaS apps via ZPA isolation)</li>
+        <li>Review isolation analytics monthly — adjust categories based on threat trends</li>
+      </ul>
+      <a href="https://help.zscaler.com/zscaler-deployments-operations/cloud-browser-isolation-deployment-and-operations-guide" target="_blank" class="help-link">CBI deployment best practices &#8599;</a>
     </div>
 
     <div class="help-links-box">
@@ -421,8 +424,10 @@ function switchView(view) {
   activeView = view;
   document.getElementById('view-scenarios').classList.toggle('hidden', view !== 'scenarios');
   document.getElementById('view-features').classList.toggle('hidden', view !== 'features');
+  document.getElementById('view-getstarted').classList.toggle('hidden', view !== 'getstarted');
   document.getElementById('btn-scenarios').className = 'view-btn ' + (view === 'scenarios' ? 'active' : 'inactive');
   document.getElementById('btn-features').className = 'view-btn ' + (view === 'features' ? 'active' : 'inactive');
+  document.getElementById('btn-getstarted').className = 'view-btn ' + (view === 'getstarted' ? 'active' : 'inactive');
 }
 
 function selectScenario(idx) {
