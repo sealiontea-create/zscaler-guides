@@ -6,145 +6,157 @@
 <title>Resilience Assessment — ZS Adoption Toolkit</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237C3AED'/%3E%3Ctext x='32' y='46' font-family='Arial' font-size='38' font-weight='800' fill='white' text-anchor='middle'%3EZ%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  @keyframes neonPulse {
+    0%, 100% { text-shadow: 0 0 10px rgba(255,45,149,0.6), 0 0 40px rgba(255,45,149,0.2), 0 2px 0 #CC0066; }
+    50% { text-shadow: 0 0 20px rgba(255,45,149,0.8), 0 0 60px rgba(255,45,149,0.3), 0 2px 0 #CC0066; }
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Inter', -apple-system, system-ui, sans-serif; background: #fff; color: #1e293b; -webkit-font-smoothing: antialiased; }
+  body { font-family: 'Oswald', -apple-system, system-ui, sans-serif; background: #0D0015; color: #F0E6FF; -webkit-font-smoothing: antialiased; }
   button { font-family: inherit; cursor: pointer; }
   .hidden { display: none; }
 
   .header {
-    background: linear-gradient(135deg, #0c4a1f 0%, #166534 40%, #22c55e 100%);
+    background: linear-gradient(135deg, #0D0015 0%, #2D1B4E 50%, #1A0A2E 100%);
     padding: 32px 24px 24px; position: relative; overflow: hidden;
+    border-bottom: 2px solid #FF2D95;
+    box-shadow: 0 2px 12px rgba(255,45,149,0.3);
   }
   .orb { position: absolute; border-radius: 50%; }
-  .orb.a { top:-50px;right:-30px;width:200px;height:200px;background:rgba(255,255,255,0.04); }
-  .orb.b { bottom:-40px;left:30px;width:120px;height:120px;background:rgba(255,255,255,0.03); }
+  .orb.a { top:-50px;right:-30px;width:200px;height:200px;background:rgba(255,45,149,0.04); }
+  .orb.b { bottom:-40px;left:30px;width:120px;height:120px;background:rgba(0,212,255,0.03); }
   .hdr { max-width:960px; margin:0 auto; position:relative; }
   .eyebrow { font-size:11px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-bottom:8px; }
-  .header h1 { font-size:32px;font-weight:800;color:#fff;margin:0 0 8px;line-height:1.2; }
-  .header p { font-size:17px;color:rgba(255,255,255,0.65);line-height:1.5; }
+  .header h1 { font-family:'Bebas Neue', Impact, sans-serif;font-size:32px;font-weight:800;color:#fff;margin:0 0 8px;line-height:1.2;letter-spacing:2px;text-transform:uppercase;text-shadow:0 0 10px rgba(255,45,149,0.6), 0 0 40px rgba(255,45,149,0.2);animation:neonPulse 3s ease-in-out infinite; }
+  .header p { font-size:17px;color:#B794F6;line-height:1.5; }
   .tabs { display:flex;gap:0;margin-top:20px; }
   .tab { padding:10px 16px;border:none;font-size:14px;font-weight:600;border-bottom:2px solid transparent;background:transparent;color:rgba(255,255,255,0.4);transition:all 0.2s; }
-  .tab.active { color:#fff;border-bottom-color:#86efac; }
+  .tab.active { color:#fff;border-bottom-color:#FF2D95; }
 
   .content { max-width:960px;margin:0 auto;padding:24px 20px; }
 
   .stat-row { display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px; }
-  .stat-card { background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:18px;text-align:center; }
+  .stat-card { background:#1A0A2E;border:1px solid #2D1B4E;border-radius:14px;padding:18px;text-align:center;transition:all 0.2s; }
+  .stat-card:hover { box-shadow:0 4px 20px rgba(255,45,149,0.15); }
   .stat-big { font-size:32px;font-weight:800;line-height:1;margin-bottom:4px; }
-  .stat-big.green { color:#16a34a; }
-  .stat-big.amber { color:#d97706; }
-  .stat-big.red { color:#dc2626; }
-  .stat-label { font-size:13px;color:#64748b;font-weight:500;line-height:1.4; }
+  .stat-big.green { color:#39FF14; }
+  .stat-big.amber { color:#FFD700; }
+  .stat-big.red { color:#FF1744; }
+  .stat-label { font-size:13px;color:#B794F6;font-weight:500;line-height:1.4; }
 
-  .info-box { border-radius:14px;padding:20px;margin-bottom:20px;border:1px solid; }
-  .info-box.green { background:#f0fdf4;border-color:#bbf7d0; }
-  .info-box.amber { background:#fffbeb;border-color:#fde68a; }
-  .info-box.red { background:#fef2f2;border-color:#fecaca; }
-  .info-box.blue { background:#eff6ff;border-color:#bfdbfe; }
+  .info-box { border-radius:14px;padding:20px;margin-bottom:20px;border:1px solid;background:#1A0A2E; }
+  .info-box.green { border-color:#2D1B4E;border-left:4px solid #39FF14; }
+  .info-box.amber { border-color:#2D1B4E;border-left:4px solid #FFD700; }
+  .info-box.red { border-color:#2D1B4E;border-left:4px solid #FF1744; }
+  .info-box.blue { border-color:#2D1B4E;border-left:4px solid #00D4FF; }
   .info-title { font-size:15px;font-weight:700;margin-bottom:6px; }
-  .info-box.green .info-title { color:#166534; }
-  .info-box.amber .info-title { color:#92400e; }
-  .info-box.red .info-title { color:#991b1b; }
-  .info-box.blue .info-title { color:#1e40af; }
-  .info-box p { font-size:15px;color:#475569;line-height:1.6; }
+  .info-box.green .info-title { color:#39FF14; }
+  .info-box.amber .info-title { color:#FFD700; }
+  .info-box.red .info-title { color:#FF1744; }
+  .info-box.blue .info-title { color:#00D4FF; }
+  .info-box p { font-size:15px;color:#B794F6;line-height:1.6; }
 
-  .section-title { font-size:20px;font-weight:800;color:#0f172a;margin:0 0 16px; }
-  .section-sub { font-size:15px;color:#64748b;margin:-8px 0 20px;line-height:1.5; }
+  .section-title { font-family:'Bebas Neue', Impact, sans-serif;font-size:20px;font-weight:800;color:#F0E6FF;margin:0 0 16px;text-transform:uppercase;letter-spacing:2px; }
+  .section-sub { font-size:15px;color:#B794F6;margin:-8px 0 20px;line-height:1.5; }
 
   /* Tier cards */
   .tier-card {
-    background:#fff;border:2px solid #e2e8f0;border-radius:16px;
+    background:#1A0A2E;border:2px solid #2D1B4E;border-radius:16px;
     padding:24px;margin-bottom:16px;transition:all 0.2s;
   }
-  .tier-card.blackout { border-left:5px solid #22c55e; }
-  .tier-card.brownout { border-left:5px solid #f59e0b; }
-  .tier-card.catastrophic { border-left:5px solid #ef4444; }
+  .tier-card:hover { border-color:#FF2D95;box-shadow:0 4px 20px rgba(255,45,149,0.15); }
+  .tier-card.blackout { border-left:5px solid #39FF14; }
+  .tier-card.brownout { border-left:5px solid #FFD700; }
+  .tier-card.catastrophic { border-left:5px solid #FF1744; }
   .tier-header { display:flex;align-items:center;gap:12px;margin-bottom:12px; }
   .tier-icon { font-size:28px; }
   .tier-meta { flex:1; }
-  .tier-name { font-size:19px;font-weight:700;color:#0f172a; }
-  .tier-desc { font-size:14px;color:#64748b;margin-top:2px; }
+  .tier-name { font-size:19px;font-weight:700;color:#F0E6FF; }
+  .tier-desc { font-size:14px;color:#B794F6;margin-top:2px; }
   .tier-badge { font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px; }
-  .tier-badge.auto { background:#dcfce7;color:#166534; }
-  .tier-badge.config { background:#fef3c7;color:#92400e; }
-  .tier-badge.manual { background:#fee2e2;color:#991b1b; }
-  .tier-body { font-size:15px;color:#475569;line-height:1.7; }
-  .tier-body strong { color:#0f172a; }
+  .tier-badge.auto { background:rgba(57,255,20,0.1);color:#39FF14; }
+  .tier-badge.config { background:rgba(255,215,0,0.1);color:#FFD700; }
+  .tier-badge.manual { background:rgba(255,23,68,0.1);color:#FF1744; }
+  .tier-body { font-size:15px;color:#B794F6;line-height:1.7; }
+  .tier-body strong { color:#F0E6FF; }
 
   .feature-list { list-style:none;padding:0;margin:12px 0 0; }
-  .feature-list li { padding:6px 0;font-size:14px;color:#475569;display:flex;gap:8px;line-height:1.5; }
-  .feature-list li::before { content:"\2192";color:#22c55e;font-weight:700;flex-shrink:0; }
+  .feature-list li { padding:6px 0;font-size:14px;color:#B794F6;display:flex;gap:8px;line-height:1.5; }
+  .feature-list li::before { content:"\2192";color:#FF2D95;font-weight:700;flex-shrink:0; }
 
   /* Checklist */
   .check-section { margin-bottom:24px; }
-  .check-group-title { font-size:14px;font-weight:700;color:#0f172a;margin:0 0 10px;display:flex;align-items:center;gap:8px; }
+  .check-group-title { font-size:14px;font-weight:700;color:#F0E6FF;margin:0 0 10px;display:flex;align-items:center;gap:8px; }
   .check-item {
-    background:#fff;border:1px solid #e2e8f0;border-radius:12px;
-    padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;
+    background:#1A0A2E;border:1px solid #2D1B4E;border-radius:12px;
+    padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;transition:all 0.2s;
   }
+  .check-item:hover { box-shadow:0 4px 20px rgba(255,45,149,0.15); }
   .check-box {
-    width:22px;height:22px;border-radius:6px;border:2px solid #cbd5e1;
+    width:22px;height:22px;border-radius:6px;border:2px solid #7C5CBF;
     display:flex;align-items:center;justify-content:center;flex-shrink:0;
     cursor:pointer;transition:all 0.2s;font-size:13px;color:transparent;margin-top:1px;
   }
-  .check-box.checked { background:#22c55e;border-color:#22c55e;color:#fff; }
+  .check-box.checked { background:#39FF14;border-color:#39FF14;color:#0D0015; }
   .check-text { flex:1; }
-  .check-text .main { font-size:15px;font-weight:600;color:#0f172a; }
-  .check-text .detail { font-size:14px;color:#64748b;margin-top:2px;line-height:1.5; }
+  .check-text .main { font-size:15px;font-weight:600;color:#F0E6FF; }
+  .check-text .detail { font-size:14px;color:#B794F6;margin-top:2px;line-height:1.5; }
   .check-tag { font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap;margin-top:2px; }
-  .check-tag.zia { background:#dbeafe;color:#1e40af; }
-  .check-tag.zpa { background:#fae8ff;color:#86198f; }
-  .check-tag.both { background:#f0fdf4;color:#166534; }
+  .check-tag.zia { background:rgba(0,212,255,0.1);color:#00D4FF; }
+  .check-tag.zpa { background:rgba(255,45,149,0.1);color:#FF2D95; }
+  .check-tag.both { background:rgba(57,255,20,0.1);color:#39FF14; }
 
   /* Phase cards */
   .phase-card {
-    background:#fff;border:1px solid #e2e8f0;border-radius:14px;
-    padding:20px;margin-bottom:14px;border-left:4px solid #22c55e;
+    background:#1A0A2E;border:1px solid #2D1B4E;border-radius:14px;
+    padding:20px;margin-bottom:14px;border-left:4px solid #FF2D95;transition:all 0.2s;
   }
-  .phase-week { font-size:11px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:1.5px; }
-  .phase-title { font-size:18px;font-weight:700;color:#0f172a;margin-top:2px; }
+  .phase-card:hover { box-shadow:0 4px 20px rgba(255,45,149,0.15); }
+  .phase-week { font-size:11px;font-weight:700;color:#FF2D95;text-transform:uppercase;letter-spacing:1.5px; }
+  .phase-title { font-size:18px;font-weight:700;color:#F0E6FF;margin-top:2px; }
   .phase-actions { list-style:none;padding:0;margin:12px 0 0; }
-  .phase-actions li { padding:5px 0;font-size:14px;color:#475569;line-height:1.5;display:flex;gap:8px; }
-  .phase-actions li::before { content:"\2192";color:#22c55e;font-weight:700;flex-shrink:0; }
-  .phase-note { background:#f0fdf4;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #dcfce7; }
-  .phase-note-label { font-size:11px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px; }
-  .phase-note p { font-size:14px;color:#475569;line-height:1.5;font-style:italic; }
+  .phase-actions li { padding:5px 0;font-size:14px;color:#B794F6;line-height:1.5;display:flex;gap:8px; }
+  .phase-actions li::before { content:"\2192";color:#FF2D95;font-weight:700;flex-shrink:0; }
+  .phase-note { background:rgba(255,45,149,0.05);border-radius:10px;padding:14px;margin-top:12px;border:1px solid #2D1B4E; }
+  .phase-note-label { font-size:11px;font-weight:700;color:#FF2D95;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px; }
+  .phase-note p { font-size:14px;color:#B794F6;line-height:1.5;font-style:italic; }
 
   /* Expand */
-  .expand-card { background:#fff;border:1px solid #e2e8f0;border-radius:14px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:all 0.2s; }
-  .expand-card.open { border-color:#22c55e;border-width:2px; }
+  .expand-card { background:#1A0A2E;border:1px solid #2D1B4E;border-radius:14px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:all 0.2s; }
+  .expand-card:hover { box-shadow:0 4px 20px rgba(255,45,149,0.15); }
+  .expand-card.open { border-color:#FF2D95;border-width:2px; }
   .expand-hdr { padding:16px 20px;display:flex;align-items:center;justify-content:space-between; }
   .expand-left { display:flex;align-items:center;gap:12px; }
-  .expand-ico { width:40px;height:40px;border-radius:10px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0; }
-  .expand-name { font-size:16px;font-weight:700;color:#0f172a; }
-  .expand-sub { font-size:13px;color:#64748b;margin-top:1px; }
-  .expand-arrow { color:#94a3b8;font-size:16px;transition:transform 0.2s; }
+  .expand-ico { width:40px;height:40px;border-radius:10px;background:rgba(255,45,149,0.1);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0; }
+  .expand-name { font-size:16px;font-weight:700;color:#F0E6FF; }
+  .expand-sub { font-size:13px;color:#B794F6;margin-top:1px; }
+  .expand-arrow { color:#7C5CBF;font-size:16px;transition:transform 0.2s; }
   .expand-arrow.open { transform:rotate(180deg); }
   .expand-body { padding:0 20px 16px;display:none; }
   .expand-body.show { display:block; }
-  .expand-body p { font-size:15px;color:#475569;line-height:1.6; }
+  .expand-body p { font-size:15px;color:#B794F6;line-height:1.6; }
 
-  .help-link{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:#16a34a;text-decoration:none;margin-top:4px;}
+  .help-link{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:#00D4FF;text-decoration:none;margin-top:4px;}
   .help-link:hover{text-decoration:underline;}
-  .setup-step{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;margin-bottom:12px;position:relative;border-left:4px solid #22c55e;}
-  .setup-step .step-num{position:absolute;top:-10px;left:16px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:11px;font-weight:800;padding:3px 12px;border-radius:8px;}
-  .setup-step h4{font-size:16px;font-weight:700;color:#0f172a;margin:6px 0 8px;}
-  .setup-step p{font-size:15px;color:#475569;line-height:1.7;}
-  .setup-step .nav-path{font-size:12px;font-weight:600;color:#16a34a;background:#f0fdf4;padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:8px;}
+  .setup-step{background:#1A0A2E;border:1px solid #2D1B4E;border-radius:14px;padding:20px;margin-bottom:12px;position:relative;border-left:4px solid #FF2D95;}
+  .setup-step .step-num{position:absolute;top:-10px;left:16px;background:linear-gradient(135deg,#FF2D95,#CC0066);color:#fff;font-size:11px;font-weight:800;padding:3px 12px;border-radius:8px;}
+  .setup-step h4{font-size:16px;font-weight:700;color:#F0E6FF;margin:6px 0 8px;}
+  .setup-step p{font-size:15px;color:#B794F6;line-height:1.7;}
+  .setup-step .nav-path{font-size:12px;font-weight:600;color:#00D4FF;background:rgba(0,212,255,0.1);padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:8px;}
   .setup-step ul{list-style:none;padding:0;margin:8px 0 0;}
-  .setup-step ul li{padding:4px 0;font-size:14px;color:#475569;line-height:1.5;display:flex;gap:8px;}
-  .setup-step ul li::before{content:"\2192";color:#22c55e;font-weight:700;flex-shrink:0;}
-  .help-links-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:20px;margin-top:16px;}
-  .help-links-box h3{font-size:15px;font-weight:700;color:#0f172a;margin:0 0 12px;display:flex;align-items:center;gap:8px;}
+  .setup-step ul li{padding:4px 0;font-size:14px;color:#B794F6;line-height:1.5;display:flex;gap:8px;}
+  .setup-step ul li::before{content:"\2192";color:#FF2D95;font-weight:700;flex-shrink:0;}
+  .help-links-box{background:#1A0A2E;border:1px solid #2D1B4E;border-radius:14px;padding:20px;margin-top:16px;}
+  .help-links-box h3{font-size:15px;font-weight:700;color:#F0E6FF;margin:0 0 12px;display:flex;align-items:center;gap:8px;}
   .help-links-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .help-links-grid a{display:flex;align-items:center;gap:8px;font-size:14px;color:#475569;text-decoration:none;padding:10px 12px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;transition:all 0.2s;}
-  .help-links-grid a:hover{border-color:#22c55e;color:#16a34a;background:#f0fdf4;}
+  .help-links-grid a{display:flex;align-items:center;gap:8px;font-size:14px;color:#B794F6;text-decoration:none;padding:10px 12px;border-radius:10px;border:1px solid #2D1B4E;background:#1A0A2E;transition:all 0.2s;}
+  .help-links-grid a:hover{border-color:#FF2D95;color:#FF2D95;background:rgba(255,45,149,0.05);}
   .help-links-grid a .link-icon{font-size:16px;flex-shrink:0;}
 
-  .footer { margin-top:32px;padding:16px 0;border-top:1px solid #e2e8f0;text-align:center; }
-  .footer p { font-size:11px;color:#94a3b8; }
+  .footer { margin-top:32px;padding:16px 0;border-top:1px solid #2D1B4E;text-align:center; }
+  .footer p { font-size:11px;color:#7C5CBF; }
 
   @media(max-width:600px){
     .stat-row{grid-template-columns:1fr;}
@@ -152,7 +164,7 @@
   }
 
   @media print {
-    .header { background: #0c4a1f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .header { background: #0D0015 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .tabs { display: none; }
     .hidden { display: block !important; }
     .tier-card, .check-item, .phase-card, .info-box { break-inside: avoid; }
@@ -206,22 +218,22 @@
 
     <div class="section-title">Three Levels of Protection</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;">
-      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;text-align:center;">
+      <div style="background:#1A0A2E;border:1px solid #2D1B4E;border-radius:12px;padding:16px;text-align:center;">
         <div style="font-size:28px;margin-bottom:8px;">⚡</div>
-        <div style="font-size:14px;font-weight:700;color:#166534;margin-bottom:4px;">Blackouts</div>
-        <div style="font-size:12px;color:#475569;line-height:1.4;">Data center goes down. Automatic failover to secondary gateway.</div>
+        <div style="font-size:14px;font-weight:700;color:#39FF14;margin-bottom:4px;">Blackouts</div>
+        <div style="font-size:12px;color:#B794F6;line-height:1.4;">Data center goes down. Automatic failover to secondary gateway.</div>
         <div style="margin-top:8px;"><span class="tier-badge auto">Automatic</span></div>
       </div>
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px;text-align:center;">
+      <div style="background:#1A0A2E;border:1px solid #2D1B4E;border-radius:12px;padding:16px;text-align:center;">
         <div style="font-size:28px;margin-bottom:8px;">🌊</div>
-        <div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:4px;">Brownouts</div>
-        <div style="font-size:12px;color:#475569;line-height:1.4;">Degraded performance. Dynamic path selection finds optimal route.</div>
+        <div style="font-size:14px;font-weight:700;color:#FFD700;margin-bottom:4px;">Brownouts</div>
+        <div style="font-size:12px;color:#B794F6;line-height:1.4;">Degraded performance. Dynamic path selection finds optimal route.</div>
         <div style="margin-top:8px;"><span class="tier-badge config">Config Required</span></div>
       </div>
-      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px;text-align:center;">
+      <div style="background:#1A0A2E;border:1px solid #2D1B4E;border-radius:12px;padding:16px;text-align:center;">
         <div style="font-size:28px;margin-bottom:8px;">🔥</div>
-        <div style="font-size:14px;font-weight:700;color:#991b1b;margin-bottom:4px;">Catastrophic</div>
-        <div style="font-size:12px;color:#475569;line-height:1.4;">Cloud unreachable. DR mode with Private Service Edges + DNS allow list.</div>
+        <div style="font-size:14px;font-weight:700;color:#FF1744;margin-bottom:4px;">Catastrophic</div>
+        <div style="font-size:12px;color:#B794F6;line-height:1.4;">Cloud unreachable. DR mode with Private Service Edges + DNS allow list.</div>
         <div style="margin-top:8px;"><span class="tier-badge manual">Pre-config Required</span></div>
       </div>
     </div>
@@ -289,15 +301,15 @@
         <strong>What happens:</strong> The Zscaler cloud is not accessible. This is the black swan event — extremely rare but potentially devastating without a plan.
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
-          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:16px;">
-            <div style="font-size:13px;font-weight:700;color:#1e40af;margin-bottom:8px;">ZIA Disaster Recovery</div>
-            <div style="font-size:13px;color:#475569;line-height:1.6;">
+          <div style="background:#1A0A2E;border:1px solid #2D1B4E;border-radius:12px;padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#00D4FF;margin-bottom:8px;">ZIA Disaster Recovery</div>
+            <div style="font-size:13px;color:#B794F6;line-height:1.6;">
               ZCC switches to local content filtering mode. Direct internet access restricted to critical business apps only via a hosted DNS allow list and custom PAC file. Basic URL filtering continues locally.
             </div>
           </div>
-          <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:16px;">
-            <div style="font-size:13px;font-weight:700;color:#7c3aed;margin-bottom:8px;">ZPA Disaster Recovery</div>
-            <div style="font-size:13px;color:#475569;line-height:1.6;">
+          <div style="background:#1A0A2E;border:1px solid #2D1B4E;border-radius:12px;padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#FF2D95;margin-bottom:8px;">ZPA Disaster Recovery</div>
+            <div style="font-size:13px;color:#B794F6;line-height:1.6;">
               Traffic redirects to ZPA Private Service Edges in your data center or cloud. Most recent policies still enforced. Private app access continues with full security controls.
             </div>
           </div>
@@ -318,11 +330,11 @@
     <div class="section-title">Resilience Readiness Checklist</div>
     <p class="section-sub">Walk through each item. Anything unchecked is a gap in your business continuity posture.</p>
 
-    <div id="check-progress" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:20px;text-align:center;">
-      <div style="font-size:28px;font-weight:800;color:#16a34a;" id="check-pct">0%</div>
-      <div style="font-size:13px;color:#64748b;font-weight:500;" id="check-count">0 of 14 items complete</div>
-      <div style="background:#e2e8f0;border-radius:6px;height:8px;margin-top:10px;overflow:hidden;">
-        <div id="check-bar" style="background:linear-gradient(90deg,#22c55e,#16a34a);height:100%;width:0%;transition:width 0.3s;border-radius:6px;"></div>
+    <div id="check-progress" style="background:#1A0A2E;border:1px solid #2D1B4E;border-radius:12px;padding:16px;margin-bottom:20px;text-align:center;">
+      <div style="font-size:28px;font-weight:800;color:#39FF14;" id="check-pct">0%</div>
+      <div style="font-size:13px;color:#B794F6;font-weight:500;" id="check-count">0 of 14 items complete</div>
+      <div style="background:#2D1B4E;border-radius:6px;height:8px;margin-top:10px;overflow:hidden;">
+        <div id="check-bar" style="background:linear-gradient(90deg,#39FF14,#00D4FF);height:100%;width:0%;transition:width 0.3s;border-radius:6px;"></div>
       </div>
     </div>
 
@@ -715,7 +727,7 @@ function renderObjections() {
         <span class="expand-arrow" id="oa-${i}">▾</span>
       </div>
       <div class="expand-body" id="ob-${i}">
-        <div style="font-size:12px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Recommended Approach</div>
+        <div style="font-size:12px;font-weight:700;color:#FF2D95;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Recommended Approach</div>
         <p style="font-style:italic;">"${o.a}"</p>
       </div>
     </div>`).join('');

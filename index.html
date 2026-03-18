@@ -6,95 +6,121 @@
 <title>ZS Adoption Toolkit — Customer Guides</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237C3AED'/%3E%3Ctext x='32' y='46' font-family='Arial' font-size='38' font-weight='800' fill='white' text-anchor='middle'%3EZ%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Inter', -apple-system, system-ui, sans-serif;
-    background: #f8fafc; color: #1e293b; min-height: 100vh;
+    font-family: 'Oswald', -apple-system, system-ui, sans-serif;
+    background: #0D0015; color: #F0E6FF; min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
   a { text-decoration: none; color: inherit; }
 
+  @keyframes neonPulse {
+    0%, 100% { text-shadow: 0 0 10px rgba(255,45,149,0.6), 0 0 40px rgba(255,45,149,0.2), 0 2px 0 #CC0066; }
+    50% { text-shadow: 0 0 20px rgba(255,45,149,0.8), 0 0 60px rgba(255,45,149,0.3), 0 2px 0 #CC0066; }
+  }
+  @keyframes neonBorderGlow {
+    0%, 100% { box-shadow: 0 0 8px rgba(0,212,255,0.3), 0 4px 20px rgba(255,45,149,0.15); }
+    50% { box-shadow: 0 0 16px rgba(0,212,255,0.5), 0 4px 30px rgba(255,45,149,0.25); }
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
   .header {
-    background: linear-gradient(135deg, #1a0533 0%, #3b1578 40%, #7c3aed 100%);
+    background: linear-gradient(135deg, #0D0015 0%, #2D1B4E 50%, #1A0A2E 100%);
     padding: 48px 24px 56px; position: relative; overflow: hidden; text-align: center;
+    border-bottom: 2px solid #FF2D95;
+    box-shadow: 0 2px 12px rgba(255,45,149,0.3);
   }
   .orb { position: absolute; border-radius: 50%; }
-  .orb.a { top: -60px; right: -40px; width: 240px; height: 240px; background: rgba(255,255,255,0.03); }
-  .orb.b { bottom: -50px; left: 20px; width: 160px; height: 160px; background: rgba(255,255,255,0.02); }
-  .orb.c { top: 30px; left: -80px; width: 200px; height: 200px; background: rgba(124,58,237,0.08); }
+  .orb.a { top: -60px; right: -40px; width: 240px; height: 240px; background: rgba(255,45,149,0.04); }
+  .orb.b { bottom: -50px; left: 20px; width: 160px; height: 160px; background: rgba(0,212,255,0.03); }
+  .orb.c { top: 30px; left: -80px; width: 200px; height: 200px; background: rgba(255,215,0,0.03); }
 
   .logo {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 56px; height: 56px; border-radius: 14px; background: rgba(255,255,255,0.12);
-    font-size: 30px; font-weight: 800; color: #fff; margin-bottom: 16px;
-    backdrop-filter: blur(8px);
+    width: 56px; height: 56px; border-radius: 14px;
+    background: linear-gradient(135deg, #FF2D95, #CC0066);
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 34px; font-weight: 800; color: #fff; margin-bottom: 16px;
+    box-shadow: 0 0 20px rgba(255,45,149,0.4);
   }
-  .header h1 { font-size: 38px; font-weight: 800; color: #fff; margin: 0 0 10px; }
-  .header p { font-size: 18px; color: rgba(255,255,255,0.6); max-width: 640px; margin: 0 auto; line-height: 1.6; }
+  .header h1 {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 48px; font-weight: 800; color: #fff; margin: 0 0 10px;
+    letter-spacing: 3px; text-transform: uppercase;
+    animation: neonPulse 3s ease-in-out infinite;
+  }
+  .header p { font-size: 18px; color: #B794F6; max-width: 640px; margin: 0 auto; line-height: 1.6; }
 
   .content { max-width: 960px; margin: -32px auto 0; padding: 0 24px 48px; position: relative; }
 
   .order-note {
-    background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+    background: #1A0A2E; border: 1px solid #2D1B4E; border-radius: 14px;
     padding: 18px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
   }
   .order-note .icon { font-size: 20px; flex-shrink: 0; }
-  .order-note .text { font-size: 15px; color: #475569; line-height: 1.5; }
-  .order-note strong { color: #0f172a; }
+  .order-note .text { font-size: 15px; color: #B794F6; line-height: 1.5; }
+  .order-note strong { color: #F0E6FF; }
 
   .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
   .guide-card {
-    background: #fff; border: 2px solid #e2e8f0; border-radius: 16px;
+    background: #1A0A2E; border: 2px solid #2D1B4E; border-radius: 16px;
     padding: 28px; transition: all 0.2s; position: relative; overflow: hidden;
+    animation: fadeIn 0.4s ease both;
   }
-  .guide-card:hover { border-color: #7c3aed; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.1); }
+  .guide-card:nth-child(1) { animation-delay: 0.1s; }
+  .guide-card:nth-child(2) { animation-delay: 0.2s; }
+  .guide-card:nth-child(3) { animation-delay: 0.3s; }
+  .guide-card:hover {
+    border-color: #FF2D95; transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(255,45,149,0.15), 0 0 1px rgba(255,45,149,0.3);
+    animation: neonBorderGlow 2s ease-in-out infinite;
+  }
   .guide-card .num {
     position: absolute; top: -1px; right: -1px;
-    background: linear-gradient(135deg, #7c3aed, #5b21b6); color: #fff;
-    font-size: 11px; font-weight: 800; padding: 6px 14px;
-    border-radius: 0 14px 0 12px;
+    background: linear-gradient(135deg, #FF2D95, #CC0066); color: #fff;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 12px; font-weight: 800; padding: 6px 14px;
+    border-radius: 0 14px 0 12px; letter-spacing: 2px; text-transform: uppercase;
   }
   .guide-card .emoji { font-size: 36px; margin-bottom: 14px; }
-  .guide-card h2 { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 8px; }
-  .guide-card .desc { font-size: 15px; color: #64748b; line-height: 1.6; margin-bottom: 16px; }
+  .guide-card h2 {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 24px; font-weight: 700; color: #F0E6FF; margin: 0 0 8px;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .guide-card .desc { font-size: 15px; color: #7C5CBF; line-height: 1.6; margin-bottom: 16px; }
   .guide-card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .tag {
-    font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 8px;
-    text-transform: uppercase; letter-spacing: 0.5px;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 8px;
+    text-transform: uppercase; letter-spacing: 1px;
   }
-  .tag.blue { background: #eff6ff; color: #1e40af; }
-  .tag.purple { background: #faf5ff; color: #7c3aed; }
-  .tag.green { background: #f0fdf4; color: #166534; }
-  .tag.amber { background: #fffbeb; color: #92400e; }
+  .tag.blue { background: rgba(0,212,255,0.1); color: #00D4FF; }
+  .tag.purple { background: rgba(255,45,149,0.1); color: #FF2D95; }
+  .tag.green { background: rgba(57,255,20,0.1); color: #39FF14; }
+  .tag.amber { background: rgba(255,215,0,0.1); color: #FFD700; }
   .guide-card .cta {
     display: inline-flex; align-items: center; gap: 6px;
-    font-size: 15px; font-weight: 700; color: #7c3aed;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 16px; font-weight: 700; color: #00D4FF;
+    letter-spacing: 1px; text-transform: uppercase;
   }
-  .guide-card:hover .cta { text-decoration: underline; }
-
-  .bonus-card {
-    background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
-    padding: 20px; margin-top: 16px; grid-column: 1 / -1;
-    display: flex; align-items: center; gap: 16px;
-  }
-  .bonus-card .emoji { font-size: 28px; flex-shrink: 0; }
-  .bonus-card h3 { font-size: 15px; font-weight: 700; color: #0f172a; margin: 0 0 4px; }
-  .bonus-card .desc { font-size: 13px; color: #64748b; line-height: 1.5; }
+  .guide-card:hover .cta { color: #FF2D95; text-shadow: 0 0 8px rgba(255,45,149,0.4); }
 
   .footer {
-    margin-top: 32px; padding: 20px 0; border-top: 1px solid #e2e8f0; text-align: center;
+    margin-top: 32px; padding: 20px 0; border-top: 1px solid #2D1B4E; text-align: center;
   }
-  .footer p { font-size: 11px; color: #94a3b8; line-height: 1.8; }
+  .footer p { font-size: 11px; color: #7C5CBF; line-height: 1.8; }
 
   @media (max-width: 600px) {
     .guide-grid { grid-template-columns: 1fr; }
-    .header h1 { font-size: 26px; }
+    .header h1 { font-size: 32px; }
   }
   @media print {
-    .header { background: #1a0533 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .header { background: #0D0015 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .guide-card { break-inside: avoid; }
   }
 </style>
