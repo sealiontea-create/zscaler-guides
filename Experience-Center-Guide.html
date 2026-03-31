@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zscaler Experience Center Migration Guide</title>
+<style>
+  :root {
+    --zs-blue: #4da6ff;
+    --zs-dark: #0d0d1a;
+    --zs-navy: #16213e;
+    --zs-mid: #1a3a5c;
+    --zs-accent: #00b4d8;
+    --zs-green: #06d6a0;
+    --zs-orange: #f7a948;
+    --zs-red: #ef476f;
+    --zs-purple: #a855f7;
+    --zs-light: #0f1219;
+    --zs-white: #1a1f2e;
+    --zs-border: #2a3042;
+    --zs-text: #d1d5db;
+    --zs-muted: #8892a4;
+    --zs-surface: #232838;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+    --radius: 12px;
+    --yt-red: #ff0033;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--zs-light);
+    color: var(--zs-text);
+    line-height: 1.6;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--zs-dark) 0%, var(--zs-mid) 50%, var(--zs-blue) 100%);
+    color: white;
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(0,180,216,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(6,214,160,0.1) 0%, transparent 40%);
+    animation: drift 20s ease-in-out infinite;
+  }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-2%, 2%); }
+  }
+  .hero h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    position: relative;
+    letter-spacing: -0.5px;
+  }
+  .hero .subtitle {
+    font-size: 1.2rem;
+    opacity: 0.85;
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto 24px;
+  }
+  .hero .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero .badge {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* Nav */
+  .toc {
+    background: var(--zs-white);
+    border-bottom: 1px solid var(--zs-border);
+    padding: 16px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+  .toc-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .toc a {
+    text-decoration: none;
+    color: var(--zs-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .toc a:hover {
+    background: var(--zs-surface);
+    border-color: var(--zs-border);
+    color: var(--zs-blue);
+  }
+
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  /* Section Headers */
+  .section-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .section-header .section-number {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--zs-blue), var(--zs-accent));
+    color: white;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+  .section-header h2 {
+    font-size: 2rem;
+    color: #e8ecf1;
+    margin-bottom: 8px;
+  }
+  .section-header p {
+    color: var(--zs-muted);
+    font-size: 1.05rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Prerequisite Banner */
+  .prereq-banner {
+    background: linear-gradient(135deg, #332b00, #3d2e00);
+    border: 1px solid #665200;
+    border-radius: var(--radius);
+    padding: 20px 28px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .prereq-banner .icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .prereq-banner h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: #fbbf24;
+  }
+  .prereq-banner p {
+    font-size: 0.9rem;
+    color: #d4a017;
+  }
+
+  /* Quick Ref Cards */
+  .quick-ref-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .qr-card {
+    background: var(--zs-white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    border-top: 4px solid var(--zs-blue);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .qr-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  .qr-card.zpa { border-top-color: var(--zs-green); }
+  .qr-card.zia { border-top-color: var(--zs-orange); }
+  .qr-card.zdx { border-top-color: var(--zs-purple); }
+  .qr-card.branch { border-top-color: var(--zs-accent); }
+  .qr-card.general { border-top-color: var(--zs-blue); }
+
+  .qr-card h3 {
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+    color: #e8ecf1;
+  }
+  .qr-card .qr-product {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .qr-card .qr-product.zpa { background: #064e3b; color: #34d399; }
+  .qr-card .qr-product.zia { background: #451a03; color: #fbbf24; }
+  .qr-card .qr-product.zdx { background: #2e1065; color: #c084fc; }
+  .qr-card .qr-product.branch { background: #083344; color: #22d3ee; }
+  .qr-card .qr-product.general { background: #172554; color: #60a5fa; }
+
+  .qr-path {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    font-size: 0.85rem;
+  }
+  .qr-path .arrow {
+    color: var(--zs-accent);
+    font-weight: 700;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .qr-old {
+    color: var(--zs-muted);
+    text-decoration: line-through;
+    flex: 1;
+  }
+  .qr-new {
+    color: var(--zs-blue);
+    font-weight: 600;
+    flex: 1;
+  }
+  .qr-source {
+    display: block;
+    margin-top: 8px;
+    text-align: right;
+  }
+  .qr-source .src {
+    font-size: 0.72rem;
+  }
+
+  /* Product Sections */
+  .product-section {
+    background: var(--zs-white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .product-header {
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .product-header .product-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+  .product-header .product-icon.zpa { background: linear-gradient(135deg, #06d6a0, #0ea5e9); }
+  .product-header .product-icon.zia { background: linear-gradient(135deg, #f77f00, #ef476f); }
+  .product-header .product-icon.zdx { background: linear-gradient(135deg, #7209b7, #3a0ca3); }
+  .product-header .product-icon.branch { background: linear-gradient(135deg, #00b4d8, #0077b6); }
+
+  .product-header h3 {
+    font-size: 1.2rem;
+    color: #e8ecf1;
+  }
+  .product-header .product-desc {
+    font-size: 0.85rem;
+    color: var(--zs-muted);
+  }
+  .product-header .expand-icon {
+    margin-left: auto;
+    font-size: 1.2rem;
+    color: var(--zs-muted);
+    transition: transform 0.3s;
+  }
+  .product-section.open .expand-icon {
+    transform: rotate(180deg);
+  }
+
+  .product-body {
+    display: none;
+    padding: 0 28px 28px;
+  }
+  .product-section.open .product-body {
+    display: block;
+  }
+
+  /* Mapping Table */
+  .map-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.88rem;
+  }
+  .map-table thead th {
+    background: var(--zs-surface);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #c5cbd3;
+    border-bottom: 2px solid var(--zs-border);
+    position: sticky;
+    top: 60px;
+  }
+  .map-table thead th:first-child { border-radius: 8px 0 0 0; }
+  .map-table thead th:last-child { border-radius: 0 8px 0 0; }
+  .map-table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--zs-border);
+    vertical-align: top;
+  }
+  .map-table tbody tr:hover {
+    background: rgba(255,255,255,0.03);
+  }
+  .map-table .feature-name {
+    font-weight: 600;
+    color: #e8ecf1;
+    white-space: nowrap;
+  }
+  .map-table .path {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.82rem;
+    color: var(--zs-muted);
+  }
+  .map-table .path-new {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.82rem;
+    color: var(--zs-blue);
+    font-weight: 500;
+  }
+  .map-table .note {
+    font-size: 0.8rem;
+    color: var(--zs-orange);
+    font-style: italic;
+    display: block;
+    margin-top: 4px;
+  }
+
+  /* YouTube source links */
+  .src {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 6px;
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #ff4444;
+    text-decoration: none;
+    background: rgba(255,0,51,0.1);
+    padding: 4px 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,0,51,0.25);
+    transition: all 0.25s;
+    letter-spacing: 0;
+    font-style: normal;
+  }
+  .src::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: #ff0033;
+    border-radius: 3px;
+    flex-shrink: 0;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21.8 8.001a2.75 2.75 0 0 0-1.94-1.93C18.12 5.5 12 5.5 12 5.5s-6.12 0-7.86.57A2.75 2.75 0 0 0 2.2 8.001 28.7 28.7 0 0 0 1.75 12a28.7 28.7 0 0 0 .45 3.999 2.75 2.75 0 0 0 1.94 1.93c1.74.57 7.86.57 7.86.57s6.12 0 7.86-.57a2.75 2.75 0 0 0 1.94-1.93A28.7 28.7 0 0 0 22.25 12a28.7 28.7 0 0 0-.45-3.999ZM9.75 15.02V8.98L15.5 12l-5.75 3.02Z'/%3E%3C/svg%3E") center/contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21.8 8.001a2.75 2.75 0 0 0-1.94-1.93C18.12 5.5 12 5.5 12 5.5s-6.12 0-7.86.57A2.75 2.75 0 0 0 2.2 8.001 28.7 28.7 0 0 0 1.75 12a28.7 28.7 0 0 0 .45 3.999 2.75 2.75 0 0 0 1.94 1.93c1.74.57 7.86.57 7.86.57s6.12 0 7.86-.57a2.75 2.75 0 0 0 1.94-1.93A28.7 28.7 0 0 0 22.25 12a28.7 28.7 0 0 0-.45-3.999ZM9.75 15.02V8.98L15.5 12l-5.75 3.02Z'/%3E%3C/svg%3E") center/contain no-repeat;
+  }
+  .src:hover {
+    background: rgba(255,0,51,0.2);
+    color: #ff6666;
+    border-color: rgba(255,0,51,0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255,0,51,0.2);
+  }
+
+  /* Changes Section */
+  .changes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .change-card {
+    background: var(--zs-white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--zs-blue);
+  }
+  .change-card.rename { border-left-color: var(--zs-orange); }
+  .change-card.moved { border-left-color: var(--zs-purple); }
+  .change-card.new-feature { border-left-color: var(--zs-green); }
+  .change-card.consolidated { border-left-color: var(--zs-accent); }
+  .change-card.retired { border-left-color: var(--zs-red); }
+
+  .change-type {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .change-type.rename { background: #451a03; color: #fbbf24; }
+  .change-type.moved { background: #2e1065; color: #c084fc; }
+  .change-type.new-feature { background: #052e16; color: #34d399; }
+  .change-type.consolidated { background: #083344; color: #22d3ee; }
+  .change-type.retired { background: #450a0a; color: #f87171; }
+
+  .change-card h4 {
+    font-size: 1rem;
+    margin-bottom: 6px;
+    color: #e8ecf1;
+  }
+  .change-card p {
+    font-size: 0.88rem;
+    color: var(--zs-muted);
+    line-height: 1.5;
+  }
+  .change-card .before-after {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  }
+  .change-card .before {
+    color: var(--zs-muted);
+    text-decoration: line-through;
+  }
+  .change-card .after {
+    color: var(--zs-blue);
+    font-weight: 600;
+  }
+  .change-card .change-source {
+    display: block;
+    margin-top: 10px;
+    text-align: right;
+  }
+
+  /* Pro Tips */
+  .pro-tip {
+    background: linear-gradient(135deg, #0c1929, #121e33);
+    border: 1px solid #1e3a5f;
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 24px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .pro-tip .tip-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .pro-tip h4 {
+    font-size: 0.9rem;
+    color: var(--zs-blue);
+    margin-bottom: 4px;
+  }
+  .pro-tip p {
+    font-size: 0.85rem;
+    color: #93b4d4;
+  }
+
+  /* Timeline Banner */
+  .timeline-banner {
+    background: linear-gradient(135deg, var(--zs-dark), var(--zs-mid));
+    color: white;
+    border-radius: var(--radius);
+    padding: 32px;
+    margin: 40px 0;
+    text-align: center;
+  }
+  .timeline-banner h3 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  .timeline-items {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .timeline-item {
+    text-align: center;
+  }
+  .timeline-item .tl-date {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--zs-accent);
+  }
+  .timeline-item .tl-label {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-top: 4px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--zs-muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--zs-border);
+    margin-top: 40px;
+  }
+
+  /* Print */
+  @media print {
+    .toc { display: none; }
+    .hero { padding: 30px; }
+    .product-section.open .product-body { display: block !important; }
+    .product-body { display: block !important; }
+    .qr-card, .change-card, .product-section { break-inside: avoid; }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 1.8rem; }
+    .container { padding: 20px 16px; }
+    .quick-ref-grid, .changes-grid { grid-template-columns: 1fr; }
+    .map-table { font-size: 0.8rem; }
+    .map-table thead th, .map-table tbody td { padding: 8px 10px; }
+    .timeline-items { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>Zscaler Experience Center</h1>
+  <p class="subtitle">Complete migration guide from legacy consoles to the unified Experience Center. Every feature, every path, every change &mdash; sourced directly from the official video series.</p>
+  <div class="badge-row">
+    <span class="badge">ZIA &bull; ZPA &bull; ZDX &bull; Branch/Cloud Connector</span>
+    <span class="badge">console.zscaler.com</span>
+    <span class="badge">Zidentity Required</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#quick-ref">Quick Reference</a>
+    <a href="#mapping-zia">ZIA / SSL</a>
+    <a href="#mapping-zpa">ZPA</a>
+    <a href="#mapping-zdx">ZDX</a>
+    <a href="#mapping-branch">Branch &amp; Cloud</a>
+    <a href="#changes">What Changed</a>
+    <a href="#tips">Tips</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Prerequisite -->
+  <div class="prereq-banner">
+    <span class="icon">&#9888;&#65039;</span>
+    <div>
+      <h3>Prerequisite: Zidentity Migration</h3>
+      <p>Your tenant must be migrated to <strong>Zidentity for Admins</strong> before you can access Experience Center. If you haven't migrated yet, contact Zscaler support or review the Zidentity migration help documents. Once complete, access everything at <strong>console.zscaler.com</strong>.</p>
+      <a class="src" href="https://www.youtube.com/watch?v=Ve9D3x79VJM&t=21s" target="_blank" style="margin-top:8px;">Ep 1 @ 0:21</a>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline-banner">
+    <h3>Key Dates</h3>
+    <div class="timeline-items">
+      <div class="timeline-item">
+        <div class="tl-date">Now</div>
+        <div class="tl-label">Experience Center available<br>alongside legacy consoles</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-date">March 31, 2026</div>
+        <div class="tl-label">No new features added<br>to legacy consoles</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-date">September 1, 2026</div>
+        <div class="tl-label">Legacy consoles<br>retired</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=24s" target="_blank" style="color:#ff6666;border-color:rgba(255,0,51,0.4);background:rgba(255,0,51,0.15);">Ep 5 @ 0:24 &mdash; ZDX console retirement banner</a></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SECTION 1: QUICK REFERENCE CARD              -->
+  <!-- ============================================ -->
+  <div id="quick-ref" class="section-header" style="margin-top: 48px;">
+    <div class="section-number">1</div>
+    <h2>Quick Reference Card</h2>
+    <p>The 20 most common admin tasks and exactly where to find them in Experience Center.</p>
+  </div>
+
+  <div class="quick-ref-grid">
+
+    <div class="qr-card general">
+      <h3>Log In</h3>
+      <span class="qr-product general">All Products</span>
+      <div class="qr-path">
+        <span class="qr-old">Separate URLs per product</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">console.zscaler.com (single URL)</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=Ve9D3x79VJM&t=62s" target="_blank">Ep 1 @ 1:02</a></div>
+    </div>
+
+    <div class="qr-card zia">
+      <h3>SSL/TLS Inspection Policies</h3>
+      <span class="qr-product zia">ZIA</span>
+      <div class="qr-path">
+        <span class="qr-old">Policy &gt; SSL Inspection</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Policies &gt; Common Configuration &gt; SSL/TLS Inspection Policy</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=qm-hC48xSRI&t=142s" target="_blank">Ep 3 @ 2:22</a></div>
+    </div>
+
+    <div class="qr-card zia">
+      <h3>Locations &amp; Location Groups</h3>
+      <span class="qr-product zia">ZIA</span>
+      <div class="qr-path">
+        <span class="qr-old">Administration &gt; Location Management</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Infrastructure &gt; Locations</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=qm-hC48xSRI&t=353s" target="_blank">Ep 3 @ 5:53</a></div>
+    </div>
+
+    <div class="qr-card zpa">
+      <h3>App Connectors</h3>
+      <span class="qr-product zpa">ZPA</span>
+      <div class="qr-path">
+        <span class="qr-old">Configuration &gt; Private Infrastructure &gt; App Connectors</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Infrastructure &gt; Private Access &gt; App Connectors</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=100s" target="_blank">Ep 2 @ 1:40</a></div>
+    </div>
+
+    <div class="qr-card zpa">
+      <h3>Application Segments</h3>
+      <span class="qr-product zpa">ZPA</span>
+      <div class="qr-path">
+        <span class="qr-old">Application Management &gt; Application Segments</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Policies &gt; Private Applications &gt; App Segments</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=102s" target="_blank">Ep 4 @ 1:42</a></div>
+    </div>
+
+    <div class="qr-card zpa">
+      <h3>Browser Access</h3>
+      <span class="qr-product zpa">ZPA</span>
+      <div class="qr-path">
+        <span class="qr-old">Application Management &gt; Browser Access</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Policies &gt; Clientless &gt; Access Methods &gt; Browser Access</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=162s" target="_blank">Ep 4 @ 2:42</a></div>
+    </div>
+
+    <div class="qr-card zpa">
+      <h3>App Protection</h3>
+      <span class="qr-product zpa">ZPA</span>
+      <div class="qr-path">
+        <span class="qr-old">Application Management &gt; App Protection</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Policies &gt; Cyber Security &gt; Inline Security &gt; Private App Protection</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=189s" target="_blank">Ep 4 @ 3:09</a></div>
+    </div>
+
+    <div class="qr-card zpa">
+      <h3>Privileged Remote Access</h3>
+      <span class="qr-product zpa">ZPA</span>
+      <div class="qr-path">
+        <span class="qr-old">Application Management &gt; Privileged Applications</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Policies &gt; Clientless &gt; Privileged Remote Access</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=230s" target="_blank">Ep 4 @ 3:50</a></div>
+    </div>
+
+    <div class="qr-card zdx">
+      <h3>ZDX Dashboards</h3>
+      <span class="qr-product zdx">ZDX</span>
+      <div class="qr-path">
+        <span class="qr-old">Dashboard (various)</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Analytics &gt; Digital Experience (new dashboards + legacy toggle)</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=112s" target="_blank">Ep 5 @ 1:52</a></div>
+    </div>
+
+    <div class="qr-card zdx">
+      <h3>ZDX Probes / Monitoring Config</h3>
+      <span class="qr-product zdx">ZDX</span>
+      <div class="qr-path">
+        <span class="qr-old">Configuration &gt; End User Monitoring</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Policies &gt; Digital Experience Monitoring &gt; Configuration &gt; Probes</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=356s" target="_blank">Ep 5 @ 5:56</a></div>
+    </div>
+
+    <div class="qr-card zdx">
+      <h3>Remediation Scripts &amp; Jobs</h3>
+      <span class="qr-product zdx">ZDX</span>
+      <div class="qr-path">
+        <span class="qr-old">Troubleshoot &gt; Scripts / Remediation Jobs</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Policies &gt; Digital Experience Monitoring &gt; Configuration &gt; Scripts / Remote Execution</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=686s" target="_blank">Ep 5 @ 11:26</a></div>
+    </div>
+
+    <div class="qr-card zdx">
+      <h3>ZDX Alerts</h3>
+      <span class="qr-product zdx">ZDX</span>
+      <div class="qr-path">
+        <span class="qr-old">Administration &gt; Alerts</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Administration &gt; Alerts &gt; Digital Experience Management</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=749s" target="_blank">Ep 5 @ 12:29</a></div>
+    </div>
+
+    <div class="qr-card branch">
+      <h3>Cloud Connector Monitoring</h3>
+      <span class="qr-product branch">Branch &amp; Cloud</span>
+      <div class="qr-path">
+        <span class="qr-old">Dashboard (deployment/active status)</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Infrastructure &gt; Connectors &gt; Cloud &gt; Cloud Connector Monitoring</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=106s" target="_blank">Ep 6 @ 1:46</a></div>
+    </div>
+
+    <div class="qr-card branch">
+      <h3>Branch Connector Monitoring</h3>
+      <span class="qr-product branch">Branch &amp; Cloud</span>
+      <div class="qr-path">
+        <span class="qr-old">Dashboard (deployment/active status)</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Infrastructure &gt; Connectors &gt; Edge &gt; Branch Connector Monitoring</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=134s" target="_blank">Ep 6 @ 2:14</a></div>
+    </div>
+
+    <div class="qr-card branch">
+      <h3>Traffic Forwarding Policies</h3>
+      <span class="qr-product branch">Branch &amp; Cloud</span>
+      <div class="qr-path">
+        <span class="qr-old">Forwarding &gt; Traffic Forwarding</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Infrastructure &gt; Connectors &gt; Cloud &gt; Traffic Steering &gt; Forwarding Policy</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=313s" target="_blank">Ep 6 @ 5:13</a></div>
+    </div>
+
+    <div class="qr-card branch">
+      <h3>Deployment Templates</h3>
+      <span class="qr-product branch">Branch &amp; Cloud</span>
+      <div class="qr-path">
+        <span class="qr-old">Cloud Automation &gt; Deployment Templates</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Infrastructure &gt; Common Resources &gt; Deployment &gt; Cloud and Edge VM Deployment Templates</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=403s" target="_blank">Ep 7 @ 6:43</a></div>
+    </div>
+
+    <div class="qr-card general">
+      <h3>API Key Management</h3>
+      <span class="qr-product general">All Products</span>
+      <div class="qr-path">
+        <span class="qr-old">Per-product API settings</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Administration &gt; API Configuration &gt; Legacy API &gt; [Product]</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=583s" target="_blank">Ep 5 @ 9:43</a></div>
+    </div>
+
+    <div class="qr-card general">
+      <h3>Client Connector Management</h3>
+      <span class="qr-product general">All Products</span>
+      <div class="qr-path">
+        <span class="qr-old">External mobile admin portal (new window)</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Infrastructure &gt; Connectors &gt; Client</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=486s" target="_blank">Ep 5 @ 8:06</a></div>
+    </div>
+
+    <div class="qr-card general">
+      <h3>Workflow Automation</h3>
+      <span class="qr-product general">All Products</span>
+      <div class="qr-path">
+        <span class="qr-old">External portal (new window)</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Administration &gt; Workflow Automation</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=522s" target="_blank">Ep 5 @ 8:42</a></div>
+    </div>
+
+    <div class="qr-card general">
+      <h3>Role-Based Access Control</h3>
+      <span class="qr-product general">All Products</span>
+      <div class="qr-path">
+        <span class="qr-old">Per-product admin/role management</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Centralized in Zidentity portal</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=395s" target="_blank">Ep 5 @ 6:35</a></div>
+    </div>
+
+  </div>
+
+  <div class="pro-tip">
+    <span class="tip-icon">&#128270;</span>
+    <div>
+      <h4>Can't find something?</h4>
+      <p>Click the <strong>magnifying glass search icon</strong> in the top bar of Experience Center and type the feature name. It uses aliases from the old consoles, so even legacy names will find the right page. It also shows you the navigation path for future reference.</p>
+      <a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=180s" target="_blank" style="margin-top:6px;">Ep 6 @ 3:00 &mdash; Search demo</a>
+    </div>
+  </div>
+
+
+  <!-- ============================================ -->
+  <!-- SECTION 2: NAVIGATION MAPPING GUIDE          -->
+  <!-- ============================================ -->
+  <div id="mapping" class="section-header" style="margin-top: 64px;">
+    <div class="section-number">2</div>
+    <h2>Navigation Mapping Guide</h2>
+    <p>Complete path-by-path mapping from every legacy console to Experience Center.</p>
+  </div>
+
+  <!-- ZIA / SSL Inspection -->
+  <div id="mapping-zia" class="product-section open">
+    <div class="product-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="product-icon zia">ZIA</div>
+      <div>
+        <h3>Zscaler Internet Access &mdash; SSL/TLS Inspection</h3>
+        <div class="product-desc">Policies, locations, and location groups related to SSL inspection</div>
+      </div>
+      <span class="expand-icon">&#9660;</span>
+    </div>
+    <div class="product-body">
+      <table class="map-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Old Console Path</th>
+            <th>Experience Center Path</th>
+            <th style="width:110px;">Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="feature-name">SSL Inspection Policy</td>
+            <td class="path">Policy &gt; SSL Inspection</td>
+            <td class="path-new">Policies &gt; Common Configuration &gt; SSL/TLS Inspection Policy</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=qm-hC48xSRI&t=142s" target="_blank">Ep 3 @ 2:22</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Locations</td>
+            <td class="path">Administration &gt; Location Management &gt; Locations</td>
+            <td class="path-new">Infrastructure &gt; Locations &gt; Locations</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=qm-hC48xSRI&t=353s" target="_blank">Ep 3 @ 5:53</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Location Groups</td>
+            <td class="path">Administration &gt; Location Management &gt; Location Groups</td>
+            <td class="path-new">Infrastructure &gt; Locations &gt; Location Groups</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=qm-hC48xSRI&t=362s" target="_blank">Ep 3 @ 6:02</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ZPA -->
+  <div id="mapping-zpa" class="product-section open">
+    <div class="product-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="product-icon zpa">ZPA</div>
+      <div>
+        <h3>Zscaler Private Access</h3>
+        <div class="product-desc">Private infrastructure, application management, and resource management</div>
+      </div>
+      <span class="expand-icon">&#9660;</span>
+    </div>
+    <div class="product-body">
+      <table class="map-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Old Console Path</th>
+            <th>Experience Center Path</th>
+            <th style="width:110px;">Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4" style="background:#052e16; font-weight:600; color:#34d399; font-size:0.8rem; letter-spacing:0.5px;">PRIVATE INFRASTRUCTURE (Ep 2)</td></tr>
+          <tr>
+            <td class="feature-name">App Connectors</td>
+            <td class="path">Configuration &gt; Private Infrastructure &gt; App Connectors</td>
+            <td class="path-new">Infrastructure &gt; Private Access &gt; App Connectors</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=100s" target="_blank">Ep 2 @ 1:40</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Private Service Edges</td>
+            <td class="path">Configuration &gt; Private Infrastructure &gt; Private Service Edge</td>
+            <td class="path-new">Infrastructure &gt; Private Access &gt; Private Service Edges</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=104s" target="_blank">Ep 2 @ 1:44</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Cloud &amp; Branch Connectors</td>
+            <td class="path">Configuration &gt; Private Infrastructure &gt; Cloud/Branch Connectors</td>
+            <td class="path-new">Infrastructure &gt; Private Access &gt; Cloud and Branch Connector</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=104s" target="_blank">Ep 2 @ 1:44</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Log Receivers</td>
+            <td class="path">Configuration &gt; Private Infrastructure &gt; Log Receivers</td>
+            <td class="path-new">Infrastructure &gt; Private Access &gt; Log Receivers</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=43s" target="_blank">Ep 2 @ 0:43</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Infrastructure Certificates</td>
+            <td class="path">Configuration &gt; Private Infrastructure</td>
+            <td class="path-new">Infrastructure &gt; Private Access &gt; Infrastructure Certificates</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=106s" target="_blank">Ep 2 @ 1:46</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">VPN for Legacy Apps</td>
+            <td class="path">&mdash;</td>
+            <td class="path-new">Infrastructure &gt; Private Access &gt; VPN for Legacy Apps</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=106s" target="_blank">Ep 2 @ 1:46</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Business Continuity / DR</td>
+            <td class="path">Configuration &gt; Private Infrastructure</td>
+            <td class="path-new">Infrastructure &gt; Private Access &gt; Business Continuity</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=120s" target="_blank">Ep 2 @ 2:00</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">B2B Exchange (Extranet)</td>
+            <td class="path">Configuration &gt; Private Infrastructure</td>
+            <td class="path-new">Infrastructure &gt; Private Access &gt; B2B Exchange</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=131s" target="_blank">Ep 2 @ 2:11</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Client Forwarding Policy</td>
+            <td class="path">Policy &gt; Client Forwarding Policy</td>
+            <td class="path-new">Infrastructure &gt; Private Access &gt; Client Connector Policies</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=135s" target="_blank">Ep 2 @ 2:15</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Redirection Policies</td>
+            <td class="path">Policy &gt; Redirection Policies</td>
+            <td class="path-new">Infrastructure &gt; Private Access &gt; Redirection Policies</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=Q-N2OYdKIpY&t=137s" target="_blank">Ep 2 @ 2:17</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#052e16; font-weight:600; color:#34d399; font-size:0.8rem; letter-spacing:0.5px;">APPLICATION / RESOURCE MANAGEMENT (Ep 4)</td></tr>
+          <tr>
+            <td class="feature-name">Application Segments</td>
+            <td class="path">Application Management &gt; Application Segments</td>
+            <td class="path-new">Policies &gt; Private Applications &gt; App Segments</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=102s" target="_blank">Ep 4 @ 1:42</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Segment Groups</td>
+            <td class="path">Application Management &gt; Segment Groups</td>
+            <td class="path-new">Policies &gt; Private Applications &gt; Segment Groups</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=126s" target="_blank">Ep 4 @ 2:06</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Browser Access</td>
+            <td class="path">Application Management &gt; Browser Access</td>
+            <td class="path-new">Policies &gt; Clientless &gt; Access Methods &gt; Browser Access
+              <span class="note">Moved out of App Segments into Clientless section</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=162s" target="_blank">Ep 4 @ 2:42</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">App Protection Policies</td>
+            <td class="path">Application Management &gt; App Protection</td>
+            <td class="path-new">Policies &gt; Cyber Security &gt; Inline Security &gt; Private App Protection</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=189s" target="_blank">Ep 4 @ 3:09</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Protected Applications</td>
+            <td class="path">Application Management &gt; App Protection &gt; Protected Applications</td>
+            <td class="path-new">Policies &gt; Cyber Security &gt; Inline Security &gt; Private App Protection &gt; Protected Applications</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=208s" target="_blank">Ep 4 @ 3:28</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Privileged Applications</td>
+            <td class="path">Application Management &gt; Privileged Applications</td>
+            <td class="path-new">Policies &gt; Access Control &gt; Clientless &gt; Privileged Remote Access</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=230s" target="_blank">Ep 4 @ 3:50</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">User Portals</td>
+            <td class="path">Resource Management &gt; User Portal</td>
+            <td class="path-new">Policies &gt; Clientless &gt; Access Methods &gt; User Portals</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=272s" target="_blank">Ep 4 @ 4:32</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Portal Links</td>
+            <td class="path">Resource Management &gt; User Portal &gt; Portal Links</td>
+            <td class="path-new">Policies &gt; Clientless &gt; User Portal Configuration &gt; Portal Links</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=300s" target="_blank">Ep 4 @ 5:00</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Client Connector Download Links</td>
+            <td class="path">Resource Management &gt; Client Connector Download Links</td>
+            <td class="path-new">Policies &gt; Clientless &gt; User Portal Configuration &gt; Client Connector Download Links</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=335s" target="_blank">Ep 4 @ 5:35</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Privileged Portals</td>
+            <td class="path">Resource Management &gt; Privileged Remote Access &gt; Privileged Portals</td>
+            <td class="path-new">Policies &gt; Clientless &gt; Access Methods &gt; Privileged Portals</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=363s" target="_blank">Ep 4 @ 6:03</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Privileged Consoles</td>
+            <td class="path">Resource Management &gt; Privileged Remote Access &gt; Privileged Consoles</td>
+            <td class="path-new">Policies &gt; Clientless &gt; Resources &gt; Privileged Consoles</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=387s" target="_blank">Ep 4 @ 6:27</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Privilege Approvals</td>
+            <td class="path">Resource Management &gt; Privileged Remote Access &gt; Approvals</td>
+            <td class="path-new">Policies &gt; Clientless &gt; Resources &gt; Privilege Approvals</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=408s" target="_blank">Ep 4 @ 6:48</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Privilege Credentials</td>
+            <td class="path">Resource Management &gt; Privileged Remote Access &gt; Credentials</td>
+            <td class="path-new">Policies &gt; Clientless &gt; Resources &gt; Privilege Credentials</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=426s" target="_blank">Ep 4 @ 7:06</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ZDX -->
+  <div id="mapping-zdx" class="product-section open">
+    <div class="product-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="product-icon zdx">ZDX</div>
+      <div>
+        <h3>Zscaler Digital Experience</h3>
+        <div class="product-desc">Dashboards, analytics, monitoring configuration, inventory, and administration</div>
+      </div>
+      <span class="expand-icon">&#9660;</span>
+    </div>
+    <div class="product-body">
+      <table class="map-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Old Console Path</th>
+            <th>Experience Center Path</th>
+            <th style="width:110px;">Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4" style="background:#1e1040; font-weight:600; color:#c084fc; font-size:0.8rem; letter-spacing:0.5px;">DASHBOARDS &amp; ANALYTICS</td></tr>
+          <tr>
+            <td class="feature-name">Dashboards (Performance, Devices, Incidents, Wi-Fi, etc.)</td>
+            <td class="path">Dashboard &gt; [type]</td>
+            <td class="path-new">Analytics &gt; Digital Experience &gt; [dashboard]
+              <span class="note">New dashboards by default; toggle "Switch to Existing Reports" for legacy views</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=112s" target="_blank">Ep 5 @ 1:52</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Copilot (AI Assistant)</td>
+            <td class="path">Copilot (bottom of console)</td>
+            <td class="path-new">Copilot icon (bottom of Experience Center)</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=189s" target="_blank">Ep 5 @ 3:09</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">System Generated Reports</td>
+            <td class="path">Analytics &gt; System Generated Reports</td>
+            <td class="path-new">Analytics &gt; Digital Experience &gt; Reporting &gt; System Generated Reports
+              <span class="note">Under "Switch to Existing Reports" toggle</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=235s" target="_blank">Ep 5 @ 3:55</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Quarterly Business Reviews</td>
+            <td class="path">Analytics &gt; Quarterly Business Reviews</td>
+            <td class="path-new">Analytics &gt; Digital Experience &gt; Reporting &gt; Quarterly Business Reviews</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=243s" target="_blank">Ep 5 @ 4:03</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Applications View</td>
+            <td class="path">Applications</td>
+            <td class="path-new">Analytics &gt; Applications</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=272s" target="_blank">Ep 5 @ 4:32</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Users View</td>
+            <td class="path">Users</td>
+            <td class="path-new">Analytics &gt; Users</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=286s" target="_blank">Ep 5 @ 4:46</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#1e1040; font-weight:600; color:#c084fc; font-size:0.8rem; letter-spacing:0.5px;">INVENTORY</td></tr>
+          <tr>
+            <td class="feature-name">Software Overview / Inventory / Patches</td>
+            <td class="path">Inventory &gt; Software &gt; [type]</td>
+            <td class="path-new">Analytics &gt; Digital Experience &gt; Inventory &gt; Software Overview / Inventory / Patch Overview</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=307s" target="_blank">Ep 5 @ 5:07</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Device Overview / Inventory</td>
+            <td class="path">Inventory &gt; Hardware &gt; Device Overview / Inventory</td>
+            <td class="path-new">Analytics &gt; Digital Experience &gt; Inventory &gt; Device &gt; Device Overview / Inventory
+              <span class="note">Renamed from "Hardware" to "Device"</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=332s" target="_blank">Ep 5 @ 5:32</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#1e1040; font-weight:600; color:#c084fc; font-size:0.8rem; letter-spacing:0.5px;">CONFIGURATION &amp; MONITORING</td></tr>
+          <tr>
+            <td class="feature-name">End User Monitoring (UC, Predefined Apps, Custom Apps)</td>
+            <td class="path">Configuration &gt; End User Monitoring</td>
+            <td class="path-new">Policies &gt; Digital Experience Monitoring &gt; Configuration &gt; Probes</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=356s" target="_blank">Ep 5 @ 5:56</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Labels</td>
+            <td class="path">Administration &gt; Resources &gt; Labels</td>
+            <td class="path-new">Policies &gt; Digital Experience Monitoring &gt; Resources &gt; Labels</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=454s" target="_blank">Ep 5 @ 7:34</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Integrations / Data Collection</td>
+            <td class="path">Administration &gt; Integrations</td>
+            <td class="path-new">Policies &gt; Digital Experience Monitoring &gt; Settings &gt; Data Collection &gt; Integrations</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=548s" target="_blank">Ep 5 @ 9:08</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Inventory / Self-Service / Remediation Settings</td>
+            <td class="path">Administration &gt; Settings</td>
+            <td class="path-new">Policies &gt; Digital Experience Monitoring &gt; Self-Service, Inventory and Remediation</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=632s" target="_blank">Ep 5 @ 10:32</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#1e1040; font-weight:600; color:#c084fc; font-size:0.8rem; letter-spacing:0.5px;">TROUBLESHOOTING</td></tr>
+          <tr>
+            <td class="feature-name">Scripts</td>
+            <td class="path">Troubleshoot &gt; Scripts</td>
+            <td class="path-new">Policies &gt; Digital Experience Monitoring &gt; Configuration &gt; Scripts</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=686s" target="_blank">Ep 5 @ 11:26</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Remediation Jobs</td>
+            <td class="path">Troubleshoot &gt; Remediation Jobs</td>
+            <td class="path-new">Policies &gt; Digital Experience Monitoring &gt; Remote Execution
+              <span class="note">Renamed from "Remediation Jobs" to "Remote Executions"</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=708s" target="_blank">Ep 5 @ 11:48</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#1e1040; font-weight:600; color:#c084fc; font-size:0.8rem; letter-spacing:0.5px;">ADMINISTRATION</td></tr>
+          <tr>
+            <td class="feature-name">Location Management</td>
+            <td class="path">Administration &gt; Location Management</td>
+            <td class="path-new">Infrastructure &gt; Locations &gt; Location Management &gt; Locations</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=424s" target="_blank">Ep 5 @ 7:04</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Admin / Role Management</td>
+            <td class="path">Administration &gt; Admin/Role Management</td>
+            <td class="path-new">Administration &gt; Admin Management &gt; Digital Experience
+              <span class="note">RBAC now primarily handled in Zidentity</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=395s" target="_blank">Ep 5 @ 6:35</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">API Key Management</td>
+            <td class="path">Administration &gt; Authentication &gt; API Key Management</td>
+            <td class="path-new">Administration &gt; API Configuration &gt; Legacy API &gt; Digital Experience API</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=607s" target="_blank">Ep 5 @ 10:07</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Subscriptions</td>
+            <td class="path">Administration &gt; Subscriptions</td>
+            <td class="path-new">Administration &gt; Account Management &gt; Subscriptions</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=654s" target="_blank">Ep 5 @ 10:54</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Alerts</td>
+            <td class="path">Administration &gt; Alerts</td>
+            <td class="path-new">Administration &gt; Alerts &gt; Digital Experience Management</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=749s" target="_blank">Ep 5 @ 12:29</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#1e1040; font-weight:600; color:#c084fc; font-size:0.8rem; letter-spacing:0.5px;">EXTERNAL PORTALS (NOW BUILT-IN)</td></tr>
+          <tr>
+            <td class="feature-name">Zscaler Client Connector Portal</td>
+            <td class="path">External portal (new window)</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client
+              <span class="note">No longer opens external window</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=486s" target="_blank">Ep 5 @ 8:06</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Workflow Automation</td>
+            <td class="path">External portal (new window)</td>
+            <td class="path-new">Administration &gt; Workflow Automation
+              <span class="note">No longer opens external window</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=522s" target="_blank">Ep 5 @ 8:42</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Branch & Cloud Connector -->
+  <div id="mapping-branch" class="product-section open">
+    <div class="product-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="product-icon branch">B&C</div>
+      <div>
+        <h3>Branch &amp; Cloud Connector</h3>
+        <div class="product-desc">Monitoring, forwarding, administration, VDI, deployment, and hardware management</div>
+      </div>
+      <span class="expand-icon">&#9660;</span>
+    </div>
+    <div class="product-body">
+      <table class="map-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Old Console Path</th>
+            <th>Experience Center Path</th>
+            <th style="width:110px;">Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4" style="background:#082f49; font-weight:600; color:#22d3ee; font-size:0.8rem; letter-spacing:0.5px;">MONITORING &amp; ANALYTICS (Ep 6)</td></tr>
+          <tr>
+            <td class="feature-name">Cloud Connector Monitoring</td>
+            <td class="path">Dashboard (deployment/active status)</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Cloud &gt; Cloud Connector Monitoring</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=106s" target="_blank">Ep 6 @ 1:46</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Branch Connector Monitoring</td>
+            <td class="path">Dashboard (deployment/active status)</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Edge &gt; Branch Connector Monitoring</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=134s" target="_blank">Ep 6 @ 2:14</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Traffic Monitoring</td>
+            <td class="path">Dashboard &gt; Traffic Monitoring</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; [Cloud/Edge] &gt; Traffic Monitoring</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=150s" target="_blank">Ep 6 @ 2:30</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Zero Trust Gateway</td>
+            <td class="path">Dashboard &gt; Zero Trust Gateway</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Cloud &gt; Zero Trust Gateway</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=162s" target="_blank">Ep 6 @ 2:42</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Session Insights</td>
+            <td class="path">Analytics &gt; Session Insights</td>
+            <td class="path-new">Logs &gt; Insights &gt; Branch and Cloud Connector &gt; Session Insights
+              <span class="note">Old "Analytics" items moved under "Logs"</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=211s" target="_blank">Ep 6 @ 3:31</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">DNS Insights</td>
+            <td class="path">Analytics &gt; DNS Insights</td>
+            <td class="path-new">Logs &gt; Branch and Cloud Connectors &gt; DNS Insights</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=253s" target="_blank">Ep 6 @ 4:13</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Tunnel Insights</td>
+            <td class="path">Analytics &gt; Tunnel Insights</td>
+            <td class="path-new">Logs &gt; Branch and Cloud Connectors &gt; Tunnel Insights</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=266s" target="_blank">Ep 6 @ 4:26</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#082f49; font-weight:600; color:#22d3ee; font-size:0.8rem; letter-spacing:0.5px;">FORWARDING &amp; POLICIES (Ep 6)</td></tr>
+          <tr>
+            <td class="feature-name">Traffic Forwarding</td>
+            <td class="path">Forwarding &gt; Policy Management &gt; Traffic Forwarding</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Cloud &gt; Traffic Steering &gt; Forwarding Policy
+              <span class="note">Renamed: "Traffic Forwarding" &rarr; "Traffic Steering / Forwarding Policy"</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=313s" target="_blank">Ep 6 @ 5:13</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Log and Control Forwarding</td>
+            <td class="path">Forwarding &gt; Log and Control Forwarding</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Cloud &gt; Log and Streaming
+              <span class="note">Renamed to "Log and Streaming"</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=337s" target="_blank">Ep 6 @ 5:37</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">DNS Policy</td>
+            <td class="path">Forwarding &gt; DNS Policy</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Cloud &gt; DNS for VM
+              <span class="note">Renamed to "DNS for VM"</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=351s" target="_blank">Ep 6 @ 5:51</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#082f49; font-weight:600; color:#22d3ee; font-size:0.8rem; letter-spacing:0.5px;">ADMINISTRATION (Ep 7)</td></tr>
+          <tr>
+            <td class="feature-name">API Key Management</td>
+            <td class="path">Administration &gt; API Key Management</td>
+            <td class="path-new">Administration &gt; API Configuration &gt; Legacy API &gt; Cloud and Branch Connector API</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=128s" target="_blank">Ep 7 @ 2:08</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Cloud Connector Groups</td>
+            <td class="path">Administration &gt; Connector Management &gt; Groups</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Cloud &gt; Cloud Connector Groups</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=175s" target="_blank">Ep 7 @ 2:55</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Administrator Management</td>
+            <td class="path">Administration &gt; Administrator Management</td>
+            <td class="path-new">Administration &gt; Admin Management &gt; Branch and Cloud Connector
+              <span class="note">RBAC/entitlements now managed in Zidentity</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=298s" target="_blank">Ep 7 @ 4:58</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Locations</td>
+            <td class="path">Administration &gt; Location Management &gt; Locations</td>
+            <td class="path-new">Infrastructure &gt; Locations &gt; Location Management &gt; Locations</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=227s" target="_blank">Ep 7 @ 3:47</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Location Templates</td>
+            <td class="path">Administration &gt; Location Management &gt; Location Templates</td>
+            <td class="path-new">Infrastructure &gt; Locations &gt; Location Resources &gt; Location Templates</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=248s" target="_blank">Ep 7 @ 4:08</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Provisioning &amp; Configuration</td>
+            <td class="path">Administration &gt; Provisioning and Configuration</td>
+            <td class="path-new">Infrastructure &gt; Common Resources &gt; Gateways &gt; Internet Access</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=271s" target="_blank">Ep 7 @ 4:31</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">IP &amp; FQDN Groups / IP Pools</td>
+            <td class="path">Administration &gt; Filtering &gt; IP and FQDN Groups</td>
+            <td class="path-new">Policies &gt; Firewall &gt; IP and FQDN Groups
+              <span class="note">Moved from Administration to Policies &gt; Firewall</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=348s" target="_blank">Ep 7 @ 5:48</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Network Services</td>
+            <td class="path">Administration &gt; Filtering &gt; Network Services</td>
+            <td class="path-new">Policies &gt; Firewall &gt; Network Services</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=382s" target="_blank">Ep 7 @ 6:22</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#082f49; font-weight:600; color:#22d3ee; font-size:0.8rem; letter-spacing:0.5px;">DEPLOYMENT &amp; VDI (Ep 7)</td></tr>
+          <tr>
+            <td class="feature-name">Deployment Templates (AWS, Azure, GCP, Terraform)</td>
+            <td class="path">Cloud Automation &gt; Deployment Templates</td>
+            <td class="path-new">Infrastructure &gt; Common Resources &gt; Deployment &gt; Cloud and Edge VM Deployment Templates</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=403s" target="_blank">Ep 7 @ 6:43</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Branch Connector Device Images</td>
+            <td class="path">Administration &gt; Images &gt; Branch Connector Images</td>
+            <td class="path-new">Infrastructure &gt; Common Resources &gt; Deployment &gt; Branch Connector Device Images</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=547s" target="_blank">Ep 7 @ 9:07</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">VDI Templates</td>
+            <td class="path">Client Connector for VDI &gt; VDI Templates</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Enroll Devices &gt; VDI Templates</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=435s" target="_blank">Ep 7 @ 7:15</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">VDI Forwarding Profiles</td>
+            <td class="path">Client Connector for VDI &gt; VDI Forwarding Profiles</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Forwarding Profiles &gt; VDI Profile</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=459s" target="_blank">Ep 7 @ 7:39</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">VDI Device Management</td>
+            <td class="path">Client Connector for VDI &gt; VDI Device Management</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Enrolled Devices &gt; VDI Device Management</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=480s" target="_blank">Ep 7 @ 8:00</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">VDI App Store</td>
+            <td class="path">Client Connector for VDI &gt; VDI App Store</td>
+            <td class="path-new">Infrastructure &gt; Common Resources &gt; Deployment &gt; App Store for VDI</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=501s" target="_blank">Ep 7 @ 8:21</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#082f49; font-weight:600; color:#22d3ee; font-size:0.8rem; letter-spacing:0.5px;">HARDWARE &amp; PUBLIC CLOUD (Ep 7)</td></tr>
+          <tr>
+            <td class="feature-name">Cloud Configuration Advanced Settings</td>
+            <td class="path">Cloud Configuration &gt; Advanced Settings</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Cloud &gt; Cloud Configuration &gt; Advanced Settings</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=523s" target="_blank">Ep 7 @ 8:43</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Branch Devices</td>
+            <td class="path">Branch Management &gt; Branch Devices</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Edge &gt; Management &gt; Branch Devices</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=200s" target="_blank">Ep 7 @ 3:20</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Zero Trust Devices</td>
+            <td class="path">Hardware Management &gt; Zero Trust Devices</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Edge &gt; Management &gt; Zero Trust Devices</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=596s" target="_blank">Ep 7 @ 9:56</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Partner Integrations</td>
+            <td class="path">Public Cloud Configuration &gt; Partner Integrations</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Cloud &gt; Management &gt; Partner Integrations</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=621s" target="_blank">Ep 7 @ 10:21</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Zero Trust Gateway (Public Cloud)</td>
+            <td class="path">Public Cloud Configuration &gt; Zero Trust Gateway</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Cloud &gt; Zero Trust Gateway</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=641s" target="_blank">Ep 7 @ 10:41</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#082f49; font-weight:600; color:#22d3ee; font-size:0.8rem; letter-spacing:0.5px;">ACTIVATION (Ep 6)</td></tr>
+          <tr>
+            <td class="feature-name">Activate Changes</td>
+            <td class="path">Activation button in console</td>
+            <td class="path-new">Cloud with arrow icon in top bar
+              <span class="note">Changes still require manual activation &mdash; not auto-applied</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=375s" target="_blank">Ep 6 @ 6:15</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ============================================ -->
+  <!-- SECTION 3: WHAT CHANGED / WHAT'S NEW         -->
+  <!-- ============================================ -->
+  <div id="changes" class="section-header" style="margin-top: 64px;">
+    <div class="section-number">3</div>
+    <h2>What Changed &amp; What's New</h2>
+    <p>Key renames, relocations, consolidations, and new features to be aware of.</p>
+  </div>
+
+  <div class="changes-grid">
+
+    <div class="change-card consolidated">
+      <span class="change-type consolidated">Consolidated</span>
+      <h4>One Console to Rule Them All</h4>
+      <p>ZIA, ZPA, ZDX, Branch/Cloud Connector, Zero Trust Browser, Mobile Admin, Zero Trust for Workloads, and Risk 360 are all unified at <strong>console.zscaler.com</strong>. No more switching tabs or logging into separate portals.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=Ve9D3x79VJM&t=14s" target="_blank">Ep 1 @ 0:14</a></span>
+    </div>
+
+    <div class="change-card new-feature">
+      <span class="change-type new-feature">New Feature</span>
+      <h4>Global Search with Aliases</h4>
+      <p>The magnifying glass icon in the top bar lets you search for any feature by name. It supports aliases from the old consoles, so typing legacy names still finds the right page. Also shows you the navigation path.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=180s" target="_blank">Ep 6 @ 3:00</a></span>
+    </div>
+
+    <div class="change-card new-feature">
+      <span class="change-type new-feature">New Feature</span>
+      <h4>One API (Unified API)</h4>
+      <p>A new unified API endpoint replaces per-product API keys. Legacy APIs still work under <strong>Administration &gt; API Configuration &gt; Legacy API</strong>, but the One API consolidates access across all services.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=583s" target="_blank">Ep 5 @ 9:43</a></span>
+    </div>
+
+    <div class="change-card new-feature">
+      <span class="change-type new-feature">New Feature</span>
+      <h4>New ZDX Dashboards</h4>
+      <p>Experience Center includes brand new dashboards for Digital Experience that are unique to the new platform. Legacy dashboards remain accessible via the "Switch to Existing Reports" toggle.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=112s" target="_blank">Ep 5 @ 1:52</a></span>
+    </div>
+
+    <div class="change-card consolidated">
+      <span class="change-type consolidated">Consolidated</span>
+      <h4>External Portals Eliminated</h4>
+      <p>Client Connector Portal and Workflow Automation no longer open in separate browser windows. Everything is embedded within Experience Center under Infrastructure &gt; Connectors &gt; Client and Administration &gt; Workflow Automation.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=486s" target="_blank">Ep 5 @ 8:06</a></span>
+    </div>
+
+    <div class="change-card consolidated">
+      <span class="change-type consolidated">Consolidated</span>
+      <h4>RBAC Centralized in Zidentity</h4>
+      <p>Role-based access control and administrator entitlements are now primarily managed through the Zidentity portal, rather than per-product admin consoles.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=298s" target="_blank">Ep 7 @ 4:58</a></span>
+    </div>
+
+    <div class="change-card rename">
+      <span class="change-type rename">Renamed</span>
+      <h4>Remediation Jobs &rarr; Remote Executions</h4>
+      <p>ZDX troubleshooting "Remediation Jobs" are now called "Remote Executions" in Experience Center.</p>
+      <div class="before-after">
+        <div><span class="before">Troubleshoot &gt; Remediation Jobs</span></div>
+        <div><span class="after">Policies &gt; DEM &gt; Remote Execution</span></div>
+      </div>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=708s" target="_blank">Ep 5 @ 11:48</a></span>
+    </div>
+
+    <div class="change-card rename">
+      <span class="change-type rename">Renamed</span>
+      <h4>Hardware &rarr; Device</h4>
+      <p>ZDX inventory section "Hardware" heading has been renamed to "Device" in Experience Center.</p>
+      <div class="before-after">
+        <div><span class="before">Inventory &gt; Hardware &gt; Device Overview</span></div>
+        <div><span class="after">Inventory &gt; Device &gt; Device Overview</span></div>
+      </div>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=332s" target="_blank">Ep 5 @ 5:32</a></span>
+    </div>
+
+    <div class="change-card rename">
+      <span class="change-type rename">Renamed</span>
+      <h4>Traffic Forwarding &rarr; Traffic Steering</h4>
+      <p>Branch &amp; Cloud Connector "Traffic Forwarding" is now "Traffic Steering" with sub-item "Forwarding Policy."</p>
+      <div class="before-after">
+        <div><span class="before">Forwarding &gt; Traffic Forwarding</span></div>
+        <div><span class="after">Connectors &gt; Cloud &gt; Traffic Steering &gt; Forwarding Policy</span></div>
+      </div>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=313s" target="_blank">Ep 6 @ 5:13</a></span>
+    </div>
+
+    <div class="change-card rename">
+      <span class="change-type rename">Renamed</span>
+      <h4>Log and Control Forwarding &rarr; Log and Streaming</h4>
+      <p>Branch &amp; Cloud Connector log forwarding feature renamed.</p>
+      <div class="before-after">
+        <div><span class="before">Forwarding &gt; Log and Control Forwarding</span></div>
+        <div><span class="after">Connectors &gt; Cloud &gt; Log and Streaming</span></div>
+      </div>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=337s" target="_blank">Ep 6 @ 5:37</a></span>
+    </div>
+
+    <div class="change-card rename">
+      <span class="change-type rename">Renamed</span>
+      <h4>DNS Policy &rarr; DNS for VM</h4>
+      <p>Branch &amp; Cloud Connector DNS policy feature renamed.</p>
+      <div class="before-after">
+        <div><span class="before">Forwarding &gt; DNS Policy</span></div>
+        <div><span class="after">Connectors &gt; Cloud &gt; DNS for VM</span></div>
+      </div>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=351s" target="_blank">Ep 6 @ 5:51</a></span>
+    </div>
+
+    <div class="change-card moved">
+      <span class="change-type moved">Relocated</span>
+      <h4>Browser Access Moved to Clientless</h4>
+      <p>ZPA Browser Access is no longer under Application Segments. It's now under the Clientless &gt; Access Methods section in Experience Center.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=140s" target="_blank">Ep 4 @ 2:20</a></span>
+    </div>
+
+    <div class="change-card moved">
+      <span class="change-type moved">Relocated</span>
+      <h4>App Protection &rarr; Cyber Security</h4>
+      <p>ZPA App Protection policies moved from the ZPA section into the cross-product Cyber Security &gt; Inline Security area.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=VPaYqjFco98&t=189s" target="_blank">Ep 4 @ 3:09</a></span>
+    </div>
+
+    <div class="change-card moved">
+      <span class="change-type moved">Relocated</span>
+      <h4>IP/FQDN Groups &rarr; Firewall Policies</h4>
+      <p>Branch &amp; Cloud Connector filtering items (IP groups, FQDN groups, IP pools, network services) moved from Administration to Policies &gt; Firewall.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=348s" target="_blank">Ep 7 @ 5:48</a></span>
+    </div>
+
+    <div class="change-card moved">
+      <span class="change-type moved">Relocated</span>
+      <h4>Branch/Cloud Analytics &rarr; Logs</h4>
+      <p>Session Insights, DNS Insights, and Tunnel Insights moved from "Analytics" to the "Logs" section in Experience Center.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=211s" target="_blank">Ep 6 @ 3:31</a></span>
+    </div>
+
+    <div class="change-card retired">
+      <span class="change-type retired">Retiring</span>
+      <h4>Legacy Consoles Sunset</h4>
+      <p>As of <strong>March 31, 2026</strong>, no new features will be added to legacy consoles. All legacy consoles will be <strong>retired on September 1, 2026</strong>. Migrate now.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=24s" target="_blank">Ep 5 @ 0:24</a></span>
+    </div>
+
+  </div>
+
+
+  <!-- ============================================ -->
+  <!-- TIPS                                          -->
+  <!-- ============================================ -->
+  <div id="tips" class="section-header" style="margin-top: 64px;">
+    <div class="section-number">&#9733;</div>
+    <h2>Tips &amp; Shortcuts</h2>
+    <p>Make the transition smoother with these power-user tips.</p>
+  </div>
+
+  <div class="pro-tip">
+    <span class="tip-icon">&#128270;</span>
+    <div>
+      <h4>Use the Search Bar</h4>
+      <p>The magnifying glass icon in the Experience Center top bar is your best friend. It searches across all products and supports aliases from legacy console names. It also shows you the exact navigation path so you can bookmark it mentally.</p>
+      <a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=180s" target="_blank" style="margin-top:6px;">Ep 6 @ 3:00</a>
+      &nbsp;
+      <a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=547s" target="_blank" style="margin-top:6px;">Ep 7 @ 9:07</a>
+    </div>
+  </div>
+
+  <div class="pro-tip">
+    <span class="tip-icon">&#9889;</span>
+    <div>
+      <h4>Activation Still Required</h4>
+      <p>In the Branch &amp; Cloud Connector section, changes are <strong>not automatically applied</strong>. Look for the cloud-with-arrow icon in the top bar &mdash; that's your activation button. If you see "activation pending," you need to click it to push your changes live.</p>
+      <a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=375s" target="_blank" style="margin-top:6px;">Ep 6 @ 6:15</a>
+    </div>
+  </div>
+
+  <div class="pro-tip">
+    <span class="tip-icon">&#128209;</span>
+    <div>
+      <h4>Legacy Reports Toggle</h4>
+      <p>Under Analytics &gt; Digital Experience, there's a <strong>"Switch to Existing Reports"</strong> checkbox. Enable it to see all your familiar legacy dashboards and reports while you get comfortable with the new native Experience Center dashboards.</p>
+      <a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=138s" target="_blank" style="margin-top:6px;">Ep 5 @ 2:18</a>
+    </div>
+  </div>
+
+  <div class="pro-tip">
+    <span class="tip-icon">&#128272;</span>
+    <div>
+      <h4>RBAC Lives in Zidentity Now</h4>
+      <p>Don't hunt for role management in each product's admin section. Role-based access control and entitlements are now centralized in the <strong>Zidentity portal</strong>. Product-specific admin pages may link you there automatically.</p>
+      <a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=298s" target="_blank" style="margin-top:6px;">Ep 7 @ 4:58</a>
+    </div>
+  </div>
+
+  <div class="pro-tip">
+    <span class="tip-icon">&#128640;</span>
+    <div>
+      <h4>One API Is Coming</h4>
+      <p>A new unified "One API" is replacing per-product API keys. Your legacy API keys still work under Administration &gt; API Configuration &gt; Legacy API, but start planning your migration to the One API for a single endpoint across all services.</p>
+      <a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=583s" target="_blank" style="margin-top:6px;">Ep 5 @ 9:43</a>
+      &nbsp;
+      <a class="src" href="https://www.youtube.com/watch?v=COECYKqgxuU&t=128s" target="_blank" style="margin-top:6px;">Ep 7 @ 2:08</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>Zscaler Experience Center Migration Guide &bull; Sourced from the official <a href="https://www.youtube.com/watch?v=Ve9D3x79VJM&list=PLMTZNJ5y5ed5qss_M-UHZM4VIG_yVwSHq" target="_blank" style="color:#4da6ff;">Experience Center video series</a> (7 episodes) &bull; Every item links to the exact video timestamp</p>
+  <p style="margin-top: 6px;">This is an unofficial reference document. Always verify paths in your live Experience Center tenant.</p>
+</div>
+
+</body>
+</html>
