@@ -212,6 +212,7 @@
   .qr-card.zia { border-top-color: var(--zs-orange); }
   .qr-card.zdx { border-top-color: var(--zs-purple); }
   .qr-card.branch { border-top-color: var(--zs-accent); }
+  .qr-card.mobile { border-top-color: #ec4899; }
   .qr-card.general { border-top-color: var(--zs-blue); }
 
   .qr-card h3 {
@@ -233,6 +234,7 @@
   .qr-card .qr-product.zia { background: #451a03; color: #fbbf24; }
   .qr-card .qr-product.zdx { background: #2e1065; color: #c084fc; }
   .qr-card .qr-product.branch { background: #083344; color: #22d3ee; }
+  .qr-card .qr-product.mobile { background: #500724; color: #f9a8d4; }
   .qr-card .qr-product.general { background: #172554; color: #60a5fa; }
 
   .qr-path {
@@ -299,6 +301,7 @@
   .product-header .product-icon.zia { background: linear-gradient(135deg, #f77f00, #ef476f); }
   .product-header .product-icon.zdx { background: linear-gradient(135deg, #7209b7, #3a0ca3); }
   .product-header .product-icon.branch { background: linear-gradient(135deg, #00b4d8, #0077b6); }
+  .product-header .product-icon.mobile { background: linear-gradient(135deg, #ec4899, #a855f7); }
 
   .product-header h3 {
     font-size: 1.2rem;
@@ -589,6 +592,7 @@
     <a href="#mapping-zpa">ZPA</a>
     <a href="#mapping-zdx">ZDX</a>
     <a href="#mapping-branch">Branch &amp; Cloud</a>
+    <a href="#mapping-mobile">Mobile Admin</a>
     <a href="#changes">What Changed</a>
     <a href="#tips">Tips</a>
   </div>
@@ -615,12 +619,12 @@
         <div class="tl-label">Experience Center available<br>alongside legacy consoles</div>
       </div>
       <div class="timeline-item">
-        <div class="tl-date">March 31, 2026</div>
-        <div class="tl-label">No new features added<br>to legacy consoles</div>
+        <div class="tl-date">April 1, 2026</div>
+        <div class="tl-label">Legacy UIs enter maintenance mode<br>(no new features)</div>
       </div>
       <div class="timeline-item">
-        <div class="tl-date">September 1, 2026</div>
-        <div class="tl-label">Legacy consoles<br>retired</div>
+        <div class="tl-date">September 30, 2026</div>
+        <div class="tl-label">Legacy consoles<br>deprecated</div>
       </div>
     </div>
     <div style="margin-top:12px;"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=24s" target="_blank" style="color:#ff6666;border-color:rgba(255,0,51,0.4);background:rgba(255,0,51,0.15);">Ep 5 @ 0:24 &mdash; ZDX console retirement banner</a></div>
@@ -632,7 +636,7 @@
   <div id="quick-ref" class="section-header" style="margin-top: 48px;">
     <div class="section-number">1</div>
     <h2>Quick Reference Card</h2>
-    <p>The 20 most common admin tasks and exactly where to find them in Experience Center.</p>
+    <p>The 23 most common admin tasks and exactly where to find them in Experience Center.</p>
   </div>
 
   <div class="quick-ref-grid">
@@ -857,6 +861,39 @@
       <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=395s" target="_blank">Ep 5 @ 6:35</a></div>
     </div>
 
+    <div class="qr-card mobile">
+      <h3>Enrolled Devices</h3>
+      <span class="qr-product mobile">Mobile Admin</span>
+      <div class="qr-path">
+        <span class="qr-old">Enrolled Devices &gt; Device Overview</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Infrastructure &gt; Connectors &gt; Client &gt; Enrolled Devices</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=252s" target="_blank">Ep 8 @ 4:12</a></div>
+    </div>
+
+    <div class="qr-card mobile">
+      <h3>Client Connector Platform Settings</h3>
+      <span class="qr-product mobile">Mobile Admin</span>
+      <div class="qr-path">
+        <span class="qr-old">App Profile &gt; [OS]</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Infrastructure &gt; Connectors &gt; Client &gt; Platform Settings</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=396s" target="_blank">Ep 8 @ 6:36</a></div>
+    </div>
+
+    <div class="qr-card mobile">
+      <h3>Client Connector Audit Logs</h3>
+      <span class="qr-product mobile">Mobile Admin</span>
+      <div class="qr-path">
+        <span class="qr-old">Administration &gt; Audit Logs</span>
+        <span class="arrow">&rarr;</span>
+        <span class="qr-new">Administration &gt; Admin Management &gt; Audit Logs &gt; Mobile Administration</span>
+      </div>
+      <div class="qr-source"><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=164s" target="_blank">Ep 9 @ 2:44</a></div>
+    </div>
+
   </div>
 
   <div class="pro-tip">
@@ -908,13 +945,13 @@
           <tr>
             <td class="feature-name">Locations</td>
             <td class="path">Administration &gt; Location Management &gt; Locations</td>
-            <td class="path-new">Infrastructure &gt; Locations &gt; Locations</td>
+            <td class="path-new">Infrastructure &gt; Locations &gt; Location Management &gt; Locations</td>
             <td><a class="src" href="https://www.youtube.com/watch?v=qm-hC48xSRI&t=353s" target="_blank">Ep 3 @ 5:53</a></td>
           </tr>
           <tr>
             <td class="feature-name">Location Groups</td>
             <td class="path">Administration &gt; Location Management &gt; Location Groups</td>
-            <td class="path-new">Infrastructure &gt; Locations &gt; Location Groups</td>
+            <td class="path-new">Infrastructure &gt; Locations &gt; Location Management &gt; Location Groups</td>
             <td><a class="src" href="https://www.youtube.com/watch?v=qm-hC48xSRI&t=362s" target="_blank">Ep 3 @ 6:02</a></td>
           </tr>
         </tbody>
@@ -1500,6 +1537,226 @@
   </div>
 
 
+  <!-- Mobile Admin / Client Connector -->
+  <div id="mapping-mobile" class="product-section open">
+    <div class="product-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="product-icon mobile">ZCC</div>
+      <div>
+        <h3>Mobile Admin &mdash; Zscaler Client Connector</h3>
+        <div class="product-desc">Device dashboards, enrolled devices, app profiles, and client connector administration. Requires tenant migration to ZIdentity to reach Experience Center.</div>
+      </div>
+      <span class="expand-icon">&#9660;</span>
+    </div>
+    <div class="product-body">
+      <table class="map-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Old Console Path</th>
+            <th>Experience Center Path</th>
+            <th style="width:110px;">Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4" style="background:#500724; font-weight:600; color:#f9a8d4; font-size:0.8rem; letter-spacing:0.5px;">DASHBOARD &amp; DEVICES (Ep 8 &mdash; Practitioner)</td></tr>
+          <tr>
+            <td class="feature-name">Platform Details</td>
+            <td class="path">Dashboard &gt; Platform Details</td>
+            <td class="path-new">Analytics &gt; Connectors &gt; Platform Details
+              <span class="note">Check &ldquo;Switch to Existing Reports,&rdquo; then open the Dashboard heading</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=188s" target="_blank">Ep 8 @ 3:08</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Device Posture</td>
+            <td class="path">Dashboard &gt; Device Posture</td>
+            <td class="path-new">Analytics &gt; Existing Reports &gt; Connectors &gt; Dashboard &gt; Device Posture</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=214s" target="_blank">Ep 8 @ 3:34</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Device Events</td>
+            <td class="path">Dashboard &gt; Device Events</td>
+            <td class="path-new">Analytics &gt; Existing Reports &gt; Connectors &gt; Dashboard &gt; Device Events</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=230s" target="_blank">Ep 8 @ 3:50</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Enrolled Devices &mdash; Device Overview</td>
+            <td class="path">Enrolled Devices &gt; Device Overview</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Enrolled Devices &gt; Device Overview</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=252s" target="_blank">Ep 8 @ 4:12</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Machine Tunnels</td>
+            <td class="path">Enrolled Devices &gt; Machine Tunnels</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Enrolled Devices &gt; Machine Tunnel</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=287s" target="_blank">Ep 8 @ 4:47</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Partner Devices</td>
+            <td class="path">Enrolled Devices &gt; Partner Devices</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Enrolled Devices &gt; Partner Devices</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=303s" target="_blank">Ep 8 @ 5:03</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Failed Posture Devices</td>
+            <td class="path">Enrolled Devices &gt; Failed Posture Devices</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Enrolled Devices &gt; Failed Posture Devices</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=366s" target="_blank">Ep 8 @ 6:06</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">App Profiles (per OS)</td>
+            <td class="path">App Profile &gt; [Windows / Mac / Linux / iOS / Android]</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Platform Settings &gt; [OS]
+              <span class="note">App profiles now sit alongside per-OS Platform Settings (unattended-mode password, browser-based auth, etc.)</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=396s" target="_blank">Ep 8 @ 6:36</a></td>
+          </tr>
+
+          <tr><td colspan="4" style="background:#500724; font-weight:600; color:#f9a8d4; font-size:0.8rem; letter-spacing:0.5px;">ADMINISTRATION (Ep 9 &mdash; Administrator)</td></tr>
+          <tr>
+            <td class="feature-name">Client Connector App Store</td>
+            <td class="path">Administration &gt; Client Connector App Store</td>
+            <td class="path-new">Infrastructure &gt; Common Resources &gt; Deployment &gt; Client Connector Deployment &gt; Update Settings</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=114s" target="_blank">Ep 9 @ 1:54</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Client Connector Notifications</td>
+            <td class="path">Administration &gt; Client Connector Notification</td>
+            <td class="path-new">Policies &gt; Common Configuration &gt; Resources &gt; User Notifications &gt; Client Connector Notifications</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=141s" target="_blank">Ep 9 @ 2:21</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Audit Logs</td>
+            <td class="path">Administration &gt; Audit Logs</td>
+            <td class="path-new">Administration &gt; Admin Management &gt; Audit Logs &gt; Mobile Administration</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=164s" target="_blank">Ep 9 @ 2:44</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Forwarding Profiles</td>
+            <td class="path">Administration &gt; Forwarding Profile</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Forwarding Profiles &gt; Forwarding Profile for Platforms</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=191s" target="_blank">Ep 9 @ 3:11</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Trusted Networks</td>
+            <td class="path">Administration &gt; Trusted Networks</td>
+            <td class="path-new">Infrastructure &gt; Locations &gt; Location Management &gt; Trusted Networks</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=247s" target="_blank">Ep 9 @ 4:07</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Client Connector Support</td>
+            <td class="path">Administration &gt; Client Connector Support</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Supportability &gt; App Supportability</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=270s" target="_blank">Ep 9 @ 4:30</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Zscaler Service Entitlement</td>
+            <td class="path">Administration &gt; Zscaler Service Entitlement</td>
+            <td class="path-new">Administration &gt; Entitlements
+              <span class="note">Select the entitlement (e.g. Private Access); tabs for ZPA, ZDX, ZIA, Deception</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=298s" target="_blank">Ep 9 @ 4:58</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">User Agent</td>
+            <td class="path">Administration &gt; User Agent</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Global Settings &gt; User Agent</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=340s" target="_blank">Ep 9 @ 5:40</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Client Connector IDP</td>
+            <td class="path">Administration &gt; Client Connector IDP</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Global Settings &gt; Client Connector IdP</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=355s" target="_blank">Ep 9 @ 5:55</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Device Posture</td>
+            <td class="path">Administration &gt; Device Posture</td>
+            <td class="path-new">Policies &gt; Common Configuration &gt; Resources &gt; Connectors &gt; Device Posture</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=377s" target="_blank">Ep 9 @ 6:17</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">ZIA Posture Profiles</td>
+            <td class="path">Administration &gt; ZIA Posture Profiles</td>
+            <td class="path-new">Policies &gt; Common Configuration &gt; Resources &gt; Connectors &gt; Internet &amp; SaaS Posture Profiles
+              <span class="note">Renamed &mdash; &ldquo;ZIA Posture Profiles&rdquo; is now &ldquo;Internet &amp; SaaS Posture Profiles&rdquo;</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=400s" target="_blank">Ep 9 @ 6:40</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Application Bypasses</td>
+            <td class="path">Administration &gt; Application Bypasses</td>
+            <td class="path-new">Infrastructure &gt; Common Resources &gt; Application &gt; Custom Application
+              <span class="note">Split into IP-based and Process-based</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=431s" target="_blank">Ep 9 @ 7:11</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Dedicated Proxy Port</td>
+            <td class="path">Administration &gt; Dedicated Proxy Port</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Global Settings &gt; Dedicated Proxy Port</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=475s" target="_blank">Ep 9 @ 7:55</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Public API Keys</td>
+            <td class="path">Administration &gt; Public API</td>
+            <td class="path-new">Administration &gt; API Configuration &gt; Legacy API &gt; Client Connector API
+              <span class="note">One API (new gateway) lives in the same API Configuration area</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=490s" target="_blank">Ep 9 @ 8:10</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Platform Settings</td>
+            <td class="path">Administration &gt; Platform Settings</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Platform Settings
+              <span class="note">Now split out per operating system within each platform tab</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=533s" target="_blank">Ep 9 @ 8:53</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Administrator Management</td>
+            <td class="path">Administration &gt; Administration Management</td>
+            <td class="path-new">Managed in ZIdentity
+              <span class="note">Roles, entitlements, and admins are provisioned through ZIdentity, not Experience Center</span>
+            </td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=570s" target="_blank">Ep 9 @ 9:30</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Device Groups</td>
+            <td class="path">Administration &gt; Device Groups</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Enrolled Devices &gt; Device Groups</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=600s" target="_blank">Ep 9 @ 10:00</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">ZPA Partner Logins</td>
+            <td class="path">Administration &gt; ZPA Partner Logins</td>
+            <td class="path-new">Administration &gt; Identity &gt; Private Access &gt; Partner Login</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=618s" target="_blank">Ep 9 @ 10:18</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Zscaler Deception</td>
+            <td class="path">Administration &gt; Zscaler Deception</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Global Settings &gt; Deception</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=640s" target="_blank">Ep 9 @ 10:40</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Business Continuity</td>
+            <td class="path">Administration &gt; Business Continuity</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Supportability &gt; Business Continuity</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=658s" target="_blank">Ep 9 @ 10:58</a></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Location-Based Policies</td>
+            <td class="path">Administration &gt; Location-Based Policies</td>
+            <td class="path-new">Infrastructure &gt; Connectors &gt; Client &gt; Location Based Policy &gt; Location Based Policies</td>
+            <td><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=680s" target="_blank">Ep 9 @ 11:20</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
   <!-- ============================================ -->
   <!-- SECTION 3: WHAT CHANGED / WHAT'S NEW         -->
   <!-- ============================================ -->
@@ -1636,11 +1893,29 @@
       <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=P1XlCByNfe4&t=211s" target="_blank">Ep 6 @ 3:31</a></span>
     </div>
 
+    <div class="change-card rename">
+      <span class="change-type rename">Renamed</span>
+      <h4>ZIA Posture Profiles &rarr; Internet &amp; SaaS Posture Profiles</h4>
+      <p>Client Connector &ldquo;ZIA Posture Profiles&rdquo; are renamed &ldquo;Internet &amp; SaaS Posture Profiles&rdquo; for more consistent naming.</p>
+      <div class="before-after">
+        <div><span class="before">Administration &gt; ZIA Posture Profiles</span></div>
+        <div><span class="after">Policies &gt; Common Configuration &gt; Resources &gt; Connectors &gt; Internet &amp; SaaS Posture Profiles</span></div>
+      </div>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=gWwpDY8My94&t=400s" target="_blank">Ep 9 @ 6:40</a></span>
+    </div>
+
+    <div class="change-card new-feature">
+      <span class="change-type new-feature">New Feature</span>
+      <h4>Per-OS Platform Settings</h4>
+      <p>For Zscaler Client Connector, App Profiles now sit alongside a separate <strong>Platform Settings</strong> area broken out per operating system. Options like unattended-mode passwords and browser-based authentication are configured per platform under Infrastructure &gt; Connectors &gt; Client &gt; Platform Settings.</p>
+      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=DIuJAgDvNxc&t=421s" target="_blank">Ep 8 @ 7:01</a></span>
+    </div>
+
     <div class="change-card retired">
       <span class="change-type retired">Retiring</span>
       <h4>Legacy Consoles Sunset</h4>
-      <p>As of <strong>March 31, 2026</strong>, no new features will be added to legacy consoles. All legacy consoles will be <strong>retired on September 1, 2026</strong>. Migrate now.</p>
-      <span class="change-source"><a class="src" href="https://www.youtube.com/watch?v=quMjrvtwv9E&t=24s" target="_blank">Ep 5 @ 0:24</a></span>
+      <p>On <strong>April 1, 2026</strong>, legacy administrative UIs enter <strong>maintenance mode</strong> &mdash; configuration changes still work, but no new features are added and all new development is exclusive to Experience Center. Legacy UIs are <strong>deprecated on September 30, 2026</strong>. Migrate now.</p>
+      <span class="change-source"><a class="src" href="https://trust.zscaler.com/zscaler.net/posts/28546" target="_blank">Zscaler Trust &mdash; posted Mar 16, 2026</a></span>
     </div>
 
   </div>
